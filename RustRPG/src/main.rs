@@ -1,104 +1,70 @@
-mod personnage;
-mod objet;
-mod monde;
-mod interaction;
+mod moteur;
+use moteur::{charger_zones, Zone};
 
-use interaction::menu_principal;
-use personnage::{Personnage};
-use monde::{Zone, Ennemi, Comportement};
+fn afficher_zone(zone: &Zone) {
+    println!("\n🌍 Vous êtes dans la zone : {}", zone.nom);
+    println!("{}", "-".repeat(30));
+    println!("📜 Description : {}", zone.description);
+    if zone.connection.is_empty() {
+        println!("❌ Aucune sortie possible.");
+    } else {
+        println!("🚪 Sorties possibles :");
+        for connexion in &zone.connection {
+            println!("➡️  Vers '{}'", connexion.direction);
+        }
+    }
+    println!("{}", "-".repeat(30));
+}
 
+fn se_deplacer<'a>(zones: &'a [Zone], current_zone: &mut &'a Zone, direction: &str) {
+    // Cherche la connexion dans la zone actuelle
+    if let Some(conn) = current_zone.connection.iter().find(|c| c.direction == direction) {
+        // Trouve la zone de destination via l'id de la connexion
+        if let Some(nouvelle_zone) = zones.iter().find(|z| z.id == conn.id_dest.parse::<u8>().unwrap()) {
+            *current_zone = nouvelle_zone;
+            afficher_zone(current_zone);
+        } else {
+            println!("⚠️ La zone de destination n'a pas été trouvée !");
+        }
+    } else {
+        println!("❌ Direction inconnue !");
+    }
+}
 
 fn main() {
-    // 1. Création du personnage via le menu
-    let joueur = menu_principal();
+    // Chargement des zones
+    let zones = charger_zones("src/json/zones/zone.json").expect("⚠️ Impossible de charger les zones !");
+    
+    // Trouver la zone de départ (id == 1)
+    let mut current_zone = zones.iter().find(|zone| zone.id == 1)
+        .expect("⚠️ La zone avec l'id 1 n'a pas été trouvée !");
 
-    // 2. Définir des zones précréées
-    let mut zone1 = Zone {
-        id: 1,
-        nom: "Entrée du Donjon".to_string(),
-        description: "Une entrée sombre, avec des portes en bois.".to_string(),
-        obstacles: vec![],
-        ennemis: vec![],
-        objets: vec![],
-        liaisons: vec![],
-    };
+    // Message d'accueil
+    println!("✨ Bienvenue dans le RustRPG !");
+    afficher_zone(current_zone);
 
-    let mut zone2 = Zone {
-        id: 2,
-        nom: "Salle des Ennemis".to_string(),
-        description: "Une grande salle avec plusieurs ennemis.".to_string(),
-        obstacles: vec![],
-        ennemis: vec![
-            Ennemi { nom: "Goblin".to_string(), points_de_vie: 30, attaque: 5, comportement: Comportement::Hostile },
-        ],
-        objets: vec![],
-        liaisons: vec![],
-    };
-
-    let mut zone3 = Zone {
-        id: 3,
-        nom: "Forêt Sombre".to_string(),
-        description: "Une forêt dense avec des créatures étranges.".to_string(),
-        obstacles: vec![],
-        ennemis: vec![
-            Ennemi { nom: "Loup Sauvage".to_string(), points_de_vie: 20, attaque: 7, comportement: Comportement::Hostile },
-        ],
-        objets: vec![],
-        liaisons: vec![],
-    };
-
-    // 3. Créer les liaisons réciproques
-    zone1.liaisons.push(zone2.clone());
-    zone2.liaisons.push(zone1.clone()); // Zone2 est aussi liée à Zone1
-
-    zone2.liaisons.push(zone3.clone());
-    zone3.liaisons.push(zone2.clone()); // Zone3 est aussi liée à Zone2
-
-    // 4. Boucle pour permettre au joueur de se déplacer
-    let mut current_zone = zone1; // Zone de départ
+    // Boucle principale du jeu
     loop {
-        // Afficher les détails de la zone actuelle
-        current_zone.afficher_details();
-
-        // Menu de déplacement
-        println!("\nQue voulez-vous faire ?");
-        println!("1. Se déplacer vers une autre zone");
-        println!("2. Quitter");
+        println!("Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter)");
 
         let mut choix = String::new();
-        std::io::stdin().read_line(&mut choix).expect("Erreur de lecture");
+        std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
         let choix = choix.trim();
 
         match choix {
-            "1" => {
-                // Afficher les zones disponibles pour se déplacer
-                println!("Vers quelle zone voulez-vous vous déplacer ?");
-                if !current_zone.liaisons.is_empty() {
-                    for (i, zone) in current_zone.liaisons.iter().enumerate() {
-                        println!("{} - {}", i + 1, zone.nom);
-                    }
-
-                    let mut zone_choisie = String::new();
-                    std::io::stdin().read_line(&mut zone_choisie).expect("Erreur de lecture");
-                    let zone_choisie: usize = zone_choisie.trim().parse().unwrap_or(1);
-
-                    // Sélectionner la zone et changer la zone actuelle
-                    match current_zone.liaisons.get(zone_choisie - 1) {
-                        Some(zone) => {
-                            current_zone = zone.clone();
-                            println!("Vous vous êtes déplacé vers : {}", current_zone.nom);
-                        }
-                        None => println!("Zone invalide."),
-                    }
-                } else {
-                    println!("Aucune zone disponible pour le déplacement.");
-                }
-            }
-            "2" => {
-                println!("Merci d'avoir joué !");
+            "q" => {
+                println!("👋 Au revoir !");
                 break;
             }
-            _ => println!("Choix invalide, veuillez réessayer."),
+            "d" => {
+                println!("🚪 Vers quelle direction voulez-vous aller ?");
+                let mut direction = String::new();
+                std::io::stdin().read_line(&mut direction).expect("❌ Erreur de lecture !");
+                let direction = direction.trim();
+
+                se_deplacer(&zones, &mut current_zone, direction);
+            }
+            _ => println!("❌ Commande inconnue !"),
         }
     }
 }

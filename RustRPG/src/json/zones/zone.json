@@ -1,0 +1,26 @@
+[
+    {
+        "type": "zone",
+        "nom": "zone1",
+        "id": "1",
+        "desc": "bla bla",
+        "connection": [
+            {
+                "direction": "nord",
+                "id_dest": "2"
+            }
+        ]
+    },
+    {
+        "type": "zone",
+        "nom": "zone2",
+        "id": "2",
+        "desc": "bla2 bla2",
+        "connection": [
+            {
+                "direction": "sud",
+                "id_dest": "1"
+            }
+        ]
+    }
+]
