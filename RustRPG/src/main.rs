@@ -27,7 +27,7 @@ fn se_deplacer<'a>(zones: &'a [Zone], current_zone: &mut &'a Zone, direction: &s
             println!("⚠️ La zone de destination n'a pas été trouvée !");
         }
     } else {
-        println!("❌ Direction inconnue !");
+        println!("❌ Vous êtes arrivé au bout du monde, faites demi tour !");
     }
 }
 
@@ -63,6 +63,18 @@ fn main() {
                 let direction = direction.trim();
 
                 se_deplacer(&zones, &mut current_zone, direction);
+            }
+            "nord" => {
+                se_deplacer(&zones, &mut current_zone, "nord");
+            }
+            "sud" => {
+                se_deplacer(&zones, &mut current_zone, "sud");
+            }
+            "est" => {
+                se_deplacer(&zones, &mut current_zone, "est");
+            }
+            "ouest" => {
+                se_deplacer(&zones, &mut current_zone, "ouest");
             }
             _ => println!("❌ Commande inconnue !"),
         }
