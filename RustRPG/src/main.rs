@@ -33,7 +33,7 @@ fn se_deplacer<'a>(zones: &'a [Zone], current_zone: &mut &'a Zone, direction: &s
 
 fn main() {
     // Chargement des zones
-    let zones = charger_zones("src/json/zones/zone.json").expect("⚠️ Impossible de charger les zones !");
+    let zones = charger_zones().expect("⚠️ Impossible de charger les zones !");
     
     // Trouver la zone de départ (id == 1)
     let mut current_zone = zones.iter().find(|zone| zone.id == 1)

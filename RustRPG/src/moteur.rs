@@ -2,6 +2,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs;
 use std::error::Error;
+use serde_json::Value;
 
 #[derive(Debug, Clone)]
 pub struct Zone {
@@ -30,9 +31,13 @@ struct ZoneTemporaire {
 }
 
 // Fonction pour charger les zones
-pub fn charger_zones(chemin: &str) -> Result<Vec<Zone>, Box<dyn Error>> {
-    let contenu = fs::read_to_string(chemin)?;
-    let zones_temp: Vec<ZoneTemporaire> = serde_json::from_str(&contenu)?;
+pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
+    let contenu = fs::read_to_string("src/json/zones/zone.json")?;
+    let zones_temp: Vec<ZoneTemporaire> = serde_json::from_str::<Vec<Value>>(&contenu)?
+    .into_iter()
+    .filter(|zone| zone["type"] == "zone")
+    .filter_map(|zone| serde_json::from_value(zone).ok())
+    .collect();
 
     let mut map_temp = HashMap::new();
     for zt in zones_temp {
