@@ -31,9 +31,36 @@ impl Zone {
         println!("{}", "-".repeat(30));
     }
 
-    pub fn afficher_coffre(&self) {
-        println!("Il y a {} coffres dans la zone", self.coffres.len());
+    pub fn compter_coffre(&self) -> usize {
+        let mut cpt = 0usize;
+        for coffre in self.coffres.clone() {
+            if !coffre.vide {
+                cpt += 1;
+            }
+        }
+        cpt
+    }
 
+    pub fn afficher_coffre(&self) {
+        println!("Il y a {} coffres dans la zone", self.compter_coffre());
+        println!("Saisir 'q' pour revenir en arrière ou un nombre correspondant au numéro du coffre");
+        let mut choix = String::new();
+        std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
+        let choix = choix.trim();
+        match choix {
+            "q" => {
+                println!("Retour en arrière...");
+            }
+            _ => match choix.parse::<usize>() {
+                Ok(index) if index <= self.compter_coffre() => {
+                    let coffre = &self.coffres[index-1]; // Récupère le coffre sélectionné
+                    coffre.ouvrir();
+                }
+                _ => {
+                    println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
+                }
+            },
+        }
     }
 
 }

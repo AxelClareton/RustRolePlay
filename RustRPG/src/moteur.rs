@@ -108,6 +108,7 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
             id_zone,
             description: coffre.description.clone(),
             inventaire,
+            vide : false,
         };
 
         coffre_finales.entry(id_zone).or_insert(Vec::new()).push(c);
