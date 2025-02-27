@@ -3,21 +3,16 @@ use std::collections::HashMap;
 use std::fs;
 use std::error::Error;
 use serde_json::Value;
-
-#[derive(Debug, Clone)]
-pub struct Zone {
-    pub id: u8,
-    pub nom: String,
-    pub description: String,
-    pub connection: Vec<ConnexionTemporaire>,
-}
-
+use coffre::Coffre;
+use crate::{coffre, inventaire, zone};
+use zone::Zone;
+use zone::Connexion;
+use inventaire::Inventaire;
 // Structures pour lire le JSON
-#[derive(Debug, Deserialize, Clone)]
-pub struct ConnexionTemporaire {
-    pub direction: String,
-    pub id_dest: String,
-}
+
+
+
+
 
 #[derive(Debug, Deserialize)]
 struct ZoneTemporaire {
@@ -27,12 +22,41 @@ struct ZoneTemporaire {
     nom: String,
     #[serde(rename = "desc")]
     description: String,
-    connection: Vec<ConnexionTemporaire>,
+    connection: Vec<Connexion>,
+}
+
+
+#[derive(Debug, Deserialize)]
+struct ObjetTemporaire {
+    id: u8, // Correspond à {"id": 1}
+}
+
+#[derive(Debug, Deserialize)]
+struct InventaireTemporaire {
+    #[serde(rename = "taille")]
+    taille_texte: String,
+    objets: Vec<ObjetTemporaire>,
+}
+
+#[derive(Debug, Deserialize)]
+struct CoffreTemporaire {
+    #[serde(rename = "id")]
+    id_texte: String,
+    #[serde(rename = "id_zone")]
+    id_zone_texte: String,
+    #[serde(rename = "desc")]
+    description: String,
+    inventaire: Vec<InventaireTemporaire>, // Le JSON utilise un tableau
+}
+pub fn charger_json(chemin: &str)->Result<String, Box<dyn Error>>{
+    let contenu = fs::read_to_string(chemin)?;
+    Ok(contenu)
 }
 
 // Fonction pour charger les zones
 pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
-    let contenu = fs::read_to_string("src/json/zones/zone.json")?;
+    let coffres_totaux: HashMap<u8, Vec<Coffre>> = charger_coffres().expect("⚠️ Impossible de charger les coffres !");
+    let contenu = charger_json("src/json/zone.json")?;
     let zones_temp: Vec<ZoneTemporaire> = serde_json::from_str::<Vec<Value>>(&contenu)?
     .into_iter()
     .filter(|zone| zone["type"] == "zone")
@@ -47,15 +71,47 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
     let mut zones_finales = Vec::new();
     for (_, zone_temp) in &map_temp {
         let id_numerique = zone_temp.id_texte.parse::<u8>()?;
-        let mut zone_finale = Zone {
+        let coffre_zone: Vec<Coffre> = coffres_totaux.get(&id_numerique).cloned().unwrap_or_else(Vec::new);
+        let zone_finale = Zone {
             id: id_numerique,
             nom: zone_temp.nom.clone(),
             description: zone_temp.description.clone(),
             connection: zone_temp.connection.clone(),
+            coffres: coffre_zone,
         };
 
         zones_finales.push(zone_finale);
     }
 
     Ok(zones_finales)
+}
+
+pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
+    let contenu = charger_json("src/json/coffre.json")?;
+    let coffres_temp: Vec<CoffreTemporaire> = serde_json::from_str(&contenu)?;
+    let mut coffre_finales: HashMap<u8, Vec<Coffre>> = HashMap::new();
+
+    for coffre in coffres_temp {
+        let id_zone = coffre.id_zone_texte.parse::<u8>()?;
+        let id = coffre.id_texte.parse::<u8>()?;
+
+        // Récupérer le premier élément de la liste `inventaire`
+        let inventaire_temp = coffre.inventaire.get(0).ok_or("Inventaire vide")?;
+
+        let inventaire = Inventaire {
+            taille: inventaire_temp.taille_texte.parse::<u8>()?, // Convertir la taille en u8
+            objets: inventaire_temp.objets.iter().map(|o| o.id).collect(), // Extraire les ID
+        };
+
+        let c = Coffre {
+            id,
+            id_zone,
+            description: coffre.description.clone(),
+            inventaire,
+        };
+
+        coffre_finales.entry(id_zone).or_insert(Vec::new()).push(c);
+    }
+    println!("{:?}", coffre_finales);
+    Ok(coffre_finales)
 }

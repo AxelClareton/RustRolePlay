@@ -1,0 +1,13 @@
+[
+  {
+    "type" : "coffre",
+    "id" : "1",
+    "id_zone" : "1",
+    "desc" : "test coffre",
+    "inventaire" : [{
+      "taille" : "3",
+      "objets" : [
+        {"id": 1}, {"id": 2}]
+    }]
+  }
+]

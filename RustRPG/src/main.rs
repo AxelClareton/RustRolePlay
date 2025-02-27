@@ -1,5 +1,10 @@
 mod moteur;
-use moteur::{charger_zones, Zone};
+mod coffre;
+mod zone;
+mod inventaire;
+
+use zone::Zone;
+use moteur::{charger_zones};
 
 fn afficher_zone(zone: &Zone) {
     println!("\n🌍 Vous êtes dans la zone : {}", zone.nom);
@@ -34,7 +39,7 @@ fn se_deplacer<'a>(zones: &'a [Zone], current_zone: &mut &'a Zone, direction: &s
 fn main() {
     // Chargement des zones
     let zones = charger_zones().expect("⚠️ Impossible de charger les zones !");
-    
+    //println!("{:?}", zones);
     // Trouver la zone de départ (id == 1)
     let mut current_zone = zones.iter().find(|zone| zone.id == 1)
         .expect("⚠️ La zone avec l'id 1 n'a pas été trouvée !");
