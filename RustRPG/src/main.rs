@@ -6,20 +6,6 @@ mod inventaire;
 use zone::Zone;
 use moteur::{charger_zones};
 
-fn afficher_zone(zone: &Zone) {
-    println!("\n🌍 Vous êtes dans la zone : {}", zone.nom);
-    println!("{}", "-".repeat(30));
-    println!("📜 Description : {}", zone.description);
-    if zone.connection.is_empty() {
-        println!("❌ Aucune sortie possible.");
-    } else {
-        println!("🚪 Sorties possibles :");
-        for connexion in &zone.connection {
-            println!("➡️  Vers '{}'", connexion.direction);
-        }
-    }
-    println!("{}", "-".repeat(30));
-}
 
 fn se_deplacer<'a>(zones: &'a [Zone], current_zone: &mut &'a Zone, direction: &str) {
     // Cherche la connexion dans la zone actuelle
@@ -27,7 +13,7 @@ fn se_deplacer<'a>(zones: &'a [Zone], current_zone: &mut &'a Zone, direction: &s
         // Trouve la zone de destination via l'id de la connexion
         if let Some(nouvelle_zone) = zones.iter().find(|z| z.id == conn.id_dest.parse::<u8>().unwrap()) {
             *current_zone = nouvelle_zone;
-            afficher_zone(current_zone);
+            current_zone.afficher_zone();
         } else {
             println!("⚠️ La zone de destination n'a pas été trouvée !");
         }
@@ -46,11 +32,11 @@ fn main() {
 
     // Message d'accueil
     println!("✨ Bienvenue dans le RustRPG !");
-    afficher_zone(current_zone);
+    current_zone.afficher_zone();
 
     // Boucle principale du jeu
     loop {
-        println!("Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter)");
+        println!("Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone)");
 
         let mut choix = String::new();
         std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
@@ -60,6 +46,9 @@ fn main() {
             "q" => {
                 println!("👋 Au revoir !");
                 break;
+            }
+            "c" => {
+                current_zone.afficher_coffre()
             }
             "d" => {
                 println!("🚪 Vers quelle direction voulez-vous aller ?");
