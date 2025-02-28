@@ -7,7 +7,7 @@ use coffre::Coffre;
 use crate::{coffre, inventaire, zone};
 use zone::Zone;
 use zone::Connexion;
-use inventaire::Inventaire;
+use inventaire::{Inventaire, ObjetInventaire};
 // Structures pour lire le JSON
 
 
@@ -28,7 +28,8 @@ struct ZoneTemporaire {
 
 #[derive(Debug, Deserialize)]
 struct ObjetTemporaire {
-    id: u8, // Correspond à {"id": 1}
+    nombre : u8,
+    objet_id: u8,
 }
 
 #[derive(Debug, Deserialize)]
@@ -99,8 +100,11 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
         let inventaire_temp = coffre.inventaire.get(0).ok_or("Inventaire vide")?;
 
         let inventaire = Inventaire {
-            taille: inventaire_temp.taille_texte.parse::<u8>()?, // Convertir la taille en u8
-            objets: inventaire_temp.objets.iter().map(|o| o.id).collect(), // Extraire les ID
+            taille: inventaire_temp.taille_texte.parse::<u8>()?, // Conversion de taille
+            objets: inventaire_temp.objets.iter().map(|o| ObjetInventaire {
+                nombre: o.nombre,
+                objet_id: o.objet_id,
+            }).collect(), // Mapper les objets avec leurs quantités
         };
 
         let c = Coffre {

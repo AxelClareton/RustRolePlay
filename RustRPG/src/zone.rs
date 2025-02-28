@@ -41,7 +41,7 @@ impl Zone {
         cpt
     }
 
-    pub fn afficher_coffre(&self) {
+    pub fn afficher_coffre(&mut self) {
         println!("Il y a {} coffres dans la zone", self.compter_coffre());
         println!("Saisir 'q' pour revenir en arrière ou un nombre correspondant au numéro du coffre");
         let mut choix = String::new();
@@ -53,7 +53,7 @@ impl Zone {
             }
             _ => match choix.parse::<usize>() {
                 Ok(index) if index <= self.compter_coffre() => {
-                    let coffre = &self.coffres[index-1]; // Récupère le coffre sélectionné
+                    let coffre = &mut self.coffres[index-1]; // Récupère le coffre sélectionné
                     coffre.ouvrir();
                 }
                 _ => {
