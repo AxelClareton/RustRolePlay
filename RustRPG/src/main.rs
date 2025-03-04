@@ -79,7 +79,7 @@ fn main() {
         let mut choix = String::new();
         std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
         let choix = choix.trim();
-        let nbr_coffres = zones[current_zone_index].compter_coffre();
+        let mut nbr_coffres = zones[current_zone_index].compter_coffre();
         match choix {
             "q" => {
                 println!("👋 Au revoir !");
@@ -88,7 +88,7 @@ fn main() {
             "c" => {
                 println!("Fouillage de la zone en cours...");
                 sleep(Duration::from_secs(5));
-                zones[current_zone_index].fouiller_zone();
+                &mut zones[current_zone_index].fouiller_zone();
                 zones[current_zone_index].afficher_zone();
             }
             "d" => {
@@ -111,6 +111,14 @@ fn main() {
                     println!("🎉 L'événement rare s'est produit !");
                 }
             }
+            "test" => {
+                let mut coffre = &mut zones[current_zone_index].coffres[0];
+                inventaire.tout_recuperer(&mut coffre.inventaire);
+                println!("INVENTAIRE");
+                inventaire.afficher();
+                println!("COFFRE");
+                coffre.ouvrir();
+            }
             _ => {
                 if let Ok(num) = choix.parse::<usize>() {
                     if (1..=nbr_coffres).contains(&num) {
@@ -120,9 +128,8 @@ fn main() {
                                 println!("objet : {}", objet);
                                 inventaire.ajouter_objet(objet as u8);
                             },
-                            None => println!("Aucun objet à récupérer"),
+                            None => (),
                         }
-                        inventaire.afficher();
 
                     } else {
                         println!("❌ Commande inconnue !");

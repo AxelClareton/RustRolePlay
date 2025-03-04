@@ -53,12 +53,12 @@ impl Inventaire {
 
     pub fn récupérer_objet(&mut self, index:usize) -> usize {
         let obj:usize = self.objets[index].objet_id as usize;
-
         self.objets[index].nombre -= 1;
         if self.objets[index].nombre == 0 {
             self.objets.remove(index);
         }
         self.trier_quantite();
+
         obj
     }
 
@@ -66,4 +66,9 @@ impl Inventaire {
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
     }
 
+    pub fn tout_recuperer(&mut self, inventaire: &mut Inventaire){
+        //
+        self.objets.extend(inventaire.objets.drain(..));
+        inventaire.objets = Vec::new();
+    }
 }
