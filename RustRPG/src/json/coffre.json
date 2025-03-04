@@ -5,6 +5,7 @@
     "id_zone" : "1",
     "prix": "5",
     "ouvert": "false",
+    "visible": "true",
     "desc" : "test coffre",
     "inventaire" : [{
       "taille" : "3",
@@ -18,6 +19,7 @@
     "id_zone" : "1",
     "prix": "7",
     "ouvert": "true",
+    "visible": "false",
     "desc" : "coffre lpedleldpe",
     "inventaire" : [{
       "taille" : "1",

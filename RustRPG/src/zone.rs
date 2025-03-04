@@ -19,6 +19,7 @@ pub struct Zone {
 
 impl Zone {
     pub fn afficher_zone(&self) {
+
         println!("\n🌍 Vous êtes dans la zone : {}", self.nom);
         println!("{}", "-".repeat(30));
         println!("📜 Description : {}", self.description);
@@ -30,13 +31,14 @@ impl Zone {
                 println!("➡️  Vers '{}'", connexion.direction);
             }
         }
+        println!("Il y a {} coffres dans la zone", self.compter_coffre());
         println!("{}", "-".repeat(30));
     }
 
     pub fn compter_coffre(&self) -> usize {
         let mut cpt = 0usize;
         for coffre in self.coffres.clone() {
-            if !coffre.vide {
+            if coffre.visible {
                 cpt += 1;
             }
         }
@@ -44,7 +46,11 @@ impl Zone {
     }
 
     pub fn afficher_coffre(&mut self) {
-        println!("Il y a {} coffres dans la zone", self.compter_coffre());
+        let nbr = self.compter_coffre();
+        println!("Il y a {} coffres dans la zone", nbr);
+        if nbr == 0 {
+            return
+        }
         println!("Saisir 'q' pour revenir en arrière ou un nombre correspondant au numéro du coffre");
         let mut choix = String::new();
         std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
@@ -56,8 +62,8 @@ impl Zone {
             _ => match choix.parse::<usize>() {
                 Ok(index) if index <= self.compter_coffre() => {
                     let coffre = &mut self.coffres[index-1]; // Récupère le coffre sélectionné
-                    coffre.ouvrir();
-                    if coffre.vide {
+                    //coffre.ouvrir();
+                    if coffre.ouvert && coffre.inventaire.objets.is_empty() {
                         self.coffres.remove(index-1);
                     }
                 }
@@ -66,6 +72,17 @@ impl Zone {
                 }
             },
         }
+    }
+
+    pub fn fouiller_zone(&mut self) {
+        let mut cpt :u8 = 0;
+        for coffre in &mut self.coffres {
+            if !coffre.visible {
+                cpt += 1;
+                coffre.visible = true;
+            }
+        }
+        println!("Félicitation vous avez trouvé {} coffre(s) !", cpt);
     }
 
 }

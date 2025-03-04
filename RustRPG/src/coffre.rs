@@ -8,11 +8,11 @@ pub struct Coffre {
     pub ouvert: bool,
     pub description: String,
     pub inventaire: Inventaire,
-    pub vide: bool,
+    pub visible: bool,
 }
 
 impl Coffre {
-    pub fn ouvrir(&mut self){
+    pub fn ouvrir(&mut self) -> Option<usize>{
         if !self.ouvert {
             println!("Voulez vous acheter ce coffe pour {}? (oui pour acheter, autres réponses pour non)", self.prix);
             let mut choix = String::new();
@@ -25,7 +25,7 @@ impl Coffre {
                 }
                 _ => {
                     println!("Coffre non acheté");
-                    return
+                    return None;
                 }
             }
         }
@@ -38,22 +38,20 @@ impl Coffre {
         match choix {
             "q" => {
                 println!("Retour en arrière...");
+                None
             }
-            "a"=>{
-                self.inventaire.ajouter_objet(4);
-            }
-            _ => match choix.parse::<usize>() {
-                Ok(index) if index <= self.inventaire.objets.len() => {
-                    let obj = self.inventaire.récupérer_objet(index-1);
+            _ => match choix.parse::<u8>() {
+                Ok(index) if index <= self.inventaire.objets.len() as u8  => {
+                    let obj = self.inventaire.récupérer_objet((index-1) as usize);
                     println!("Vous avez récupérer l'objet {}", obj);
-                    if self.inventaire.objets.is_empty() {
-                        self.vide = true;
-                    }
+                    Some(obj)
                 }
                 _ => {
                     println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
+                    None
                 }
             },
         }
     }
+
 }
