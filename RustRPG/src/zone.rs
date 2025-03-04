@@ -10,6 +10,8 @@ pub struct Connexion {
 pub struct Zone {
     pub id: u8,
     pub nom: String,
+    pub prix: u8,
+    pub ouvert: bool,
     pub description: String,
     pub connection: Vec<Connexion>,
     pub coffres: Vec<Coffre>,
@@ -55,6 +57,9 @@ impl Zone {
                 Ok(index) if index <= self.compter_coffre() => {
                     let coffre = &mut self.coffres[index-1]; // Récupère le coffre sélectionné
                     coffre.ouvrir();
+                    if coffre.vide {
+                        self.coffres.remove(index-1);
+                    }
                 }
                 _ => {
                     println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");

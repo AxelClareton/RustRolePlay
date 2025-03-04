@@ -3,6 +3,8 @@
         "type": "zone",
         "nom": "Forêt des Murmures",
         "id": "1",
+        "prix": "20",
+        "ouvert": "true",
         "desc": "Un épais sous-bois, où la brume semble se mêler aux arbres ancestraux. On entend des murmures presque incompréhensibles portés par le vent. \nDes créatures mystiques et des druides solitaires hantent cet endroit. Les sentiers sont parfois invisibles, dissimulés par des racines tordues et des fougères géantes.",
         "connection": [
             {
@@ -19,6 +21,8 @@
         "type": "zone",
         "nom": "Cavernes du Crépuscule",
         "id": "2",
+        "prix": "20",
+        "ouvert": "false",
         "desc": "Une série de grottes sombres où des cristaux luminescents flottent dans l'air, émettant une lumière faible. \nLes murs suintent de mousse bioluminescente, et des créatures semi-aquatiques hantent les ruisseaux souterrains. L'air y est frais, mais lourd de mystère.\nL'endroit est un labyrinthe complexe, idéal pour les aventuriers en quête de trésors cachés.",
         "connection": [
             {
@@ -31,6 +35,8 @@
         "type": "zone",
         "nom": "Plaines du Vent Solitaire",
         "id": "3",
+        "prix": "20",
+        "ouvert": "true",
         "desc": "Des étendues de sable et de herbes sauvages balayées par un vent incessant, où seuls les échos des pas résonnent dans le silence. \nLa vaste étendue semble infinie, ponctuée par quelques rochers gigantesques et des ruines anciennes. \nOn dit que les esprits des anciens rois se promènent ici, et que des tempêtes imprévisibles peuvent surgir sans prévenir.",
         "connection": [
             {
