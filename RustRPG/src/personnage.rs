@@ -30,6 +30,7 @@ pub struct Personnage {
     pub force: u8,
     pub inventaire: crate::inventaire::Inventaire,
     pub parties_du_corps: Vec<PartieDuCorps>,
+    pub argent: u32,
 }
 
 impl Personnage {
@@ -56,6 +57,18 @@ impl Personnage {
         let personnages = Personnage::charger_depuis_json(fichier)?;
         let max_id = personnages.iter().map(|p| p.id).max().unwrap_or(0);
         Ok(max_id + 1)
+    }
+
+    pub fn ajouter_argent(&mut self, montant: u32) {
+        self.argent += montant;
+    }
+
+    pub fn retirer_argent(&mut self, montant: u32) {
+        if self.argent < montant {
+            println!("Vous n'avez pas assez d'argent !");
+        } else {
+            self.argent -= montant;
+        }
     }
 }
 
@@ -92,6 +105,7 @@ impl Joueur {
 
         let mut rng: ThreadRng = rand::thread_rng();
         let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         println!("Valeur: {}", valeur);
 
@@ -102,6 +116,7 @@ impl Joueur {
             force: valeur,
             inventaire,
             parties_du_corps,
+            argent: valeur2,
         };
 
         personnage.sauvegarder_json("src/json/personnage.json")?;

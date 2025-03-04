@@ -146,6 +146,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Message d'accueil
     println!("✨ Bienvenue {} dans le RustRPG !", perso_joueur.nom);
+    println!("📜 Votre force : {}", perso_joueur.force);
+    println!("💰 Votre argent : {}", perso_joueur.argent);
+
     zones[current_zone_index].afficher_zone();
     let mut rng = rand::rng();
     // Boucle principale du jeu
