@@ -55,10 +55,12 @@ struct CoffreTemporaire {
     id_zone_texte: String,
     #[serde(rename = "desc")]
     description: String,
-    #[serde(rename = "prix")]
-    prix: String,
+    #[serde(rename = "cle")]
+    cle: String,
     #[serde(rename = "ouvert")]
     ouvert: String,
+    #[serde(rename = "visible")]
+    visible: String,
     inventaire: Vec<InventaireTemporaire>, // Le JSON utilise un tableau
 }
 pub fn charger_json(chemin: &str)->Result<String, Box<dyn Error>>{
@@ -114,10 +116,17 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
     for coffre in coffres_temp {
         let id_zone = coffre.id_zone_texte.parse::<u8>()?;
         let id = coffre.id_texte.parse::<u8>()?;
-        let prix = coffre.prix.parse::<u8>()?;
+        let mut cle = true;
+        if coffre.ouvert == "false" {
+            cle = false;
+        }
         let mut ouvert = true;
         if coffre.ouvert == "false" {
             ouvert = false;
+        }
+        let mut visible = true;
+        if coffre.visible == "false" {
+            visible = false;
         }
         // Récupérer le premier élément de la liste `inventaire`
         let inventaire_temp = coffre.inventaire.get(0).ok_or("Inventaire vide")?;
@@ -135,9 +144,9 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
             id_zone,
             description: coffre.description.clone(),
             inventaire,
-            prix:prix,
+            cle:cle,
             ouvert: ouvert,
-            vide : false,
+            visible : visible,
         };
 
         coffre_finales.entry(id_zone).or_insert(Vec::new()).push(c);

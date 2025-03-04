@@ -3,8 +3,9 @@
     "type" : "coffre",
     "id" : "1",
     "id_zone" : "1",
-    "prix": "5",
+    "cle": "false",
     "ouvert": "false",
+    "visible": "true",
     "desc" : "test coffre",
     "inventaire" : [{
       "taille" : "3",
@@ -16,8 +17,9 @@
     "type" : "coffre",
     "id" : "2",
     "id_zone" : "1",
-    "prix": "7",
+    "cle": "true",
     "ouvert": "true",
+    "visible": "false",
     "desc" : "coffre lpedleldpe",
     "inventaire" : [{
       "taille" : "1",
