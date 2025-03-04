@@ -3,7 +3,7 @@
     "id": 1,
     "nom": "Axel",
     "description": "Un personnage courageux avec un grand cœur",
-    "force": 105,
+    "force": 120,
     "inventaire": {
       "taille": 10,
       "objets": []
@@ -57,7 +57,8 @@
           "objets": []
         }
       }
-    ]
+    ],
+    "argent":20
   },
   {
     "id": 2,
@@ -117,6 +118,68 @@
           "objets": []
         }
       }
-    ]
+    ],
+    "argent":10
+  },
+  {
+    "id": 3,
+    "nom": "Erwan",
+    "description": "Il est... Il est point.",
+    "force": 80,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-04T16:09:04.946833600Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-04T16:09:04.946835800Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-04T16:09:04.946836400Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-04T16:09:04.946837Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-04T16:09:04.946837500Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-04T16:09:04.946838100Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent":0
   }
 ]
