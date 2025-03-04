@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "nom": "Axel",
+    "description": "Un personnage courageux avec un grand cœur",
+    "force": 105,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-04T14:59:26.390204900Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-04T14:59:26.390206200Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-04T14:59:26.390206700Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-04T14:59:26.390207Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-04T14:59:26.390207300Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-04T14:59:26.390207600Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "nom": "paul",
+    "description": "son frère c'est pierre et jacques",
+    "force": 108,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-04T15:07:00.863003900Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-04T15:07:00.863005200Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-04T15:07:00.863005500Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-04T15:07:00.863005900Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-04T15:07:00.863006300Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-04T15:07:00.863006600Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ]
+  }
+]

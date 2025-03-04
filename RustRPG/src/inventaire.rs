@@ -1,13 +1,13 @@
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 use std::cmp::Reverse;
 use crate::objet::OBJETS_DISPONIBLES;
 use std::sync::RwLockReadGuard;
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Inventaire {
     pub taille: u8,
     pub objets: Vec<ObjetInventaire>,
 }
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ObjetInventaire {
     pub nombre : u8,
     pub objet_id: u8,
