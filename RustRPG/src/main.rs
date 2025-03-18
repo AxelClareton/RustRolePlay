@@ -4,6 +4,8 @@ mod zone;
 mod inventaire;
 mod objet;
 mod personnage;
+mod objetType;
+
 use zone::Zone;
 use moteur::{charger_zones};
 use rand::Rng;
