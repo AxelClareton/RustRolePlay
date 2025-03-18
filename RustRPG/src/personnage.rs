@@ -81,13 +81,108 @@ pub struct Joueur {
 // PNJ et Mobs
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PNJ {
-    personnage: Personnage,
+    pub personnage: Personnage,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Mob {
-    personnage: Personnage,
+    pub personnage: Personnage,
 }
+
+impl PNJ {
+    pub fn creer_pnj(nom: &str, description: &str) -> io::Result<Self> {
+        let prochain_id = Personnage::prochain_id("src/json/pnj.json")?;
+        let inventaire = Inventaire { taille: 10, objets: vec![] };
+        let inventaire_corps = crate::inventaire::Inventaire { taille: 1, objets: vec![] };
+        let parties_du_corps = vec![
+            PartieDuCorps { nom: "Bras droit".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Jambe gauche".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Tête".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Torse".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Bras gauche".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Jambe droite".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+        ];
+
+        let mut rng: ThreadRng = rand::thread_rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
+
+        println!("Valeur: {}", valeur);
+
+        let personnage = Personnage {
+            id: prochain_id,
+            nom: nom.to_string(),
+            description: description.to_string(),
+            force: valeur,
+            inventaire,
+            parties_du_corps,
+            argent: valeur2,
+        };
+
+        personnage.sauvegarder_json("src/json/pnj.json")?;
+
+        Ok(PNJ { personnage })
+    }
+
+    pub fn charger_pnj(fichier: &str) -> io::Result<Vec<Personnage>> {
+        let mut file = match File::open(fichier) {
+            Ok(file) => file,
+            Err(_) => return Ok(vec![]),
+        };
+        let mut contenu = String::new();
+        file.read_to_string(&mut contenu)?;
+        let PNJ: Vec<Personnage> = serde_json::from_str(&contenu)?;
+        Ok(PNJ)
+    }
+}
+
+impl Mob {
+    pub fn creer_mob(nom: &str, description: &str) -> io::Result<Self> {
+        let prochain_id = Personnage::prochain_id("src/json/mob.json")?;
+        let inventaire = Inventaire { taille: 10, objets: vec![] };
+        let inventaire_corps = crate::inventaire::Inventaire { taille: 1, objets: vec![] };
+        let parties_du_corps = vec![
+            PartieDuCorps { nom: "Bras droit".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Jambe gauche".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Tête".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Torse".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Bras gauche".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+            PartieDuCorps { nom: "Jambe droite".to_string(), etat: Utc::now(), equipement: inventaire_corps.clone() },
+        ];
+
+        let mut rng: ThreadRng = rand::thread_rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
+
+        println!("Valeur: {}", valeur);
+
+        let personnage = Personnage {
+            id: prochain_id,
+            nom: nom.to_string(),
+            description: description.to_string(),
+            force: valeur,
+            inventaire,
+            parties_du_corps,
+            argent: valeur2,
+        };
+
+        personnage.sauvegarder_json("src/json/mob.json")?;
+
+        Ok(Mob { personnage })
+    }
+
+    pub fn charger_mob(fichier: &str) -> io::Result<Vec<Personnage>> {
+        let mut file = match File::open(fichier) {
+            Ok(file) => file,
+            Err(_) => return Ok(vec![]),
+        };
+        let mut contenu = String::new();
+        file.read_to_string(&mut contenu)?;
+        let mob: Vec<Personnage> = serde_json::from_str(&contenu)?;
+        Ok(mob)
+    }
+}
+
 
 impl Joueur {
     pub fn creer_joueur(nom: &str, description: &str) -> io::Result<Self> {

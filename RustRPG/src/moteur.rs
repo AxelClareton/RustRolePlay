@@ -94,11 +94,12 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
         if zone_temp.ouvert == "false" {
             ouvert = false;
         }
+
         let inventaire = Inventaire {
             taille : 255,
             objets : Vec::new(),
         };
-        let zone_finale = Zone {
+        let mut zone_finale = Zone {
             id: id_numerique,
             nom: zone_temp.nom.clone(),
             prix: prix_zone,
@@ -106,9 +107,9 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             description: zone_temp.description.clone(),
             connection: zone_temp.connection.clone(),
             coffres: coffre_zone,
+            mobs: Vec::new(),
             objet_zone : inventaire,
         };
-
         zones_finales.push(zone_finale);
     }
 

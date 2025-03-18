@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "nom": "Dylan",
+    "description": "PNJ de base",
+    "force": 83,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-18T14:12:57.600424500Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-18T14:12:57.600426200Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-18T14:12:57.600426800Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-18T14:12:57.600427100Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-18T14:12:57.600427400Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-18T14:12:57.600427700Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 9
+  }
+]

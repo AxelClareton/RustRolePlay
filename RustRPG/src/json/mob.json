@@ -1,0 +1,185 @@
+[
+  {
+    "id": 1,
+    "nom": "Dylan",
+    "description": "Mob de base",
+    "force": 83,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-18T14:12:57.600424500Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-18T14:12:57.600426200Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-18T14:12:57.600426800Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-18T14:12:57.600427100Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-18T14:12:57.600427400Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-18T14:12:57.600427700Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 9
+  },
+  {
+    "id": 2,
+    "nom": "Assassin",
+    "description": "Il t'assassine",
+    "force": 114,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-18T14:49:30.514862400Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-18T14:49:30.514864400Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-18T14:49:30.514864900Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-18T14:49:30.514865300Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-18T14:49:30.514865700Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-18T14:49:30.514866Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 9
+  },
+  {
+    "id": 3,
+    "nom": "Méchant pas bo",
+    "description": "il est bo",
+    "force": 83,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Bras droit",
+        "etat": "2025-03-18T14:49:41.590768900Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "etat": "2025-03-18T14:49:41.590772100Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Tête",
+        "etat": "2025-03-18T14:49:41.590772700Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "etat": "2025-03-18T14:49:41.590773100Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "etat": "2025-03-18T14:49:41.590773500Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "etat": "2025-03-18T14:49:41.590774Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 3
+  }
+]
