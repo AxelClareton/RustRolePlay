@@ -81,12 +81,12 @@ pub struct Joueur {
 // PNJ et Mobs
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PNJ {
-    personnage: Personnage,
+    pub personnage: Personnage,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Mob {
-    personnage: Personnage,
+    pub personnage: Personnage,
 }
 
 impl PNJ {
