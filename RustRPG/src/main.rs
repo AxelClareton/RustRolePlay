@@ -13,6 +13,8 @@ use std::time::Duration;
 use inventaire::Inventaire;
 use personnage::Joueur;
 use personnage::Personnage;
+use personnage::PNJ;
+use personnage::Mob;
 
 fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str) {
     let current_zone = &zones[*current_zone_index];
@@ -71,79 +73,114 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         taille : 5,
         objets: Vec::new(),
     };
-
-
-    println!("Choisissez quoi faire (1 créer perso, 2 charger perso) : ");
-    // Demander à l'utilisateur de choisir un personnage
-    let mut choix_perso = String::new();
-    std::io::stdin().read_line(&mut choix_perso).expect("❌ Erreur de lecture !");
-    let choix_perso = choix_perso.trim();
-    
     //Initiliasation du personnage avec l'id 1 au cas où il n'y a pas de personnage.
     let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
     let mut perso_joueur : Personnage = personnages.into_iter().find(|j| j.id == 1).expect("No player found with this ID");
 
-    // Créer ou charger un personnage
-    match choix_perso {
-        "1" => {
-            println!("Entrez le nom de votre personnage : ");
-            let mut nom = String::new();
-            std::io::stdin().read_line(&mut nom).expect("❌ Erreur de lecture !");
-            let nom = nom.trim();
-
-            println!("Décrivez votre personnage : ");
-            let mut description = String::new();
-            std::io::stdin().read_line(&mut description).expect("❌ Erreur de lecture !");
-            let description = description.trim();
-
-            
-            let joueur = Joueur::creer_joueur(nom, description)?;
-            let joueur_id = joueur.personnage.id;
-            let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
-            let joueur = personnages.into_iter().find(|j| j.id == joueur_id);
-            println!("Joueur créé: {:#?}", joueur);
-            perso_joueur = joueur.expect("Aucun personnage trouvé avec cet ID.");
-        }
-        "2" => {
-            // Charger un personnage
-            let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
-            // Si aucun personnage n'existe
-            if personnages.is_empty() {
-                println!("⚠️ Aucun personnage trouvé.");
-                return Ok(());
+    loop {
+        println!("Choisissez quoi faire (1 créer perso, 2 charger perso) : ");
+        let mut choix_perso = String::new();
+        std::io::stdin().read_line(&mut choix_perso).expect("❌ Erreur de lecture !");
+        let choix_perso = choix_perso.trim();
+    
+        match choix_perso {
+            "1" => {
+                println!("Entrez le nom de votre personnage : ");
+                let mut nom = String::new();
+                std::io::stdin().read_line(&mut nom).expect("❌ Erreur de lecture !");
+                let nom = nom.trim();
+    
+                println!("Décrivez votre personnage : ");
+                let mut description = String::new();
+                std::io::stdin().read_line(&mut description).expect("❌ Erreur de lecture !");
+                let description = description.trim();
+    
+                let joueur = Joueur::creer_joueur(nom, description)?;
+                let joueur_id = joueur.personnage.id;
+                let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
+                let joueur = personnages.into_iter().find(|j| j.id == joueur_id);
+                println!("Joueur créé: {:#?}", joueur);
+                perso_joueur = joueur.expect("Aucun personnage trouvé avec cet ID.");
+                break;
             }
-
-            // Afficher la liste des personnages avec leur ID et nom
-            println!("Liste des personnages disponibles :");
-            for personnage in &personnages {
-                println!("ID: {}, Nom: {}", personnage.id, personnage.nom);
-            }
-
-            // Demander à l'utilisateur de choisir un ID
-            println!("Entrez l'ID du personnage que vous souhaitez charger :");
-            let mut id_choisi = String::new();
-            std::io::stdin().read_line(&mut id_choisi).expect("❌ Erreur de lecture !");
-            let id_choisi: u32 = id_choisi.trim().parse().expect("❌ Erreur de lecture de l'ID");
-
-            // Chercher le personnage avec l'ID choisi
-            let joueur = personnages.into_iter().find(|j| j.id == id_choisi);
-
-            match joueur {
-                Some(joueur) => {
+            "2" => {
+                let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
+                if personnages.is_empty() {
+                    println!("⚠️ Aucun personnage trouvé.");
+                    continue;
+                }
+    
+                println!("Liste des personnages disponibles :");
+                for personnage in &personnages {
+                    println!("ID: {}, Nom: {}", personnage.id, personnage.nom);
+                }
+    
+                println!("Entrez l'ID du personnage que vous souhaitez charger :");
+                let mut id_choisi = String::new();
+                std::io::stdin().read_line(&mut id_choisi).expect("❌ Erreur de lecture !");
+                let id_choisi: u32 = id_choisi.trim().parse().expect("❌ Erreur de lecture de l'ID");
+    
+                if let Some(joueur) = personnages.into_iter().find(|j| j.id == id_choisi) {
                     println!("Joueur chargé : {:#?}", joueur);
                     perso_joueur = joueur;
-                }
-                None => {
+                    break;
+                } else {
                     println!("❌ Aucun personnage trouvé avec cet ID.");
                 }
             }
-        }
-        _ => {
-            println!("❌ Option inconnue !");
+            "admin" => {
+                loop {
+                    println!("Choisissez le type de personnage à créer (1 PNJ, 2 Mob, 3 Retour) : ");
+                    let mut choix_type = String::new();
+                    std::io::stdin().read_line(&mut choix_type).expect("❌ Erreur de lecture !");
+                    let choix_type = choix_type.trim();
+    
+                    match choix_type {
+                        "1" => {
+                            println!("Entrez le nom du PNJ : ");
+                            let mut nom = String::new();
+                            std::io::stdin().read_line(&mut nom).expect("❌ Erreur de lecture !");
+                            let nom = nom.trim();
+    
+                            println!("Décrivez le PNJ : ");
+                            let mut description = String::new();
+                            std::io::stdin().read_line(&mut description).expect("❌ Erreur de lecture !");
+                            let description = description.trim();
+    
+                            match PNJ::creer_pnj(nom, description) {
+                                Ok(pnj) => println!("✅ PNJ créé : {:#?}", pnj),
+                                Err(e) => println!("❌ Erreur lors de la création du PNJ : {}", e),
+                            }
+                        }
+                        "2" => {
+                            println!("Entrez le nom du Mob : ");
+                            let mut nom = String::new();
+                            std::io::stdin().read_line(&mut nom).expect("❌ Erreur de lecture !");
+                            let nom = nom.trim();
+    
+                            println!("Décrivez le Mob : ");
+                            let mut description = String::new();
+                            std::io::stdin().read_line(&mut description).expect("❌ Erreur de lecture !");
+                            let description = description.trim();
+    
+                            match Mob::creer_mob(nom, description) {
+                                Ok(mob) => println!("✅ Mob créé : {:#?}", mob),
+                                Err(e) => println!("❌ Erreur lors de la création du Mob : {}", e),
+                            }
+                        }
+                        "3" => {
+                            println!("🔙 Retour au menu principal.");
+                            break;
+                        }
+                        _ => println!("❌ Option inconnue !"),
+                    }
+                }
+                continue; // Revient au choix du personnage après avoir quitté "admin"
+            }
+            _ => println!("❌ Option inconnue !"),
         }
     }
-
-
+    
     // Message d'accueil
     println!("✨ Bienvenue {} dans le RustRPG !", perso_joueur.nom);
     println!("📜 Votre force : {}", perso_joueur.force);
