@@ -150,7 +150,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut rng = rand::rng();
     // Boucle principale du jeu
     loop {
-        println!("Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre)");
+        println!("Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre, i pour voir l'inventaire, 't' pour regarder par terre)");
 
         let mut choix = String::new();
         std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
@@ -161,11 +161,60 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("👋 Au revoir !");
                 break Ok(());
             }
+            "i" => {
+                println!("Votre inventaire : ");
+                match perso_joueur.inventaire.afficher(){
+                    Some(obj)=> {
+                        println!("Voulez vous utiliser l'objet ? ('u')");
+                        let mut y = String::new();
+                        std::io::stdin().read_line(&mut y).expect("❌ Erreur de lecture !");
+                        let y = y.trim();
+                        match y {
+                            "u" => {
+                                println!("Utilisation de l'objet {}", obj)
+                                //
+                            }
+                            _ => {
+                                println!("Vous vous débarassez de l'objet");
+                                &mut zones[current_zone_index].objet_zone.ajouter_objet(obj as u8);
+                                //ajout dans les objets de la zones
+                            }
+                        }
+                    }
+                    None => ()
+
+                }
+            }
             "c" => {
                 println!("Fouillage de la zone en cours...");
                 sleep(Duration::from_secs(5));
                 &mut zones[current_zone_index].fouiller_zone();
                 zones[current_zone_index].afficher_zone();
+            }
+            "t" => {
+                println!("Fouillage de la zone en cours...");
+                sleep(Duration::from_secs(5));
+                match zones[current_zone_index].objet_zone.afficher(){
+                    Some(obj)=> {
+                        println!("Voulez vous récupérer l'objet ? ('u')");
+                        let mut w = String::new();
+                        std::io::stdin().read_line(&mut w).expect("❌ Erreur de lecture !");
+                        let w = w.trim();
+                        match w {
+                            "u" => {
+                                perso_joueur.inventaire.ajouter_objet(obj as u8);
+                                println!("Vous récupérez l'objet {}", obj)
+                                //
+                            }
+                            _ => {
+                                println!("Vous laissez l'objet par terre ...");
+                                //ajout dans les objets de la zones
+                            }
+                        }
+                    }
+                    None => ()
+
+                }
             }
             "d" => {
                 println!("🚪 Vers quelle direction voulez-vous aller ?");
@@ -201,8 +250,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let coffre = &mut zones[current_zone_index].coffres[num-1]; // Récupère le coffre sélectionné
                         match coffre.ouvrir() {
                             Some(objet) => {
-                                println!("objet : {}", objet);
-                                inventaire.ajouter_objet(objet as u8);
+                                perso_joueur.inventaire.ajouter_objet(objet as u8);
                             },
                             None => (),
                         }

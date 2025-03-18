@@ -30,32 +30,8 @@ impl Coffre {
             }
         }
         println!("Ouverture du coffre ! ");
-        self.inventaire.afficher();
-        println!("Saisir 'q' pour revenir en arrière, 't' pour récupérer tout l'inventaire ou le nombre correspondant à l'item que vous voulez récupéré");
-        let mut choix = String::new();
-        std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
-        let choix = choix.trim();
-        match choix {
-            "q" => {
-                println!("Retour en arrière...");
-                None
-            }
-            "t" => {
-                self.inventaire.afficher();
-                None
-            }
-            _ => match choix.parse::<u8>() {
-                Ok(index) if index <= self.inventaire.objets.len() as u8  => {
-                    let obj = self.inventaire.récupérer_objet((index-1) as usize);
-                    println!("Vous avez récupérer l'objet {}", obj);
-                    Some(obj)
-                }
-                _ => {
-                    println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
-                    None
-                }
-            },
-        }
+        let obj = self.inventaire.afficher();
+        obj
     }
 
 }

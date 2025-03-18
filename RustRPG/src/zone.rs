@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use crate::coffre::Coffre;
+use crate::inventaire::Inventaire;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Connexion {
@@ -15,6 +16,7 @@ pub struct Zone {
     pub description: String,
     pub connection: Vec<Connexion>,
     pub coffres: Vec<Coffre>,
+    pub objet_zone : Inventaire,
 }
 
 impl Zone {

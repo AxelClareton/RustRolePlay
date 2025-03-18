@@ -14,24 +14,50 @@ pub struct ObjetInventaire {
 }
 
 impl Inventaire {
-    pub fn afficher(&mut self) {
+    pub fn afficher(&mut self) -> Option<usize> {
         if self.objets.is_empty(){
             println!("📦 Malheureusement le coffre est vide");
-            return
+            return None
         }
         println!("📦 Inventaire (Taille: {}):", self.taille);
         let objets_all: RwLockReadGuard<_> = OBJETS_DISPONIBLES.read().unwrap();
         if self.objets.is_empty() {
             println!("  - (vide)");
+            None
         } else {
             self.trier_quantite();
             for (index, obj) in self.objets.iter().enumerate() {
                 //println!("  {}: Objet ID {} (x{})", index + 1, obj.objet_id, obj.nombre);
                 if let Some(o) = objets_all.get(&obj.objet_id) {
-                    println!("  {} ({}): {} (x{})", index + 1, obj.objet_id, o.nom, obj.nombre);
+                    println!("  {} : {} (x{})", index + 1, o.nom, obj.nombre);
                 } else {
                     println!("  Objet inconnu (ID: {})", obj.objet_id);
                 }
+            }
+            println!("Saisir 'q' pour revenir en arrière, 't' pour utilisier un objet ou le nombre correspondant à l'item que vous voulez récupéré");
+            let mut choix = String::new();
+            std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
+            let choix = choix.trim();
+            match choix {
+                "q" => {
+                    println!("Retour en arrière...");
+                    None
+                }
+                "t" => {
+                    self.afficher();
+                    None
+                }
+                _ => match choix.parse::<u8>() {
+                    Ok(index) if index <= self.objets.len() as u8  => {
+                        let obj = self.récupérer_objet((index-1) as usize);
+                        println!("Vous avez récupérer l'objet {}", obj);
+                        Some(obj)
+                    }
+                    _ => {
+                        println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
+                        None
+                    }
+                },
             }
         }
     }
