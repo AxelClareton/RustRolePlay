@@ -15,7 +15,8 @@
                 "direction": "ouest",
                 "id_dest": "3"
             }
-        ]
+        ],
+        "objet_zone" : { "taille": 255, "objets": [] }
     },
     {
         "type": "zone",
@@ -29,7 +30,8 @@
                 "direction": "sud",
                 "id_dest": "1"
             }
-        ]
+        ],
+        "objet_zone" : { "taille": 255, "objets": [] }
     },
     {
         "type": "zone",
@@ -43,6 +45,7 @@
                 "direction": "est",
                 "id_dest": "1"
             }
-        ]
+        ],
+        "objet_zone" : { "taille": 255, "objets": [] }
     }
 ]
