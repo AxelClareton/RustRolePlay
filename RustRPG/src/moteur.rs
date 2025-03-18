@@ -24,6 +24,8 @@ struct ZoneTemporaire {
     #[serde(rename = "ouvert")]
     ouvert: String,
     connection: Vec<Connexion>,
+    #[serde(rename = "objet_zone")]
+    objet_zone: Inventaire,
 }
 
 
@@ -93,6 +95,10 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             ouvert = false;
         }
 
+        let inventaire = Inventaire {
+            taille : 255,
+            objets : Vec::new(),
+        };
         let mut zone_finale = Zone {
             id: id_numerique,
             nom: zone_temp.nom.clone(),
@@ -102,6 +108,7 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             connection: zone_temp.connection.clone(),
             coffres: coffre_zone,
             mobs: Vec::new(),
+            objet_zone : inventaire,
         };
         zones_finales.push(zone_finale);
     }
@@ -152,7 +159,6 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
 
         coffre_finales.entry(id_zone).or_insert(Vec::new()).push(c);
     }
-    println!("{:?}", coffre_finales);
     Ok(coffre_finales)
 }
 

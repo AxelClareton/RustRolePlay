@@ -4,7 +4,7 @@ use serde::Deserialize;
 use std::fs;
 use crate::coffre::Coffre;
 use crate::personnage::Mob;
-
+use crate::inventaire::Inventaire;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Connexion {
@@ -21,6 +21,7 @@ pub struct Zone {
     pub connection: Vec<Connexion>,
     pub coffres: Vec<Coffre>,
     pub mobs: Vec<Mob>,
+    pub objet_zone : Inventaire,
 }
 
 impl Zone {
