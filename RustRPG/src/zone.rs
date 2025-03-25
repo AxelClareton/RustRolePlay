@@ -18,23 +18,6 @@ pub struct Zone {
 }
 
 impl Zone {
-    pub fn afficher_zone(&self) {
-
-        println!("\n🌍 Vous êtes dans la zone : {}", self.nom);
-        println!("{}", "-".repeat(30));
-        println!("📜 Description : {}", self.description);
-        if self.connection.is_empty() {
-            println!("❌ Aucune sortie possible.");
-        } else {
-            println!("🚪 Sorties possibles :");
-            for connexion in &self.connection {
-                println!("➡️  Vers '{}'", connexion.direction);
-            }
-        }
-        println!("Il y a {} coffres dans la zone", self.compter_coffre());
-        println!("{}", "-".repeat(30));
-    }
-
     pub fn compter_coffre(&self) -> usize {
         let mut cpt = 0usize;
         for coffre in self.coffres.clone() {
