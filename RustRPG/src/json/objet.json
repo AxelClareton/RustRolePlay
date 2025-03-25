@@ -1,0 +1,14 @@
+[
+  {
+    "id" : "1",
+    "nom" : "Epee"
+  },
+  {
+    "id" : "2",
+    "nom" : "Bouclier"
+  },
+  {
+    "id" : "3",
+    "nom" : "Potion"
+  }
+]
