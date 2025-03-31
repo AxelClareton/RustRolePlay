@@ -25,6 +25,7 @@ pub struct Zone {
 }
 
 impl Zone {
+    //Tu vas surement devoir modifier ça Dylan
     pub fn afficher_zone(&self) {
 
         println!("\n🌍 Vous êtes dans la zone : {}", self.nom);
@@ -71,7 +72,6 @@ impl Zone {
         }
         mobs // Retourner le vecteur de Mobs générés
     }
-
     pub fn compter_coffre(&self) -> usize {
         let mut cpt = 0usize;
         for coffre in self.coffres.clone() {
