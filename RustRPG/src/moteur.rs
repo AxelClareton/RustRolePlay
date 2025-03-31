@@ -24,6 +24,8 @@ struct ZoneTemporaire {
     #[serde(rename = "ouvert")]
     ouvert: String,
     connection: Vec<Connexion>,
+    #[serde(rename = "objet_zone")]
+    objet_zone: Inventaire,
 }
 
 
@@ -55,8 +57,8 @@ struct CoffreTemporaire {
     id_zone_texte: String,
     #[serde(rename = "desc")]
     description: String,
-    #[serde(rename = "prix")]
-    prix: String,
+    #[serde(rename = "cle")]
+    cle: String,
     #[serde(rename = "ouvert")]
     ouvert: String,
     #[serde(rename = "visible")]
@@ -92,7 +94,12 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
         if zone_temp.ouvert == "false" {
             ouvert = false;
         }
-        let zone_finale = Zone {
+
+        let inventaire = Inventaire {
+            taille : 255,
+            objets : Vec::new(),
+        };
+        let mut zone_finale = Zone {
             id: id_numerique,
             nom: zone_temp.nom.clone(),
             prix: prix_zone,
@@ -100,8 +107,9 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             description: zone_temp.description.clone(),
             connection: zone_temp.connection.clone(),
             coffres: coffre_zone,
+            mobs: Vec::new(),
+            objet_zone : inventaire,
         };
-
         zones_finales.push(zone_finale);
     }
 
@@ -116,7 +124,10 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
     for coffre in coffres_temp {
         let id_zone = coffre.id_zone_texte.parse::<u8>()?;
         let id = coffre.id_texte.parse::<u8>()?;
-        let prix = coffre.prix.parse::<u8>()?;
+        let mut cle = true;
+        if coffre.ouvert == "false" {
+            cle = false;
+        }
         let mut ouvert = true;
         if coffre.ouvert == "false" {
             ouvert = false;
@@ -141,14 +152,13 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
             id_zone,
             description: coffre.description.clone(),
             inventaire,
-            prix:prix,
+            cle:cle,
             ouvert: ouvert,
             visible : visible,
         };
 
         coffre_finales.entry(id_zone).or_insert(Vec::new()).push(c);
     }
-    println!("{:?}", coffre_finales);
     Ok(coffre_finales)
 }
 
