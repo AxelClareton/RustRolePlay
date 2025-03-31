@@ -78,12 +78,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut perso_joueur : Personnage = personnages.into_iter().find(|j| j.id == 1).expect("No player found with this ID");
 
     loop {
-        println!("Choisissez quoi faire (1 créer perso, 2 charger perso) : ");
-        let mut choix_perso = String::new();
-        std::io::stdin().read_line(&mut choix_perso).expect("❌ Erreur de lecture !");
-        let choix_perso = choix_perso.trim();
+        let choix_perso = affichage::faire_choix(
+            "Choisissez quoi faire (1 créer perso, 2 charger perso) : ",
+            &vec!["1".to_string(), "2".to_string(), "admin".to_string()]
+        );
     
-        match choix_perso {
+        match choix_perso.as_str() {
             "1" => {
                 println!("Entrez le nom de votre personnage : ");
                 let mut nom = String::new();
@@ -130,12 +130,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             "admin" => {
                 loop {
-                    println!("Choisissez le type de personnage à créer (1 PNJ, 2 Mob, 3 Retour) : ");
-                    let mut choix_type = String::new();
-                    std::io::stdin().read_line(&mut choix_type).expect("❌ Erreur de lecture !");
-                    let choix_type = choix_type.trim();
+                    let choix_type = affichage::faire_choix(
+                        "Choisissez le type de personnage à créer (1 PNJ, 2 Mob, 3 Retour) : ",
+                        &vec!["1".to_string(), "2".to_string(), "3".to_string()]
+                    );
     
-                    match choix_type {
+                    match choix_type.as_str() {
                         "1" => {
                             println!("Entrez le nom du PNJ : ");
                             let mut nom = String::new();
@@ -187,29 +187,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut rng = rand::rng();
     // Boucle principale du jeu
     loop {
-        affichage::notifier(&zones[current_zone_index], "Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre)");
-
-        let mut choix = String::new();
-        std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
-        let choix = choix.trim();
+        let choix = affichage::faire_choix(
+            "Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre) :",
+            &vec!["d".to_string(), "q".to_string(), "c".to_string(), "i".to_string(), "t".to_string()]
+        );
         let mut nbr_coffres = zones[current_zone_index].compter_coffre();
-        match choix {
+        match choix.as_str() {
             "q" => {
                   affichage::notifier(&zones[current_zone_index], "👋 Au revoir !");
-                  break;
+                  break Ok(());
               }
             "i" => {
                 println!("Votre inventaire : ");
                 match perso_joueur.inventaire.afficher(){
                     Some(obj)=> {
-                        println!("Voulez vous utiliser l'objet ? ('u')");
-                        let mut y = String::new();
-                        std::io::stdin().read_line(&mut y).expect("❌ Erreur de lecture !");
-                        let y = y.trim();
-                        match y {
+                        let choix_utiliser = affichage::faire_choix(
+                            "Voulez vous utiliser l'objet ? o/n",
+                            &vec!["u".to_string(), "n".to_string()]
+                        );
+                        match choix_utiliser.as_str() {
                             "u" => {
                                 println!("Utilisation de l'objet {}", obj)
-                                //
                             }
                             _ => {
                                 println!("Vous vous débarassez de l'objet");
@@ -232,15 +230,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 sleep(Duration::from_secs(5));
                 match zones[current_zone_index].objet_zone.afficher(){
                     Some(obj)=> {
-                        println!("Voulez vous récupérer l'objet ? ('u')");
-                        let mut w = String::new();
-                        std::io::stdin().read_line(&mut w).expect("❌ Erreur de lecture !");
-                        let w = w.trim();
-                        match w {
+                        let choix_recuperer = affichage::faire_choix(
+                            "Voulez vous récupérer l'objet ? (o/n)",
+                            &vec!["o".to_string(), "n".to_string()]
+                        );
+                        match choix_recuperer.as_str() {
                             "u" => {
                                 perso_joueur.inventaire.ajouter_objet(obj as u8);
                                 println!("Vous récupérez l'objet {}", obj)
-                                //
                             }
                             _ => {
                                 println!("Vous laissez l'objet par terre ...");
@@ -249,23 +246,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         }
                     }
                     None => ()
-
                 }
             }
             "d" => {
-                affichage::notifier(&zones[current_zone_index], "🚪 Vers quelle direction voulez-vous aller ?");
-                let mut direction = String::new();
-                std::io::stdin().read_line(&mut direction).expect("❌ Erreur de lecture !");
-                let direction = direction.trim();
-
-                se_deplacer(&mut zones, &mut current_zone_index, direction);
+                let direction = affichage::faire_choix(
+                    "🚪 Vers quelle direction voulez-vous aller ?",
+                    &vec!["nord".to_string(), "sud".to_string(), "est".to_string(), "ouest".to_string()]
+                );
+                se_deplacer(&mut zones, &mut current_zone_index, &direction);
 
                 if rng.random_range(0..99) < 10 {
                     affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !");
                 }
             }
             "nord" | "sud" | "est" | "ouest" => {
-                se_deplacer(&mut zones, &mut current_zone_index, choix);
+                se_deplacer(&mut zones, &mut current_zone_index, &choix);
                 if rng.random_range(0..99) < 10 {
                     affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !");
                 }

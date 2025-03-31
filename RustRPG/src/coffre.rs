@@ -1,4 +1,5 @@
 use crate::inventaire::Inventaire;
+use crate::affichage;
 
 #[derive(Debug, Clone)]
 pub struct Coffre {
@@ -14,11 +15,11 @@ pub struct Coffre {
 impl Coffre {
     pub fn ouvrir(&mut self) -> Option<usize>{
         if !self.ouvert {
-            println!("Ce coffre est fermé voulez-vous utiliser une clé pour l'ouvrir ?");
-            let mut choix = String::new();
-            std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
-            let choix = choix.trim();
-            match choix {
+            let choix = affichage::faire_choix(
+                "Ce coffre est fermé voulez-vous utiliser une clé pour l'ouvrir ?",
+                &vec!["oui".to_string(), "non".to_string()]
+            );
+            match choix.as_str() {
                 "oui" => {
                     self.ouvert = true;
                     //déduire le prix

@@ -5,6 +5,7 @@ use std::fs;
 use crate::coffre::Coffre;
 use crate::personnage::Mob;
 use crate::inventaire::Inventaire;
+use crate::affichage::notifier;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Connexion {
@@ -119,7 +120,7 @@ impl Zone {
                 coffre.visible = true;
             }
         }
-        println!("Félicitation vous avez trouvé {} coffre(s) !", cpt);
+        notifier(self, &("Félicitation vous avez trouvé ".to_owned() + &cpt.to_string() + " coffre(s) !"));
     }
 
 }
