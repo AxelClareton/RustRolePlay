@@ -16,7 +16,7 @@ impl Coffre {
     pub fn ouvrir(&mut self) -> Option<usize>{
         if !self.ouvert {
             let choix = affichage::faire_choix(
-                "Ce coffre est fermé voulez-vous utiliser une clé pour l'ouvrir ?",
+                "Ce coffre est fermé voulez-vous utiliser une clé pour l'ouvrir ? (oui/non)",
                 &vec!["oui".to_string(), "non".to_string()]
             );
             match choix.as_str() {
