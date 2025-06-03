@@ -19,6 +19,11 @@ impl PartieDuCorps {
     pub fn est_saine(&self) -> bool {
         Utc::now() >= self.etat
     }
+
+    pub fn nom(&self) -> &str {
+        &self.nom
+    }
+
 }
 
 // Personnage

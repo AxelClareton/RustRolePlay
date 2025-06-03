@@ -120,7 +120,10 @@ impl Zone {
                 coffre.visible = true;
             }
         }
-        notifier(self, &("Félicitation vous avez trouvé ".to_owned() + &cpt.to_string() + " coffre(s) !"));
+        notifier(self, &("Vous avez trouvé ".to_owned() + &cpt.to_string() + " coffre(s) ."));
     }
 
+    pub fn supprimer_coffre(&mut self, num : usize) {
+        self.coffres.remove(num);
+    }
 }

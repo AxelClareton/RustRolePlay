@@ -15,9 +15,14 @@ pub struct ObjetInventaire {
 }
 
 impl Inventaire {
-    pub fn afficher(&mut self) -> Option<usize> {
+    pub fn afficher(&mut self, estJoueur : bool) -> Option<usize> {
         if self.objets.is_empty(){
-            println!("📦 Malheureusement le coffre est vide");
+            if(estJoueur){
+                println!("📦 Votre inventaire est vide")
+            }
+            else {
+                println!("📦 Malheureusement le coffre est vide");
+            }
             return None
         }
         println!("📦 Inventaire (Taille: {}):", self.taille);
@@ -35,31 +40,54 @@ impl Inventaire {
                     println!("  Objet inconnu (ID: {})", obj.objet_id);
                 }
             }
-            println!("Saisir 'q' pour revenir en arrière, ou le nombre correspondant à l'item que vous voulez récupéré\nEntrez votre choix :");
-            let mut choix = String::new();
-            std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
-            let choix = choix.trim();
-            match choix {
-                "q" => {
-                    println!("Retour en arrière...");
-                    None
-                }
-                "t" => {
-                    self.afficher();
-                    None
-                }
-                _ => match choix.parse::<u8>() {
-                    Ok(index) if index <= self.objets.len() as u8  => {
-                        let obj = self.récupérer_objet((index-1) as usize);
-                        println!("Vous avez récupérer l'objet {}", obj);
-                        Some(obj)
-                    }
-                    _ => {
-                        println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
+            if(estJoueur){
+                println!("Saisir 'q' pour fermer l'inventaire, ou le nombre correspondant à l'item que vous voulez utilisé\nEntrez votre choix :");
+                let mut choix = String::new();
+                std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
+                let choix = choix.trim();
+                match choix {
+                    "q" => {
+                        println!("Fermeture de l'inventaire...");
                         None
                     }
-                },
+
+                    _ => match choix.parse::<u8>() {
+                        Ok(index) if index <= self.objets.len() as u8  => {
+                            //let obj = self.récupérer_objet((index-1) as usize);
+                            //println!("Vous avez récupérer l'objet {}", obj);
+                            Some((index - 1) as usize)
+                        }
+                        _ => {
+                            println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
+                            None
+                        }
+                    },
+                }
+            } else {
+                println!("Saisir 'q' pour fermer le coffre, ou le nombre correspondant à l'item que vous voulez récupéré\nEntrez votre choix :");
+                let mut choix = String::new();
+                std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
+                let choix = choix.trim();
+                match choix {
+                    "q" => {
+                        println!("Fermeture du coffre...");
+                        None
+                    }
+
+                    _ => match choix.parse::<u8>() {
+                        Ok(index) if index <= self.objets.len() as u8  => {
+                            let obj = self.récupérer_objet((index-1) as usize);
+                            println!("Vous avez récupérer l'objet {}", obj);
+                            Some(obj)
+                        }
+                        _ => {
+                            println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
+                            None
+                        }
+                    },
+                }
             }
+
         }
     }
 
@@ -98,4 +126,6 @@ impl Inventaire {
         self.objets.extend(inventaire.objets.drain(..));
         inventaire.objets = Vec::new();
     }
+
+
 }
