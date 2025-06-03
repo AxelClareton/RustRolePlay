@@ -1,14 +1,131 @@
 [
   {
-    "id" : "1",
-    "nom" : "Epee"
+    "id": "1",
+    "nom": "Épée en bois",
+    "poids": "2000",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "1",
+        "proba_degats": "0.6",
+        "degats": "10",
+        "prix": "50"
+      }
+    }
   },
   {
-    "id" : "2",
-    "nom" : "Bouclier"
+    "id": "2",
+    "nom": "Katana",
+    "poids": "800",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "2",
+        "proba_degats": "0.7",
+        "degats": "40",
+        "prix": "120"
+      }
+    }
   },
   {
-    "id" : "3",
-    "nom" : "Potion"
+    "id": "3",
+    "nom": "Pistolet",
+    "poids": "1200",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "3",
+        "proba_degats": "0.8",
+        "degats": "30",
+        "prix": "200"
+      }
+    }
+  },
+  {
+    "id": "4",
+    "nom": "Mitraillette",
+    "poids": "1400",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "5",
+        "proba_degats": "0.85",
+        "degats": "20",
+        "prix": "350"
+      }
+    }
+  },
+  {
+    "id": "5",
+    "nom": "Casque de pompier",
+    "poids": "1100",
+    "objet_type": {
+      "Equipement": {
+        "prix": "90",
+        "protection": "2"
+      }
+    }
+  },
+  {
+    "id": "6",
+    "nom": "Casque du SWAT",
+    "poids": "1750",
+    "objet_type": {
+      "Equipement": {
+        "prix": "200",
+        "protection": "3"
+      }
+    }
+  },
+  {
+    "id": "7",
+    "nom": "Gilet par balle",
+    "poids": "1400",
+    "objet_type": {
+      "Equipement": {
+        "prix": "150",
+        "protection": "3"
+      }
+    }
+  },
+  {
+    "id": "8",
+    "nom": "Grosse doudoune rembourrée",
+    "poids": "1050",
+    "objet_type": {
+      "Equipement": {
+        "prix": "80",
+        "protection": "1"
+      }
+    }
+  },
+  {
+    "id": "9",
+    "nom": "Gilet par balle renforcé",
+    "poids": "2100",
+    "objet_type": {
+      "Equipement": {
+        "prix": "250",
+        "protection": "4"
+      }
+    }
+  },
+  {
+    "id": "10",
+    "nom": "Bandage",
+    "poids": "70",
+    "objet_type": {
+      "Soin": {
+        "prix": "40",
+        "vie": "30"
+      }
+    }
+  },
+  {
+    "id": "11",
+    "nom": "Pansement motif mickey",
+    "poids": "50",
+    "objet_type": {
+      "Soin": {
+        "prix": "15",
+        "vie": "10"
+      }
+    }
   }
 ]
