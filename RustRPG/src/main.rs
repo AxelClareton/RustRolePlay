@@ -187,11 +187,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut rng = rand::rng();
     // Boucle principale du jeu
     loop {
-        let choix = affichage::faire_choix(
-            "Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre) :",
-            &vec!["d".to_string(), "q".to_string(), "c".to_string(), "i".to_string(), "t".to_string()]
-        );
         let mut nbr_coffres = zones[current_zone_index].compter_coffre();
+        let mut options = vec![
+            "d".to_string(), // se déplacer
+            "q".to_string(), // quitter
+            "c".to_string(), // fouiller la zone
+            "i".to_string(), // autre option
+            "t".to_string(), // autre option
+        ];
+        for i in 1..=nbr_coffres {
+            options.push(i.to_string());
+        }
+
+
+
+        let choix = affichage::faire_choix(
+            "Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre) :",&options
+
+        );
         match choix.as_str() {
             "q" => {
                   affichage::notifier(&zones[current_zone_index], "👋 Au revoir !");
