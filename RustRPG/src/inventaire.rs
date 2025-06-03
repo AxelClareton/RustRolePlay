@@ -2,6 +2,7 @@ use serde::{Serialize, Deserialize};
 use std::cmp::Reverse;
 use crate::objet::OBJETS_DISPONIBLES;
 use std::sync::RwLockReadGuard;
+use crate::affichage;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Inventaire {
     pub taille: u8,
@@ -34,7 +35,7 @@ impl Inventaire {
                     println!("  Objet inconnu (ID: {})", obj.objet_id);
                 }
             }
-            println!("Saisir 'q' pour revenir en arrière, 't' pour utilisier un objet ou le nombre correspondant à l'item que vous voulez récupéré");
+            println!("Saisir 'q' pour revenir en arrière, ou le nombre correspondant à l'item que vous voulez récupéré\nEntrez votre choix :");
             let mut choix = String::new();
             std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
             let choix = choix.trim();
