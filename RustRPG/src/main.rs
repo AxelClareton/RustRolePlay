@@ -5,6 +5,8 @@ mod inventaire;
 mod objet;
 mod personnage;
 mod affichage;
+mod combat;
+
 use zone::Zone;
 use moteur::{charger_zones};
 use rand::Rng;
