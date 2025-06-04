@@ -1,1 +1,402 @@
-
+[
+  {
+    "id": 1,
+    "nom": "Marc le fou furieux",
+    "description": "Un aventurier téméraire à la recherche de gloire",
+    "force": 114,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522043Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522053Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522053Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522053Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522053Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522053Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 6,
+    "est_vivant": true
+  },
+  {
+    "id": 2,
+    "nom": "Alice l'Exploratrice",
+    "description": "Une exploratrice curieuse et rusée",
+    "force": 90,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522054Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522054Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522054Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522055Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522055Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522055Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 4,
+    "est_vivant": true
+  },
+  {
+    "id": 3,
+    "nom": "Bob le Bâtisseur",
+    "description": "Un constructeur habile avec un grand cœur",
+    "force": 114,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522055Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522055Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522055Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 13,
+    "est_vivant": true
+  },
+  {
+    "id": 4,
+    "nom": "Clara la Magicienne",
+    "description": "Une magicienne puissante maîtrisant les arcanes",
+    "force": 119,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522056Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 14,
+    "est_vivant": true
+  },
+  {
+    "id": 5,
+    "nom": "David le Guerrier",
+    "description": "Un guerrier robuste prêt à défendre ses alliés",
+    "force": 111,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522057Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T20:20:14.522058Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 6,
+    "est_vivant": true
+  }
+]

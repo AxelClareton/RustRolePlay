@@ -142,7 +142,7 @@
     "prix": "15",
     "objet_type": {
       "Equipement": {
-        "protecton": "10",
+        "protection": "10",
         "emplacement": "Jambe"
       }
     }
