@@ -237,16 +237,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                     println!("{}", o);
                                     if(o.est_equipement()){
                                         if(o.est_pour_emplacement(Emplacement::Tete)){
-                                            tableau = vec![2]
+                                            tableau = vec![0]
                                         }
                                         else if (o.est_pour_emplacement(Emplacement::Torse)) {
-                                            tableau = vec![3]
+                                            tableau = vec![1]
                                         }
                                         else if (o.est_pour_emplacement(Emplacement::Bras)) {
-                                            tableau = vec![1, 5]
+                                            tableau = vec![2, 3]
                                         }
                                         else {
-                                            tableau = vec![0, 4]
+                                            tableau = vec![4, 5]
                                         }
                                         for i in tableau{
                                             if(perso_joueur.parties_du_corps[i].equipement().objets.is_empty()){

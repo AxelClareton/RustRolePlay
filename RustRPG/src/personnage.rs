@@ -25,10 +25,22 @@ pub struct PartieDuCorps {
     equipement: crate::inventaire::Inventaire,
 }
 
+impl fmt::Display for EtatPartie {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            EtatPartie::Saine => write!(f, "Saine"),
+            EtatPartie::Blessee(pourcentage) => write!(f, "Blessée ({}%)", pourcentage),
+            EtatPartie::Morte => write!(f, "Morte"),
+        }
+    }
+}
+
 impl fmt::Display for PartieDuCorps {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "  - Partie : {}", self.nom)?;
+        writeln!(f, "    Vie    : {}/{}", self.vie_actuelle, self.vie_max)?;
         writeln!(f, "    État   : {}", self.etat)?;
+        writeln!(f, "    Guérison prévue : {}", self.guerison)?;
         writeln!(f, "    Équipement :")?;
         writeln!(f, "{}", self.equipement)
     }
