@@ -1,10 +1,11 @@
+use std::fmt;
 use std::fs::{File, OpenOptions};
 use std::io::{self, Read, Write};
 use serde::{Serialize, Deserialize};
 use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
-use crate::inventaire::Inventaire;
+use crate::inventaire::{Inventaire, ObjetInventaire};
 use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -23,6 +24,16 @@ pub struct PartieDuCorps {
     guerison: DateTime<Utc>,
     equipement: crate::inventaire::Inventaire,
 }
+
+impl fmt::Display for PartieDuCorps {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "  - Partie : {}", self.nom)?;
+        writeln!(f, "    État   : {}", self.etat)?;
+        writeln!(f, "    Équipement :")?;
+        writeln!(f, "{}", self.equipement)
+    }
+}
+
 
 impl PartieDuCorps {
     pub fn new(nom: String, vie_max: u32) -> Self {
@@ -140,6 +151,25 @@ impl PartieDuCorps {
     pub fn nom(&self) -> &str {
         &self.nom
     }
+    
+    pub fn equipement(&self) -> &crate::inventaire::Inventaire {
+        &self.equipement
+    }
+    
+    pub fn ajouter_equipement(&mut self, objet : u8){
+        let _ = &self.equipement.ajouter_objet(objet);
+    }
+
+    pub fn récupérer_objet(&mut self, index: usize) -> ObjetInventaire {
+        let objet = self.equipement.objets[index].clone();
+        self.equipement.objets[index].nombre -= 1;
+        if self.equipement.objets[index].nombre == 0 {
+            self.equipement.objets.remove(index);
+        }
+        self.equipement.trier_quantite();
+
+        objet
+    }
 
 }
 
@@ -161,7 +191,25 @@ pub struct Personnage {
     pub parties_du_corps: Vec<PartieDuCorps>,
     pub argent: u32,
     pub est_vivant: bool,
+    
 }
+
+impl fmt::Display for Personnage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "=== Personnage #{} ===", self.id)?;
+        writeln!(f, "Nom         : {}", self.nom)?;
+        writeln!(f, "Description : {}", self.description)?;
+        writeln!(f, "Force       : {}", self.force)?;
+        writeln!(f, "Argent      : {}", self.argent)?;
+        writeln!(f, "Parties du corps :")?;
+        for partie in &self.parties_du_corps {
+            writeln!(f, "{}", partie)?;
+        }
+        Ok(())
+    }
+}
+
+
 
 impl Personnage {
     pub fn gerer_blessure(&mut self, nom_partie: &str, degats: u32) -> ResultatBlessure {

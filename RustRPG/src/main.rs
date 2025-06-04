@@ -7,6 +7,7 @@ mod personnage;
 mod affichage;
 mod combat;
 
+use std::sync::RwLockReadGuard;
 use zone::Zone;
 use moteur::{charger_zones};
 use rand::Rng;
@@ -18,6 +19,8 @@ use personnage::Joueur;
 use personnage::Personnage;
 use personnage::PNJ;
 use personnage::Mob;
+use crate::inventaire::ObjetInventaire;
+use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
 
 fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str) {
     let current_zone = &zones[*current_zone_index];
@@ -197,6 +200,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "c".to_string(), // fouiller la zone
             "i".to_string(), // autre option
             "t".to_string(), // autre option
+            "p".to_string(),
         ];
         for i in 1..=nbr_coffres {
             options.push(i.to_string());
@@ -213,6 +217,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                   affichage::notifier(&zones[current_zone_index], "👋 Au revoir !");
                   break Ok(());
               }
+            "p" => {
+                println!("{}", perso_joueur)
+            }
             "i" => {
                 println!("Votre inventaire : ");
                 match perso_joueur.inventaire.afficher(true){
@@ -224,8 +231,57 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                         match choix_utiliser.as_str() {
                             "oui" => {
+                                let id = perso_joueur.inventaire.objets[obj].objet_id;
+                                let mut tableau: Vec<usize> ;
+                                if let Some(o) = OBJETS_DISPONIBLES.read().unwrap().get(&(id as u8)) {
+                                    println!("{}", o);
+                                    if(o.est_equipement()){
+                                        if(o.est_pour_emplacement(Emplacement::Tete)){
+                                            tableau = vec![2]
+                                        }
+                                        else if (o.est_pour_emplacement(Emplacement::Torse)) {
+                                            tableau = vec![3]
+                                        }
+                                        else if (o.est_pour_emplacement(Emplacement::Bras)) {
+                                            tableau = vec![1, 5]
+                                        }
+                                        else {
+                                            tableau = vec![0, 4]
+                                        }
+                                        for i in tableau{
+                                            if(perso_joueur.parties_du_corps[i].equipement().objets.is_empty()){
+                                                let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
+                                                println!("Equipement équipé !");
+                                            }
+                                            else {
+                                                let new_choix = affichage::faire_choix(
+                                                    "Equipement plein, voulez vous inverser l'objet ? (oui ou non)",
+                                                    &vec!["oui".to_string(), "non".to_string()]
+                                                );
+                                                match new_choix.as_str() {
+                                                    "oui" => {
+                                                        let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                        let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[i].récupérer_objet(obj);
+                                                        perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
+                                                        perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
+                                                    }
+
+                                                    _ => {
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else{
+                                    println!("pas d'objet trouvé");
+                                }
                                 println!("Utilisation de l'objet {}", obj);
-                                //println!("{}", perso_joueur.parties_du_corps[0].nom())
+                                
+                                //println!("{}", perso_joueur.parties_du_corps[0].nom());
+                                
                             }
                             _ => {
                                 println!("Vous vous débarassez de l'objet");

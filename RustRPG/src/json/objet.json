@@ -134,5 +134,17 @@
         "emplacement": "Tous"
       }
     }
+  },
+  {
+    "id": "12",
+    "nom": "Pantalon du SWAT",
+    "poids": "50",
+    "prix": "15",
+    "objet_type": {
+      "Equipement": {
+        "protecton": "10",
+        "emplacement": "Jambe"
+      }
+    }
   }
 ]
