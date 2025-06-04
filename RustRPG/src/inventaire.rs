@@ -1,5 +1,6 @@
 use serde::{Serialize, Deserialize};
 use std::cmp::Reverse;
+use std::fmt;
 use crate::objet::OBJETS_DISPONIBLES;
 use std::sync::RwLockReadGuard;
 use crate::affichage;
@@ -142,4 +143,19 @@ impl Inventaire {
     }
 
 
+}
+
+impl fmt::Display for Inventaire {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if self.objets.is_empty() {
+            writeln!(f, "    (aucun objet)")?;
+        } else {
+            for objet in &self.objets {
+                if let Some(o) = OBJETS_DISPONIBLES.read().unwrap().get(&(objet.objet_id)){
+                    writeln!(f, "    - {}", o.nom)?;
+                }
+            }
+        }
+        Ok(())
+    }
 }

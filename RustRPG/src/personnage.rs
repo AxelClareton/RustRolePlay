@@ -1,3 +1,4 @@
+use std::fmt;
 use std::fs::{File, OpenOptions};
 use std::io::{self, Read, Write};
 use serde::{Serialize, Deserialize};
@@ -14,6 +15,16 @@ pub struct PartieDuCorps {
     etat: DateTime<Utc>,
     equipement: crate::inventaire::Inventaire,
 }
+
+impl fmt::Display for PartieDuCorps {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "  - Partie : {}", self.nom)?;
+        writeln!(f, "    État   : {}", self.etat)?;
+        writeln!(f, "    Équipement :")?;
+        writeln!(f, "{}", self.equipement)
+    }
+}
+
 
 impl PartieDuCorps {
     pub fn est_saine(&self) -> bool {
@@ -55,7 +66,25 @@ pub struct Personnage {
     pub inventaire: crate::inventaire::Inventaire,
     pub parties_du_corps: Vec<PartieDuCorps>,
     pub argent: u32,
+    
 }
+
+impl fmt::Display for Personnage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "=== Personnage #{} ===", self.id)?;
+        writeln!(f, "Nom         : {}", self.nom)?;
+        writeln!(f, "Description : {}", self.description)?;
+        writeln!(f, "Force       : {}", self.force)?;
+        writeln!(f, "Argent      : {}", self.argent)?;
+        writeln!(f, "Parties du corps :")?;
+        for partie in &self.parties_du_corps {
+            writeln!(f, "{}", partie)?;
+        }
+        Ok(())
+    }
+}
+
+
 
 impl Personnage {
     pub fn sauvegarder_json(&self, fichier: &str) -> io::Result<()> {
