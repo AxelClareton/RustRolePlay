@@ -9,8 +9,8 @@ use coffre::Coffre;
 use crate::{coffre, inventaire, zone};
 use zone::Zone;
 use zone::Connexion;
-use inventaire::{Inventaire, ObjetInventaire};
-use crate::objet::{ajouter_objet, Objet, TypeObjet, OBJETS_DISPONIBLES};
+use inventaire::{Inventaire};
+use crate::objet::{ajouter_objet, TypeObjet, OBJETS_DISPONIBLES};
 // Structures pour lire le JSON
 
 #[derive(Debug, Deserialize)]
@@ -91,7 +91,6 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
     for (_, zone_temp) in &map_temp {
         let id_numerique = zone_temp.id_texte.parse::<u8>()?;
         let coffre_zone: Vec<Coffre> = coffres_totaux.get(&id_numerique).cloned().unwrap_or_else(Vec::new);
-        let prix_zone = zone_temp.prix.parse::<u8>()?;
         let mut ouvert = true;
         if zone_temp.ouvert == "false" {
             ouvert = false;
@@ -101,15 +100,13 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             taille : 255,
             objets : Vec::new(),
         };
-        let mut zone_finale = Zone {
+        let zone_finale = Zone {
             id: id_numerique,
             nom: zone_temp.nom.clone(),
-            prix: prix_zone,
             ouvert: ouvert,
             description: zone_temp.description.clone(),
             connection: zone_temp.connection.clone(),
             coffres: coffre_zone,
-            mobs: Vec::new(),
             objet_zone : inventaire,
         };
         zones_finales.push(zone_finale);

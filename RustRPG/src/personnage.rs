@@ -1,12 +1,11 @@
 use std::fmt;
-use std::fs::{File, OpenOptions};
+use std::fs::{File};
 use std::io::{self, Read, Write};
 use serde::{Serialize, Deserialize};
 use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
 use crate::inventaire::{Inventaire, ObjetInventaire};
-use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum EtatPartie {
@@ -327,7 +326,7 @@ impl Personnage {
                 },
                 EtatPartie::Blessee(pourcentage) => {
                     let reduction = (*pourcentage as f32) / 200.0;
-                    modificateur *= (1.0 - reduction);
+                    modificateur *= 1.0 - reduction;
                 },
                 EtatPartie::Saine => {},
             }
@@ -441,9 +440,9 @@ impl PNJ {
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
-        let mut rng: ThreadRng = rand::thread_rng();
-        let valeur = rng.gen_range(80..120);
-        let valeur2 = rng.gen_range(0..20);
+        let mut rng: ThreadRng = rand::rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         let personnage = Personnage {
             id: prochain_id,
@@ -485,9 +484,9 @@ impl PNJ {
         for (nom, description) in pnjs_test {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
-            let mut rng: ThreadRng = rand::thread_rng();
-            let valeur = rng.gen_range(80..120);
-            let valeur2 = rng.gen_range(0..20);
+            let mut rng: ThreadRng = rand::rng();
+            let valeur = rng.random_range(80..120);
+            let valeur2 = rng.random_range(0..20);
 
             let personnage = Personnage {
                 id: current_id,
@@ -523,9 +522,9 @@ impl Mob {
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
-        let mut rng: ThreadRng = rand::thread_rng();
-        let valeur = rng.gen_range(80..120);
-        let valeur2 = rng.gen_range(0..20);
+        let mut rng: ThreadRng = rand::rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         let personnage = Personnage {
             id: prochain_id,
@@ -569,9 +568,9 @@ impl Mob {
         for (nom, description) in mobs_test {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
-            let mut rng: ThreadRng = rand::thread_rng();
-            let valeur = rng.gen_range(80..120);
-            let valeur2 = rng.gen_range(0..20);
+            let mut rng: ThreadRng = rand::rng();
+            let valeur = rng.random_range(80..120);
+            let valeur2 = rng.random_range(0..20);
 
             let personnage = Personnage {
                 id: current_id,
@@ -607,9 +606,9 @@ impl Joueur {
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
-        let mut rng: ThreadRng = rand::thread_rng();
-        let valeur = rng.gen_range(80..120);
-        let valeur2 = rng.gen_range(0..20);
+        let mut rng: ThreadRng = rand::rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         let personnage = Personnage {
             id: prochain_id,
@@ -645,9 +644,9 @@ impl Joueur {
         for (nom, description) in joueurs_test {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
-            let mut rng: ThreadRng = rand::thread_rng();
-            let valeur = rng.gen_range(80..120);
-            let valeur2 = rng.gen_range(0..20);
+            let mut rng: ThreadRng = rand::rng();
+            let valeur = rng.random_range(80..120);
+            let valeur2 = rng.random_range(0..20);
 
             let personnage = Personnage {
                 id: current_id,

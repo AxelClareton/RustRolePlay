@@ -3,7 +3,6 @@ use std::cmp::Reverse;
 use std::fmt;
 use crate::objet::OBJETS_DISPONIBLES;
 use std::sync::RwLockReadGuard;
-use crate::affichage;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Inventaire {
     pub taille: u8,
@@ -16,9 +15,9 @@ pub struct ObjetInventaire {
 }
 
 impl Inventaire {
-    pub fn afficher(&mut self, estJoueur : bool) -> Option<usize> {
+    pub fn afficher(&mut self, est_joueur : bool) -> Option<usize> {
         if self.objets.is_empty(){
-            if(estJoueur){
+            if est_joueur {
                 println!("📦 Votre inventaire est vide")
             }
             else {
@@ -34,14 +33,13 @@ impl Inventaire {
         } else {
             self.trier_quantite();
             for (index, obj) in self.objets.iter().enumerate() {
-                //println!("  {}: Objet ID {} (x{})", index + 1, obj.objet_id, obj.nombre);
                 if let Some(o) = objets_all.get(&obj.objet_id) {
                     println!("  {} : {} (x{})", index + 1, o.nom, obj.nombre);
                 } else {
                     println!("  Objet inconnu (ID: {})", obj.objet_id);
                 }
             }
-            if(estJoueur){
+            if est_joueur {
                 println!("Saisir 'q' pour fermer l'inventaire, ou le nombre correspondant à l'item que vous voulez utilisé\nEntrez votre choix :");
                 let mut choix = String::new();
                 std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
@@ -51,11 +49,8 @@ impl Inventaire {
                         println!("Fermeture de l'inventaire...");
                         None
                     }
-
                     _ => match choix.parse::<u8>() {
                         Ok(index) if index <= self.objets.len() as u8  => {
-                            //let obj = self.récupérer_objet((index-1) as usize);
-                            //println!("Vous avez récupérer l'objet {}", obj);
                             Some((index - 1) as usize)
                         }
                         _ => {
@@ -74,7 +69,6 @@ impl Inventaire {
                         println!("Fermeture du coffre...");
                         None
                     }
-
                     _ => match choix.parse::<u8>() {
                         Ok(index) if index <= self.objets.len() as u8  => {
                             let obj = self.récupérer_objet((index-1) as usize);
@@ -88,7 +82,6 @@ impl Inventaire {
                     },
                 }
             }
-
         }
     }
 
@@ -107,9 +100,9 @@ impl Inventaire {
         self.trier_quantite();
     }
 
-    pub fn récupérer_objet(&mut self, index:usize) -> usize {
-        let obj:usize = self.objets[index].objet_id as usize;
-        let o : &ObjetInventaire = &self.objets[index];
+    pub fn récupérer_objet(&mut self, index: usize) -> usize {
+        let obj: usize = self.objets[index].objet_id as usize;
+        let _o: &ObjetInventaire = &self.objets[index];
         self.objets[index].nombre -= 1;
         if self.objets[index].nombre == 0 {
             self.objets.remove(index);
@@ -130,8 +123,6 @@ impl Inventaire {
         objet
     }
 
-
-
     pub fn trier_quantite(&mut self){
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
     }
@@ -141,8 +132,6 @@ impl Inventaire {
         self.objets.extend(inventaire.objets.drain(..));
         inventaire.objets = Vec::new();
     }
-
-
 }
 
 impl fmt::Display for Inventaire {
