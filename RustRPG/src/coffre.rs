@@ -31,8 +31,9 @@ impl Coffre {
             }
         }
         println!("Ouverture du coffre ! ");
-        let obj = self.inventaire.afficher();
+        let obj = self.inventaire.afficher(false);
         obj
     }
+
 
 }

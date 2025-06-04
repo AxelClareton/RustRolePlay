@@ -60,9 +60,10 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Chargement des objets
+    charger_objets().expect("⚠️ Impossible de charger les objets !");
     // Chargement des zones
     let mut zones = charger_zones().expect("⚠️ Impossible de charger les zones !");
-    charger_objets().expect("⚠️ Impossible de charger les objets !");
     // Trouver l'index de la zone de départ (id == 1)
     let mut current_zone_index = zones.iter_mut().position(|zone| zone.id == 1)
         .expect("⚠️ La zone avec l'id 1 n'a pas été trouvée !");
@@ -204,7 +205,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 
         let choix = affichage::faire_choix(
-            "Que voulez-vous faire ? ('d' pour vous déplacer, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre) :",&options
+            "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre) :",&options
 
         );
         match choix.as_str() {
@@ -214,19 +215,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
               }
             "i" => {
                 println!("Votre inventaire : ");
-                match perso_joueur.inventaire.afficher(){
+                match perso_joueur.inventaire.afficher(true){
                     Some(obj)=> {
                         let choix_utiliser = affichage::faire_choix(
-                            "Voulez vous utiliser l'objet ? o/n",
-                            &vec!["u".to_string(), "n".to_string()]
+                            "Voulez vous utiliser l'objet ? (oui ou non)",
+                            &vec!["oui".to_string(), "non".to_string()]
                         );
+
                         match choix_utiliser.as_str() {
-                            "u" => {
-                                println!("Utilisation de l'objet {}", obj)
+                            "oui" => {
+                                println!("Utilisation de l'objet {}", obj);
+                                //println!("{}", perso_joueur.parties_du_corps[0].nom())
                             }
                             _ => {
                                 println!("Vous vous débarassez de l'objet");
-                                &mut zones[current_zone_index].objet_zone.ajouter_objet(obj as u8);
+                                //&mut zones[current_zone_index].objet_zone.ajouter_objet(obj as u8);
                                 //ajout dans les objets de la zones
                             }
                         }
@@ -243,7 +246,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "t" => {
                 println!("Fouillage de la zone en cours...");
                 sleep(Duration::from_secs(5));
-                match zones[current_zone_index].objet_zone.afficher(){
+                match zones[current_zone_index].objet_zone.afficher(false){
                     Some(obj)=> {
                         let choix_recuperer = affichage::faire_choix(
                             "Voulez vous récupérer l'objet ? (o/n)",
@@ -280,26 +283,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !");
                 }
             }
-            "test" => {
-                let mut coffre = &mut zones[current_zone_index].coffres[0];
-                inventaire.tout_recuperer(&mut coffre.inventaire);
-                println!("INVENTAIRE");
-                inventaire.afficher();
-                println!("COFFRE");
-                coffre.ouvrir();
-            }
             _ => {
                 if let Ok(num) = choix.parse::<usize>() {
                     if (1..=nbr_coffres).contains(&num) {
                         let coffre = &mut zones[current_zone_index].coffres[num-1]; // Récupère le coffre sélectionné
                         match coffre.ouvrir() {
                             Some(objet) => {
-                                affichage::notifier(&zones[current_zone_index], &format!("Objet trouvé : {}", objet));
-                                inventaire.ajouter_objet(objet as u8);
+                                //affichage::notifier(&zones[current_zone_index], &format!("Objet trouvé : {}", objet));
+                                perso_joueur.inventaire.ajouter_objet(objet as u8);
+                                if(coffre.inventaire.objets.is_empty()){
+                                    zones[current_zone_index].supprimer_coffre(num-1);
+                                }
                             },
                             None => affichage::notifier(&zones[current_zone_index], "Aucun objet à récupérer"),
                         }
-                        inventaire.afficher();
+                        //inventaire.afficher();
                     } else {
                         affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !");
                     }

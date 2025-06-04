@@ -1,14 +1,138 @@
 [
   {
-    "id" : "1",
-    "nom" : "Epee"
+    "id": "1",
+    "nom": "Épée en bois",
+    "poids": "2000",
+    "prix": "50",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "1",
+        "proba_degats": "0.6",
+        "degats": "10"
+      }
+    }
   },
   {
-    "id" : "2",
-    "nom" : "Bouclier"
+    "id": "2",
+    "nom": "Katana",
+    "poids": "800",
+    "prix": "120",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "2",
+        "proba_degats": "0.7",
+        "degats": "40"
+      }
+    }
   },
   {
-    "id" : "3",
-    "nom" : "Potion"
+    "id": "3",
+    "nom": "Pistolet",
+    "poids": "1200",
+    "prix": "200",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "3",
+        "proba_degats": "0.8",
+        "degats": "30"
+      }
+    }
+  },
+  {
+    "id": "4",
+    "nom": "Mitraillette",
+    "poids": "1400",
+    "prix": "350",
+    "objet_type": {
+      "Arme": {
+        "frequence_degats": "5",
+        "proba_degats": "0.85",
+        "degats": "20"
+      }
+    }
+  },
+  {
+    "id": "5",
+    "nom": "Casque de pompier",
+    "poids": "1100",
+    "prix": "90",
+    "objet_type": {
+      "Equipement": {
+        "protection": "2",
+        "emplacement": "Tete"
+      }
+    }
+  },
+  {
+    "id": "6",
+    "nom": "Casque du SWAT",
+    "poids": "1750",
+    "prix": "200",
+    "objet_type": {
+      "Equipement": {
+        "protection": "3",
+        "emplacement": "Tete"
+      }
+    }
+  },
+  {
+    "id": "7",
+    "nom": "Gilet par balle",
+    "poids": "1400",
+    "prix": "150",
+    "objet_type": {
+      "Equipement": {
+        "protection": "3",
+        "emplacement": "Torse"
+      }
+    }
+  },
+  {
+    "id": "8",
+    "nom": "Grosse doudoune rembourrée",
+    "poids": "1050",
+    "prix": "80",
+    "objet_type": {
+      "Equipement": {
+        "protection": "1",
+        "emplacement": "Torse"
+      }
+    }
+  },
+  {
+    "id": "9",
+    "nom": "Gilet par balle renforcé",
+    "poids": "2100",
+    "prix": "250",
+    "objet_type": {
+      "Equipement": {
+        "protection": "4",
+        "emplacement": "Torse"
+      }
+    }
+  },
+  {
+    "id": "10",
+    "nom": "Bandage",
+    "poids": "70",
+    "prix": "40",
+    "objet_type": {
+      "Soin": {
+        "vie": "30",
+        "emplacement": "Tous"
+      }
+    }
+  },
+  {
+    "id": "11",
+    "nom": "Pansement motif mickey",
+    "poids": "50",
+    "prix": "15",
+    "objet_type": {
+      "Soin": {
+        "vie": "10",
+        "emplacement": "Tous"
+      }
+    }
   }
 ]

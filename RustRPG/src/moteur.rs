@@ -2,13 +2,15 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs;
 use std::error::Error;
+use rand::Rng;
+use rand::prelude::IndexedRandom;
 use serde_json::Value;
 use coffre::Coffre;
 use crate::{coffre, inventaire, zone};
 use zone::Zone;
 use zone::Connexion;
 use inventaire::{Inventaire, ObjetInventaire};
-use crate::objet::ajouter_objet;
+use crate::objet::{ajouter_objet, Objet, TypeObjet, OBJETS_DISPONIBLES};
 // Structures pour lire le JSON
 
 #[derive(Debug, Deserialize)]
@@ -35,13 +37,13 @@ struct ObjetInventaireTemporaire {
     objet_id: u8,
 }
 
-#[derive(Debug, Deserialize)]
-struct ObjetTemporaire {
-    #[serde(rename = "id")]
-    id_texte : String,
-    #[serde(rename = "nom")]
-    nom: String,
-}
+// #[derive(Debug, Deserialize)]
+// struct ObjetTemporaire {
+//     #[serde(rename = "id")]
+//     id_texte : String,
+//     #[serde(rename = "nom")]
+//     nom: String,
+// }
 #[derive(Debug, Deserialize)]
 struct InventaireTemporaire {
     #[serde(rename = "taille")]
@@ -137,14 +139,18 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
             visible = false;
         }
         // Récupérer le premier élément de la liste `inventaire`
-        let inventaire_temp = coffre.inventaire.get(0).ok_or("Inventaire vide")?;
-
+        // let inventaire_temp = coffre.inventaire.get(0).ok_or("Inventaire vide")?;
+        //
+        // let inventaire = Inventaire {
+        //     taille: inventaire_temp.taille_texte.parse::<u8>()?, // Conversion de taille
+        //     objets: inventaire_temp.objets.iter().map(|o| ObjetInventaire {
+        //         nombre: o.nombre,
+        //         objet_id: o.objet_id,
+        //     }).collect(), // Mapper les objets avec leurs quantités
+        // };
         let inventaire = Inventaire {
-            taille: inventaire_temp.taille_texte.parse::<u8>()?, // Conversion de taille
-            objets: inventaire_temp.objets.iter().map(|o| ObjetInventaire {
-                nombre: o.nombre,
-                objet_id: o.objet_id,
-            }).collect(), // Mapper les objets avec leurs quantités
+            taille: 10,
+            objets: Vec::new(),
         };
 
         let c = Coffre {
@@ -158,17 +164,74 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
         };
 
         coffre_finales.entry(id_zone).or_insert(Vec::new()).push(c);
+
     }
+
+    for coffres in coffre_finales.values_mut() {
+        remplir_coffres(coffres);
+    }
+
     Ok(coffre_finales)
+}
+
+pub fn remplir_coffres(coffres: &mut [Coffre]){
+    let objets_disponibles = OBJETS_DISPONIBLES.read().unwrap();
+    let mut rng = rand::rng();
+    let ids_objets: Vec<u8> = objets_disponibles.keys().cloned().collect();
+
+    for coffre in coffres.iter_mut() {
+        let nb_objets = rng.random_range(1..=5);
+        let mut tirages: HashMap<u8, u8> = HashMap::new();
+        let mut total_ajout = 0;
+
+        while total_ajout < nb_objets {
+            if let Some(&objet_id) = ids_objets.choose(&mut rng) {
+                let compteur = tirages.entry(objet_id).or_insert(0);
+                if *compteur < 2 {
+                   *compteur += 1;
+                    total_ajout += 1;
+                    coffre.inventaire.ajouter_objet(objet_id);
+                }
+            }
+        }
+
+        coffre.inventaire.taille = 5;
+    }
+
 }
 
 pub fn charger_objets() -> Result<(), Box<dyn Error>> {
     let contenu = charger_json("src/json/objet.json")?;
-    let objets_temp: Vec<ObjetTemporaire> = serde_json::from_str(&contenu)?;
-    for objet in objets_temp {
-        let id = objet.id_texte.parse::<u8>()?;
-        let nom = objet.nom;
-        ajouter_objet(id, nom);
+    let objets_temp: Vec<serde_json::Value> = serde_json::from_str(&contenu)?;
+    for objet_val in objets_temp {
+        let id = objet_val["id"].as_str().unwrap().parse::<u8>()?;
+        let nom = objet_val["nom"].as_str().unwrap().to_string();
+        let poids = objet_val["poids"].as_str().unwrap().parse::<u32>()?;
+        let prix = objet_val["prix"].as_str().unwrap().parse::<u32>()?;
+
+        let objet_type_val = &objet_val["objet_type"];
+
+        let objet_type = if let Some(ar) = objet_type_val.get("Arme") {
+            TypeObjet::Arme {
+                frequence_degats: ar["frequence_degats"].as_str().unwrap().parse()?,
+                proba_degats: ar["proba_degats"].as_str().unwrap().parse()?,
+                degats: ar["degats"].as_str().unwrap().parse()?,
+            }
+        } else if let Some(eq) = objet_type_val.get("Equipement") {
+            TypeObjet::Equipement {
+                protection: eq["protection"].as_str().unwrap().parse()?,
+                emplacement: eq["emplacement"].as_str().unwrap().parse()?,
+            }
+        } else if let Some(soin) = objet_type_val.get("Soin") {
+            TypeObjet::Soin {
+                vie: soin["vie"].as_str().unwrap().parse()?,
+                emplacement: soin["emplacement"].as_str().unwrap().parse()?,
+            }
+        } else {
+            return Err("Objet inconnu ou type manquant".into());
+        };
+
+        ajouter_objet(id, nom, poids, prix, objet_type);
     }
     Ok(())
 }

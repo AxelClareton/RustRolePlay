@@ -136,6 +136,11 @@ impl PartieDuCorps {
             }
         }
     }
+
+    pub fn nom(&self) -> &str {
+        &self.nom
+    }
+
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
