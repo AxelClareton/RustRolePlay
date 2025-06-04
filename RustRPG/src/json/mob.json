@@ -1,1 +1,562 @@
-
+[
+  {
+    "id": 1,
+    "nom": "Gobelin Sauvage",
+    "description": "Un petit gobelin agressif aux dents pointues",
+    "force": 119,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593554Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593557Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593557Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593558Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593558Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593558Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 16,
+    "est_vivant": true
+  },
+  {
+    "id": 2,
+    "nom": "Orc Guerrier",
+    "description": "Un orc massif brandissant une hache",
+    "force": 105,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593567Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593567Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593568Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593568Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593568Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593568Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 0,
+    "est_vivant": true
+  },
+  {
+    "id": 3,
+    "nom": "Loup des Ténèbres",
+    "description": "Un loup noir aux yeux rougeoyants",
+    "force": 97,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593569Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593570Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593570Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593570Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593571Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593571Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 8,
+    "est_vivant": true
+  },
+  {
+    "id": 4,
+    "nom": "Squelette Ancien",
+    "description": "Un squelette animé par une magie noire",
+    "force": 96,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593572Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593572Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593572Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593573Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593573Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593573Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 15,
+    "est_vivant": true
+  },
+  {
+    "id": 5,
+    "nom": "Araignée Géante",
+    "description": "Une araignée venimeuse de la taille d'un cheval",
+    "force": 107,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593574Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593575Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593575Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593575Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593575Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593576Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 10,
+    "est_vivant": true
+  },
+  {
+    "id": 6,
+    "nom": "Bandit Masqué",
+    "description": "Un voleur de grand chemin sans scrupules",
+    "force": 81,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593578Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593578Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593578Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593578Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593579Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593579Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 17,
+    "est_vivant": true
+  },
+  {
+    "id": 7,
+    "nom": "Troll des Marais",
+    "description": "Une créature putride qui régénère ses blessures",
+    "force": 99,
+    "inventaire": {
+      "taille": 10,
+      "objets": []
+    },
+    "parties_du_corps": [
+      {
+        "nom": "Tête",
+        "vie_max": 50,
+        "vie_actuelle": 50,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593580Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Torse",
+        "vie_max": 100,
+        "vie_actuelle": 100,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593580Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras droit",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593581Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Bras gauche",
+        "vie_max": 75,
+        "vie_actuelle": 75,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593581Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe droite",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593581Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      },
+      {
+        "nom": "Jambe gauche",
+        "vie_max": 80,
+        "vie_actuelle": 80,
+        "etat": "Saine",
+        "guerison": "2025-06-04T22:12:25.593582Z",
+        "equipement": {
+          "taille": 1,
+          "objets": []
+        }
+      }
+    ],
+    "argent": 7,
+    "est_vivant": true
+  }
+]
