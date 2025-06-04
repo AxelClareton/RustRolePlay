@@ -91,8 +91,7 @@ pub fn exemple_combat() -> Result<(), Box<dyn std::error::Error>> {
     let joueurs = crate::personnage::Joueur::charger_joueur("src/json/personnage.json")?;
     let joueur = joueurs.into_iter().next().ok_or("Aucun joueur trouvé")?;
     
-    let mobs = crate::personnage::Mob::charger_mob("src/json/mob.json")?;
-    let mob = mobs.into_iter().next().ok_or("Aucun mob trouvé")?;
+    let mob = crate::personnage::Mob::creer_mob("Gobelin Sauvage", "Un petit gobelin agressif aux dents pointues")?.personnage;
     
     let resultat = combattre(joueur, mob);
     println!("Vainqueur : {:?}", resultat.vainqueur);
