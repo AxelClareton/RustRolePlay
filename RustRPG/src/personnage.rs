@@ -4,7 +4,7 @@ use serde::{Serialize, Deserialize};
 use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
-use crate::inventaire::Inventaire;
+use crate::inventaire::{Inventaire, ObjetInventaire};
 
 
 // PartieDuCorps
@@ -22,6 +22,25 @@ impl PartieDuCorps {
 
     pub fn nom(&self) -> &str {
         &self.nom
+    }
+    
+    pub fn equipement(&self) -> &crate::inventaire::Inventaire {
+        &self.equipement
+    }
+    
+    pub fn ajouter_equipement(&mut self, objet : u8){
+        let _ = &self.equipement.ajouter_objet(objet);
+    }
+
+    pub fn récupérer_objet(&mut self, index: usize) -> ObjetInventaire {
+        let objet = self.equipement.objets[index].clone();
+        self.equipement.objets[index].nombre -= 1;
+        if self.equipement.objets[index].nombre == 0 {
+            self.equipement.objets.remove(index);
+        }
+        self.equipement.trier_quantite();
+
+        objet
     }
 
 }

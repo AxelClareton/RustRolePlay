@@ -108,6 +108,7 @@ impl Inventaire {
 
     pub fn récupérer_objet(&mut self, index:usize) -> usize {
         let obj:usize = self.objets[index].objet_id as usize;
+        let o : &ObjetInventaire = &self.objets[index];
         self.objets[index].nombre -= 1;
         if self.objets[index].nombre == 0 {
             self.objets.remove(index);
@@ -116,6 +117,19 @@ impl Inventaire {
 
         obj
     }
+
+    pub fn récupérer_objet_2(&mut self, index: usize) -> ObjetInventaire {
+        let objet = self.objets[index].clone();
+        self.objets[index].nombre -= 1;
+        if self.objets[index].nombre == 0 {
+            self.objets.remove(index);
+        }
+        self.trier_quantite();
+
+        objet
+    }
+
+
 
     pub fn trier_quantite(&mut self){
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
