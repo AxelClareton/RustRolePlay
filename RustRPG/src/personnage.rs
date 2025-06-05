@@ -1,12 +1,11 @@
 use std::fmt;
-use std::fs::{File, OpenOptions};
+use std::fs::{File};
 use std::io::{self, Read, Write};
 use serde::{Serialize, Deserialize};
 use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
 use crate::inventaire::{Inventaire, ObjetInventaire};
-use std::path::Path;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum EtatPartie {
@@ -230,9 +229,9 @@ impl Personnage {
             
             let partie_detruite = partie.subir_degats(degats);
             
-            if partie_detruite && partie.nom.to_lowercase().contains("Tête") {
+            if partie_detruite && (partie.nom.to_lowercase().contains("tête") || partie.nom.to_lowercase().contains("torse")) {
                 self.est_vivant = false;
-                println!("{} est mort suite à une blessure mortelle à la tête !", self.nom);
+                println!("{} est mort suite à une blessure mortelle à la {} !", self.nom, partie.nom);
                 return ResultatBlessure::Mort;
             }
             
@@ -297,15 +296,15 @@ impl Personnage {
         if !self.est_vivant {
             return false;
         }
-
-        let bras_fonctionnels = self.parties_du_corps.iter()
-            .filter(|p| p.nom.to_lowercase().contains("bras") && !p.est_morte())
-            .count();
-            
-        let jambes_fonctionnelles = self.parties_du_corps.iter()
-            .filter(|p| p.nom.to_lowercase().contains("jambe") && !p.est_morte())
-            .count();
-
+        // Vérifier que la tête et le torse sont vivants (non morts)
+        let tete_vivante = self.parties_du_corps.iter().any(|p| p.nom.to_lowercase().contains("tête") && !p.est_morte());
+        let torse_vivant = self.parties_du_corps.iter().any(|p| p.nom.to_lowercase().contains("torse") && !p.est_morte());
+        if !tete_vivante || !torse_vivant {
+            return false;
+        }
+        // Vérifier qu'au moins un bras et une jambe sont vivants
+        let bras_fonctionnels = self.parties_du_corps.iter().filter(|p| p.nom.to_lowercase().contains("bras") && !p.est_morte()).count();
+        let jambes_fonctionnelles = self.parties_du_corps.iter().filter(|p| p.nom.to_lowercase().contains("jambe") && !p.est_morte()).count();
         bras_fonctionnels > 0 && jambes_fonctionnelles > 0
     }
 
@@ -327,7 +326,7 @@ impl Personnage {
                 },
                 EtatPartie::Blessee(pourcentage) => {
                     let reduction = (*pourcentage as f32) / 200.0;
-                    modificateur *= (1.0 - reduction);
+                    modificateur *= 1.0 - reduction;
                 },
                 EtatPartie::Saine => {},
             }
@@ -407,6 +406,29 @@ impl Personnage {
             self.argent -= montant;
         }
     }
+
+    /// Soigne les parties du corps après un combat selon les règles :
+    /// - Si une partie est à 0%, on la remet à 100% et on met la guérison à +1h
+    /// - Si une partie est blessée (pas à 100% et pas à 0%), on la remet à 100% sans conséquence
+    pub fn soigner_apres_combat(&mut self) {
+        if !self.est_vivant {
+            return;
+        }
+        let maintenant = chrono::Utc::now();
+        for partie in &mut self.parties_du_corps {
+            if partie.est_morte() {
+                // On remet la vie au max et on met la guérison à +1h
+                partie.vie_actuelle = partie.vie_max;
+                partie.etat = EtatPartie::Saine;
+                partie.guerison = maintenant + chrono::Duration::hours(1);
+            } else if partie.vie_actuelle < partie.vie_max {
+                // Blessée mais pas morte : on remet à 100% sans délai
+                partie.vie_actuelle = partie.vie_max;
+                partie.etat = EtatPartie::Saine;
+                partie.guerison = maintenant;
+            }
+        }
+    }
 }
 
 fn creer_parties_du_corps() -> Vec<PartieDuCorps> {
@@ -441,9 +463,9 @@ impl PNJ {
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
-        let mut rng: ThreadRng = rand::thread_rng();
-        let valeur = rng.gen_range(80..120);
-        let valeur2 = rng.gen_range(0..20);
+        let mut rng: ThreadRng = rand::rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         let personnage = Personnage {
             id: prochain_id,
@@ -485,9 +507,9 @@ impl PNJ {
         for (nom, description) in pnjs_test {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
-            let mut rng: ThreadRng = rand::thread_rng();
-            let valeur = rng.gen_range(80..120);
-            let valeur2 = rng.gen_range(0..20);
+            let mut rng: ThreadRng = rand::rng();
+            let valeur = rng.random_range(80..120);
+            let valeur2 = rng.random_range(0..20);
 
             let personnage = Personnage {
                 id: current_id,
@@ -523,9 +545,9 @@ impl Mob {
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
-        let mut rng: ThreadRng = rand::thread_rng();
-        let valeur = rng.gen_range(80..120);
-        let valeur2 = rng.gen_range(0..20);
+        let mut rng: ThreadRng = rand::rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         let personnage = Personnage {
             id: prochain_id,
@@ -569,9 +591,9 @@ impl Mob {
         for (nom, description) in mobs_test {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
-            let mut rng: ThreadRng = rand::thread_rng();
-            let valeur = rng.gen_range(80..120);
-            let valeur2 = rng.gen_range(0..20);
+            let mut rng: ThreadRng = rand::rng();
+            let valeur = rng.random_range(80..120);
+            let valeur2 = rng.random_range(0..20);
 
             let personnage = Personnage {
                 id: current_id,
@@ -607,9 +629,9 @@ impl Joueur {
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
-        let mut rng: ThreadRng = rand::thread_rng();
-        let valeur = rng.gen_range(80..120);
-        let valeur2 = rng.gen_range(0..20);
+        let mut rng: ThreadRng = rand::rng();
+        let valeur = rng.random_range(80..120);
+        let valeur2 = rng.random_range(0..20);
 
         let personnage = Personnage {
             id: prochain_id,
@@ -645,9 +667,9 @@ impl Joueur {
         for (nom, description) in joueurs_test {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
-            let mut rng: ThreadRng = rand::thread_rng();
-            let valeur = rng.gen_range(80..120);
-            let valeur2 = rng.gen_range(0..20);
+            let mut rng: ThreadRng = rand::rng();
+            let valeur = rng.random_range(80..120);
+            let valeur2 = rng.random_range(0..20);
 
             let personnage = Personnage {
                 id: current_id,
