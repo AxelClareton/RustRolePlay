@@ -3,7 +3,7 @@
         "type": "zone",
         "nom": "Forêt des Murmures",
         "id": "1",
-        "prix": "20",
+        "prix": "0",
         "ouvert": "true",
         "desc": "Un épais sous-bois, où la brume semble se mêler aux arbres ancestraux. On entend des murmures presque incompréhensibles portés par le vent. \nDes créatures mystiques et des druides solitaires hantent cet endroit. Les sentiers sont parfois invisibles, dissimulés par des racines tordues et des fougères géantes.",
         "connection": [
@@ -22,13 +22,21 @@
         "type": "zone",
         "nom": "Cavernes du Crépuscule",
         "id": "2",
-        "prix": "20",
-        "ouvert": "false",
+        "prix": "0",
+        "ouvert": "true",
         "desc": "Une série de grottes sombres où des cristaux luminescents flottent dans l'air, émettant une lumière faible. \nLes murs suintent de mousse bioluminescente, et des créatures semi-aquatiques hantent les ruisseaux souterrains. L'air y est frais, mais lourd de mystère.\nL'endroit est un labyrinthe complexe, idéal pour les aventuriers en quête de trésors cachés.",
         "connection": [
             {
                 "direction": "sud",
                 "id_dest": "1"
+            },
+            {
+                "direction": "nord",
+                "id_dest": "4"
+            },
+            {
+                "direction": "ouest",
+                "id_dest": "5"
             }
         ],
         "objet_zone" : { "taille": 255, "objets": [] }
@@ -38,14 +46,155 @@
         "nom": "Plaines du Vent Solitaire",
         "id": "3",
         "prix": "20",
-        "ouvert": "true",
+        "ouvert": "false",
         "desc": "Des étendues de sable et de herbes sauvages balayées par un vent incessant, où seuls les échos des pas résonnent dans le silence. \nLa vaste étendue semble infinie, ponctuée par quelques rochers gigantesques et des ruines anciennes. \nOn dit que les esprits des anciens rois se promènent ici, et que des tempêtes imprévisibles peuvent surgir sans prévenir.",
         "connection": [
             {
                 "direction": "est",
                 "id_dest": "1"
+            },
+            {
+                "direction": "ouest",
+                "id_dest": "6"
             }
         ],
         "objet_zone" : { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Marais des Âmes Perdues",
+        "id": "4",
+        "prix": "100",
+        "ouvert": "false",
+        "desc": "Un marécage lugubre où flottent des lanternes suspendues dans le vide. Les brumes épaisses camouflent d’étranges créatures rampantes. Des bruits de pas sont parfois entendus, sans qu’aucune silhouette ne soit visible.",
+        "connection": [
+            {
+                "direction": "sud",
+                "id_dest": "2"
+            },
+            {
+                "direction": "ouest",
+                "id_dest": "8"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Montagnes de l’Aube",
+        "id": "5",
+        "prix": "150",
+        "ouvert": "false",
+        "desc": "Des sommets enneigés baignés de lumière rose à l’aube. Des créatures ailées rôdent dans les hauteurs, et seuls les plus courageux osent grimper ces pics vertigineux où l'air est rare et le silence glaçant.",
+        "connection": [
+            {
+                "direction": "est",
+                "id_dest": "2"
+            },
+            {
+                "direction": "ouest",
+                "id_dest": "7"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Crypte des Ombres",
+        "id": "6",
+        "prix": "300",
+        "ouvert": "false",
+        "desc": "Sous une vieille église en ruine se cache une crypte oubliée, remplie de statues cassées et de murmures funèbres. Des pièges ancestraux protègent un secret oublié.",
+        "connection": [
+            {
+                "direction": "est",
+                "id_dest": "3"
+            },
+            {
+                "direction": "nord",
+                "id_dest": "7"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Ruines du Savoir Ancien",
+        "id": "7",
+        "prix": "500",
+        "ouvert": "false",
+        "desc": "Des colonnes brisées et des gravures énigmatiques témoignent d’une civilisation perdue. La magie y est instable et des artefacts brillent parfois sous les décombres.",
+        "connection": [
+            {
+                "direction": "nord",
+                "id_dest": "9"
+            },
+            {
+                "direction": "est",
+                "id_dest": "4"
+            },
+            {
+                "direction": "sud",
+                "id_dest": "6"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Oasis des Mirages",
+        "id": "8",
+        "prix": "2000",
+        "ouvert": "false",
+        "desc": "Une source claire en plein désert, bordée de palmiers et de chants d’oiseaux. Mais certains voyageurs disent que l’endroit se déplace et que ce qu’ils y voient n’est pas toujours réel.",
+        "connection": [
+            {
+                "direction": "ouest",
+                "id_dest": "9"
+            },
+            {
+                "direction": "est",
+                "id_dest": "4"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Sanctuaire de l’Éclipse",
+        "id": "9",
+        "prix": "3500",
+        "ouvert": "false",
+        "desc": "Un ancien temple dissimulé dans une faille rocheuse. Lors des éclipses, ses murs s’illuminent de glyphes mystérieux. Les cultistes des ombres y vénèrent une entité oubliée.",
+        "connection": [
+            {
+                "direction": "sud",
+                "id_dest": "7"
+            },
+            {
+                "direction": "est",
+                "id_dest": "8"
+            },
+            {
+                "direction": "nord",
+                "id_dest": "10"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
+    },
+    {
+        "type": "zone",
+        "nom": "Jardin Suspendu de Liora",
+        "id": "10",
+        "prix": "10000",
+        "ouvert": "false",
+        "desc": "Un jardin luxuriant flottant dans les airs, relié par des ponts de lianes enchantées. Chaque plante semble vivante, réagissant à la présence des visiteurs.",
+        "connection": [
+            {
+                "direction": "sud",
+                "id_dest": "9"
+            }
+        ],
+        "objet_zone": { "taille": 255, "objets": [] }
     }
 ]
