@@ -103,6 +103,14 @@ impl Objet {
         matches!(self.objet_type, TypeObjet::Equipement { .. })
     }
 
+    pub fn est_arme(&self) -> bool {
+        matches!(self.objet_type, TypeObjet::Arme { .. })
+    }
+
+    pub fn est_soin(&self) -> bool {
+        matches!(self.objet_type, TypeObjet::Soin { .. })
+    }
+
     pub fn emplacement(&self) -> Option<Emplacement> {
         match &self.objet_type {
             TypeObjet::Equipement { emplacement, .. } => Some(emplacement.clone()),
