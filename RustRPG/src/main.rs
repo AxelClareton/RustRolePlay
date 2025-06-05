@@ -230,33 +230,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 let id = perso_joueur.inventaire.objets[obj].objet_id;
                                 if let Some(o) = OBJETS_DISPONIBLES.read().unwrap().get(&(id as u8)) {
                                     println!("{}", o);
-                                    if o.est_equipement() {
-                                        if o.est_pour_emplacement(Emplacement::Tete) {
+                                    if(o.est_equipement()){
+                                        if(o.est_pour_emplacement(Emplacement::Tete)){
                                             tableau = vec![0]
-                                        } else if o.est_pour_emplacement(Emplacement::Torse) {
-                                            tableau = vec![1]
-                                        } else if o.est_pour_emplacement(Emplacement::Bras) {
-                                            tableau = vec![2, 3]
-                                        } else {
-                                            tableau = vec![4, 5]
                                         }
-                                        for i in tableau {
-                                            if perso_joueur.parties_du_corps[i].equipement().objets.is_empty() {
-                                                let objet = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                        else {
+                                            tableau = vec![1]
+                                        }
+
+                                        for i in tableau{
+                                            if(perso_joueur.parties_du_corps[i].equipement().objets.is_empty()){
+                                                let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
                                                 perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
                                                 println!("Equipement équipé !");
-                                            } else {
+                                            }
+                                            else {
                                                 let new_choix = affichage::faire_choix(
                                                     "Equipement plein, voulez vous inverser l'objet ? (oui ou non)",
                                                     &vec!["oui".to_string(), "non".to_string()]
                                                 );
                                                 match new_choix.as_str() {
                                                     "oui" => {
-                                                        let objet = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                        let objet2 = perso_joueur.parties_du_corps[i].récupérer_objet(obj);
+                                                        let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                        let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[i].récupérer_objet(obj);
                                                         perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
                                                         perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
                                                     }
+
                                                     _ => {
 
                                                     }
@@ -264,11 +264,87 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                             }
                                         }
                                     }
+                                    else if(o.est_arme()){
+                                        let choix = affichage::faire_choix(
+                                            "Dans quelle main equipée l'objet ? (g ou d ou q)",
+                                            &vec!["g".to_string(), "d".to_string()]
+                                        );
+                                        match choix.as_str() {
+                                            "g" => {
+                                                if(perso_joueur.parties_du_corps[3].equipement().objets.is_empty()){
+                                                    let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                    perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
+                                                    println!("Equipement équipé !");
+                                                }
+                                                else {
+                                                    let new_choix = affichage::faire_choix(
+                                                        "Equipement plein, voulez vous inverser l'objet ? (oui ou non)",
+                                                        &vec!["oui".to_string(), "non".to_string()]
+                                                    );
+                                                    match new_choix.as_str() {
+                                                        "oui" => {
+                                                            let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                            let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[3].récupérer_objet(obj);
+                                                            perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
+                                                            perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
+                                                        }
+
+                                                        _ => {
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            "d" => {
+                                                if(perso_joueur.parties_du_corps[2].equipement().objets.is_empty()){
+                                                    let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                    perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
+                                                    println!("Equipement équipé !");
+                                                }
+                                                else {
+                                                    let new_choix = affichage::faire_choix(
+                                                        "Equipement plein, voulez vous inverser l'objet ? (oui ou non)",
+                                                        &vec!["oui".to_string(), "non".to_string()]
+                                                    );
+                                                    match new_choix.as_str() {
+                                                        "oui" => {
+                                                            let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                            let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[2].récupérer_objet(obj);
+                                                            perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
+                                                            perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
+                                                        }
+
+                                                        _ => {
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            _ => {
+
+                                            }
+                                        }
+                                    }
+                                    else if (o.est_soin()) {
+                                        let choix = affichage::faire_choix(
+                                            "Sur quelle partie du corps utilisé l'objet ? (0 : tete, 1 : torse, 2 : bras droit, 3 : bras gauche, 4 : jambre droite, 5 : jambe gauche, q : quitter)",
+                                            &vec!["0".to_string(), "1".to_string(), "2".to_string(), "3".to_string(), "4".to_string(), "5".to_string(), "q".to_string()]
+                                        );
+                                        match choix.as_str() {
+                                            "0" => println!("Soin de la tête"),
+                                            "1" => println!("Soin du torse"),
+                                            "2" => println!("Soin du bras droit"),
+                                            "3" => println!("Soin du bras gauche"),
+                                            "4" => println!("Soin de la jambe droite"),
+                                            "5" => println!("Soin de la jambe gauche"),
+                                            _ => println!("Annulation du soin.")
+                                        }
+                                }
                                 }
                                 else{
                                     println!("pas d'objet trouvé");
                                 }
-                                println!("Utilisation de l'objet {}", obj);
+
                             }
                             _ => {
                                 println!("Vous vous débarassez de l'objet");
