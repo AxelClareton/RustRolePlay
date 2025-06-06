@@ -16,7 +16,8 @@
                 "id_dest": "3"
             }
         ],
-        "objet_zone" : { "taille": 255, "objets": [] }
+        "objet_zone" : { "taille": 255, "objets": [] },
+        "mob_present": false
     },
     {
         "type": "zone",
@@ -31,7 +32,8 @@
                 "id_dest": "1"
             }
         ],
-        "objet_zone" : { "taille": 255, "objets": [] }
+        "objet_zone" : { "taille": 255, "objets": [] },
+        "mob_present": true
     },
     {
         "type": "zone",
@@ -46,6 +48,7 @@
                 "id_dest": "1"
             }
         ],
-        "objet_zone" : { "taille": 255, "objets": [] }
+        "objet_zone" : { "taille": 255, "objets": [] },
+        "mob_present": true
     }
 ]

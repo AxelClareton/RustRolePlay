@@ -28,6 +28,8 @@ struct ZoneTemporaire {
     connection: Vec<Connexion>,
     #[serde(rename = "objet_zone")]
     objet_zone: Inventaire,
+    #[serde(default)]
+    mob_present: bool,
 }
 
 
@@ -108,6 +110,7 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             connection: zone_temp.connection.clone(),
             coffres: coffre_zone,
             objet_zone : inventaire,
+            mob_present: zone_temp.mob_present
         };
         zones_finales.push(zone_finale);
     }
