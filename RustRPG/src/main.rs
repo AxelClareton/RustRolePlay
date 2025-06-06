@@ -148,7 +148,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("Entrez l'ID du personnage que vous souhaitez charger :");
                 let mut id_choisi = String::new();
                 std::io::stdin().read_line(&mut id_choisi).expect("❌ Erreur de lecture !");
-                let id_choisi: u32 = id_choisi.trim().parse().expect("❌ Erreur de lecture de l'ID");
+                let id_choisi = id_choisi.trim();
+                if id_choisi.is_empty() {
+                    println!("❌ Vous devez entrer un ID !");
+                    continue;
+                }
+                let id_choisi: u32 = match id_choisi.parse() {
+                    Ok(id) => id,
+                    Err(_) => {
+                        println!("❌ L'ID doit être un nombre !");
+                        continue;
+                    }
+                };
     
                 if let Some(joueur) = personnages.into_iter().find(|j| j.id == id_choisi) {
                     println!("Joueur chargé : {:#?}", joueur);
@@ -279,7 +290,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     if let Ok(index) = choix_pnj.trim().parse::<usize>() {
                         if index > 0 && index <= pnjs_in_zone.len() {
                             let pnj_index = pnjs_in_zone[index - 1];
-                            pnjs[pnj_index].interagir(&mut perso_joueur);
+                            pnjs[pnj_index].interagir(&mut perso_joueur, &mut zones, current_zone_index);
                         } else {
                             println!("Numéro de PNJ invalide !");
                         }
@@ -541,6 +552,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !")
                 }
             },
+        }
+        if !perso_joueur.est_vivant {
+            println!("Vous êtes mort... La partie est terminée !");
+            break Ok(());
         }
     }
 }
