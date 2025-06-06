@@ -501,46 +501,64 @@ impl PNJ {
         let objets_disponibles = OBJETS_DISPONIBLES.read().unwrap();
         let mut inventaire = Inventaire { taille: 10, objets: Vec::new() };
 
-        println!("Entrez les objets que le marchand aura parmi ceux-ci :");
-        for (id, objet) in objets_disponibles.iter() {
-            println!("{}: {}", id, objet.nom);
-        }
+        loop {
+            println!("Entrez les objets que le marchand aura parmi ceux-ci :");
+            for (id, objet) in objets_disponibles.iter() {
+                println!("{}: {}", id, objet.nom);
+            }
 
-        println!("Précisez le nombre d'exemplaires pour chaque objet sous cette forme : numéro_de_l'objet:quantité, numéro_de_l'objet:quantité");
-        println!("Par exemple : 1:3,2:5");
-        print!("Votre choix : ");
-        io::stdout().flush()?;
+            println!("Précisez le nombre d'exemplaires pour chaque objet sous cette forme : numéro_de_l'objet:quantité, numéro_de_l'objet:quantité");
+            println!("Par exemple : 1:3,2:5");
+            print!("Votre choix : ");
+            io::stdout().flush()?;
 
-        let mut input = String::new();
-        io::stdin().read_line(&mut input)?;
+            let mut input = String::new();
+            io::stdin().read_line(&mut input)?;
 
-        let choix: Vec<&str> = input.trim().split(',').collect();
-        for choix_item in choix {
-            let parts: Vec<&str> = choix_item.split(':').map(|s| s.trim()).collect();
-            if parts.len() == 2 {
-                if let Ok(objet_id) = parts[0].parse::<u8>() {
-                    if let Ok(quantite) = parts[1].parse::<u8>() {
-                        if objets_disponibles.contains_key(&objet_id) {
-                            for _ in 0..quantite {
-                                inventaire.ajouter_objet(objet_id);
+            let choix: Vec<&str> = input.trim().split(',').collect();
+            let mut total_quantite = 0;
+
+            for choix_item in &choix {
+                let parts: Vec<&str> = choix_item.split(':').map(|s| s.trim()).collect();
+                if parts.len() == 2 {
+                    if let Ok(objet_id) = parts[0].parse::<u8>() {
+                        if let Ok(quantite) = parts[1].parse::<u8>() {
+                            if objets_disponibles.contains_key(&objet_id) {
+                                total_quantite += quantite;
+                            } else {
+                                println!("Objet avec l'ID {} non trouvé.", objet_id);
                             }
                         } else {
-                            println!("Objet avec l'ID {} non trouvé.", objet_id);
+                            println!("Quantité invalide : {}", parts[1]);
                         }
                     } else {
-                        println!("Quantité invalide : {}", parts[1]);
+                        println!("ID d'objet invalide : {}", parts[0]);
                     }
                 } else {
-                    println!("ID d'objet invalide : {}", parts[0]);
+                    println!("Format invalide : {}", choix_item);
                 }
-            } else {
-                println!("Format invalide : {}", choix_item);
             }
-        }
 
-        if inventaire.objets.len() > 10 {
-            println!("Attention : L'inventaire ne peut pas contenir plus de 10 objets.");
-            inventaire.objets.truncate(10);
+            if total_quantite <= 10 {
+                for choix_item in &choix {
+                    let parts: Vec<&str> = choix_item.split(':').map(|s| s.trim()).collect();
+                    if parts.len() == 2 {
+                        if let Ok(objet_id) = parts[0].parse::<u8>() {
+                            if let Ok(quantite) = parts[1].parse::<u8>() {
+                                if objets_disponibles.contains_key(&objet_id) {
+                                    for _ in 0..quantite {
+                                        inventaire.ajouter_objet(objet_id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            } else {
+                println!("La somme des quantités d'objets ne doit pas dépasser 10. Veuillez réessayer.");
+                inventaire.objets.clear(); // Vider l'inventaire pour réessayer
+            }
         }
 
         Ok(inventaire)
@@ -792,7 +810,8 @@ impl PNJ {
 
                     if let Ok(quantite) = quantite.trim().parse::<u8>() {
                         let prix_total = self.calculer_prix_vente(objet.prix) * quantite as u32;
-                        if quantite <= objet_inv.nombre && joueur.argent >= prix_total {
+                        let total_objet = joueur.inventaire.objets.iter().map(|o| o.nombre).sum::<u8>() + quantite;
+                        if quantite <= objet_inv.nombre && joueur.argent >= prix_total && total_objet <= joueur.inventaire.taille {
                             joueur.retirer_argent(prix_total);
                             self.personnage.argent += prix_total;
 
