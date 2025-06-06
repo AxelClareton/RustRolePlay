@@ -22,8 +22,9 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
             (&mut p2, &mut p1)
         };
 
-        // Actuellement on prend la premier arme de l'inventaire mais plus tard il faudrait prendre l'arme "équipé"
-        let arme = att.inventaire.objets.iter()
+        let arme = att.parties_du_corps.iter()
+            .filter(|p| p.nom().to_lowercase().contains("bras"))
+            .flat_map(|bras| bras.equipement().objets.iter())
             .find_map(|obj_inv| {
                 let objets = OBJETS_DISPONIBLES.read().unwrap();
                 objets.get(&obj_inv.objet_id).and_then(|o| match &o.objet_type {
@@ -59,7 +60,12 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
                     _ => None,
                 }).unwrap_or(0)
             }).sum();
-            let degats_finals = (degats - protection).max(0) as u32;
+            let degats_finals = if protection > 0 {
+                let diviseur = (1.5 * protection as f32).floor().max(1.0); 
+                ((degats as f32) / diviseur).floor() as u32
+            } else {
+                degats.max(0) as u32
+            };
             if degats_finals > 0 {
                 def.gerer_blessure(&nom_partie, degats_finals);
             }

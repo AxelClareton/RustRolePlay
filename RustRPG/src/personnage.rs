@@ -8,6 +8,7 @@ use rand::Rng;
 use rand::rngs::ThreadRng;
 use crate::inventaire::{Inventaire, ObjetInventaire};
 use crate::objet::{Objet, OBJETS_DISPONIBLES};
+use crate::Zone;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum EtatPartie {
@@ -750,7 +751,7 @@ impl PNJ {
         self.multiplicateur_prix = nouveau_multiplicateur.max(0.1); // Minimum 10% du prix de base
     }
 
-    pub fn interagir(&mut self, joueur: &mut Personnage) {
+    pub fn interagir(&mut self, joueur: &mut Personnage, zones: &mut Vec<Zone>, current_zone_index: usize) {
         println!("Vous rencontrez {}. Que voulez-vous faire ?", self.personnage.nom);
         println!("1. Combattre");
         println!("2. Voir l'inventaire");
@@ -762,7 +763,24 @@ impl PNJ {
         match choix.trim() {
             "1" => {
                 println!("Vous avez choisi de combattre !");
-                // Implémentez la logique de combat ici
+                let resultat = crate::combat::combattre(joueur.clone(), self.personnage.clone());
+                if resultat.etat_final_joueur.est_vivant {
+                    *joueur = resultat.etat_final_joueur;
+                    println!("Vous avez gagné le combat contre le PNJ !");
+                    // Drop de l'inventaire du PNJ
+                    for objet in &self.personnage.inventaire.objets {
+                        zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                    }
+                    self.personnage.inventaire.objets.clear();
+                    // Récupération de l'argent
+                    joueur.ajouter_argent(self.personnage.argent);
+                    println!("Vous ramassez {} pièces d'or sur le PNJ !", self.personnage.argent);
+                    self.personnage.argent = 0;
+                } else {
+                    *joueur = resultat.etat_final_joueur;
+                    joueur.est_vivant = false;
+                    println!("Vous avez perdu le combat contre le PNJ...");
+                }
             }
             "2" => {
                 self.afficher_inventaire();
