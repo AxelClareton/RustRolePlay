@@ -102,6 +102,7 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             taille : 255,
             objets : Vec::new(),
         };
+        let prix = zone_temp.prix.parse::<u32>()?;
         let zone_finale = Zone {
             id: id_numerique,
             nom: zone_temp.nom.clone(),
@@ -110,7 +111,8 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
             connection: zone_temp.connection.clone(),
             coffres: coffre_zone,
             objet_zone : inventaire,
-            mob_present: zone_temp.mob_present
+            mob_present: zone_temp.mob_present,
+            prix,
         };
         zones_finales.push(zone_finale);
     }
