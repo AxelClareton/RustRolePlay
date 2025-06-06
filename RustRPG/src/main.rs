@@ -25,7 +25,7 @@ use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
 
 
-fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str, perso_joueur: &mut Personnage) {
+fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str, perso_joueur: &mut Personnage, pnjs: &Vec<PNJ>) {
     let current_zone = &zones[*current_zone_index];
 
     // Trouver la connexion
@@ -34,7 +34,7 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
         if let Some(new_index) = zones.iter().position(|z| z.id == conn.id_dest.parse::<u8>().unwrap()) {
             if(zones[new_index].mob_present){
                 let mob_choix = affichage::faire_choix(
-                    &format!("Il y a un ennemie dans la zone {}, voulez-vous y aller quand même ? (oui/non)", conn.id_dest),
+                    &format!("Il y a un ennemie dans la zone {}, il se peut qu'il vous attaque ,voulez-vous y aller quand même ? (oui/non)", conn.id_dest),
                     &vec!["oui".to_string(), "non".to_string()]
                 );
                 match mob_choix.as_str() {
@@ -52,9 +52,9 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
             }
             if zones[new_index].ouvert {
                 *current_zone_index = new_index; // Mise à jour de l'index
-                affichage::notifier(&zones[*current_zone_index], "Déplacement...");
+                affichage::notifier(&zones[*current_zone_index], "Déplacement...", &pnjs);
                 sleep(Duration::from_secs(5));
-                affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone");
+                affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone", &pnjs);
             }
             else {
                 let choix = affichage::faire_choix(
@@ -68,23 +68,23 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
                             perso_joueur.retirer_argent(prix_zone);
                             zones[new_index].ouvert = true;
                             *current_zone_index = new_index;
-                            affichage::notifier(&zones[*current_zone_index], "Déplacement...");
+                            affichage::notifier(&zones[*current_zone_index], "Déplacement...", &pnjs);
                             sleep(Duration::from_secs(5));
-                            affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone");
+                            affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone", &pnjs);
                         } else {
-                            affichage::notifier(&zones[*current_zone_index], "❌ Vous n'avez pas assez d'argent pour acheter cette zone !");
+                            affichage::notifier(&zones[*current_zone_index], "❌ Vous n'avez pas assez d'argent pour acheter cette zone !", &pnjs);
                         }
                     }
                     _ => {
-                        affichage::notifier(&zones[*current_zone_index], "Zone non achetée, vous restez dans la même zone");
+                        affichage::notifier(&zones[*current_zone_index], "Zone non achetée, vous restez dans la même zone", &pnjs);
                     }
                 }
             }
         } else {
-            affichage::notifier(&zones[*current_zone_index], "⚠️ La zone de destination n'a pas été trouvée !");
+            affichage::notifier(&zones[*current_zone_index], "⚠️ La zone de destination n'a pas été trouvée !", &pnjs);
         }
     } else {
-        affichage::notifier(&zones[*current_zone_index], "❌ Vous êtes arrivé au bout du monde, faites demi-tour !");
+        affichage::notifier(&zones[*current_zone_index], "❌ Vous êtes arrivé au bout du monde, faites demi-tour !", &pnjs);
     }
 }
 
@@ -238,10 +238,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     
     // Message d'accueil
-    affichage::notifier(&zones[current_zone_index], "✨ Bienvenue dans le RustRPG !");
+    affichage::notifier(&zones[current_zone_index], "✨ Bienvenue dans le RustRPG !", &pnjs);
     
     
-    affichage::afficher_zone(&zones[current_zone_index]);
+    affichage::afficher_zone(&zones[current_zone_index], &pnjs);
     let mut rng = rand::rng();
     // Boucle principale du jeu
     loop {
@@ -275,7 +275,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         match choix.as_str() {
             "q" => {
-                  affichage::notifier(&zones[current_zone_index], "👋 Au revoir !");
+                  affichage::notifier(&zones[current_zone_index], "👋 Au revoir !", &pnjs);
                   break Ok(());
               }
             "p" => {
@@ -454,10 +454,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             "c" => {
-                affichage::notifier(&zones[current_zone_index], "Fouillage de la zone en cours...");
+                affichage::notifier(&zones[current_zone_index], "Fouillage de la zone en cours...", &pnjs);
                 sleep(Duration::from_secs(5));
-                zones[current_zone_index].fouiller_zone();
-                affichage::afficher_zone(&zones[current_zone_index]);
+                zones[current_zone_index].fouiller_zone(&pnjs);
+                affichage::afficher_zone(&zones[current_zone_index], &pnjs);
             }
             "t" => {
                 println!("Fouillage de la zone en cours...");
@@ -486,10 +486,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "🚪 Vers quelle direction voulez-vous aller ?",
                     &vec!["nord".to_string(), "sud".to_string(), "est".to_string(), "ouest".to_string()]
                 );
-                se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut perso_joueur);
+                se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut perso_joueur, &pnjs);
                 if(zones[current_zone_index].mob_present){
                     let mut rng = rand::rng();
-                    let chance: f32 = rng.random(); // génère un float entre 0.0 et 1.0
+                    let chance: f32 = rng.random();
 
                     if chance < 0.9 {
                         // Le mob apparaît (60 % de chances)
@@ -522,14 +522,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             }
                         }
 
+                    }else{
+                        println!("Vous êtes chanceux le mob ne vous attaque pas.")
                     }
                 }
                 
             }
             "nord" | "sud" | "est" | "ouest" => {
-                se_deplacer(&mut zones, &mut current_zone_index, &choix, &mut perso_joueur);
+                se_deplacer(&mut zones, &mut current_zone_index, &choix, &mut perso_joueur, &pnjs);
                 if rng.random_range(0..99) < 10 {
-                    affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !");
+                    affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !", &pnjs);
                 }
             }
             _ => {
@@ -543,13 +545,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                     zones[current_zone_index].supprimer_coffre(num-1);
                                 }
                             },
-                            None => affichage::notifier(&zones[current_zone_index], "Aucun objet à récupérer"),
+                            None => affichage::notifier(&zones[current_zone_index], "Aucun objet à récupérer", &pnjs),
                         }
                     } else {
-                        affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !");
+                        affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !", &pnjs);
                     }
                 } else {
-                    affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !")
+                    affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !", &pnjs);
                 }
             },
         }

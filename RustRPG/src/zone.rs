@@ -3,6 +3,8 @@ use crate::coffre::Coffre;
 use crate::inventaire::Inventaire;
 use crate::affichage::notifier;
 use crate::personnage::Mob;
+use crate::personnage::PNJ;
+use crate::affichage::ajouter_notification;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Connexion {
@@ -34,7 +36,7 @@ impl Zone {
         cpt
     }
 
-    pub fn fouiller_zone(&mut self) {
+    pub fn fouiller_zone(&mut self, tous_les_pnjs: &[PNJ]) {
         let mut cpt :u8 = 0;
         for coffre in &mut self.coffres {
             if !coffre.visible {
@@ -42,7 +44,7 @@ impl Zone {
                 coffre.visible = true;
             }
         }
-        notifier(self, &("Vous avez trouvé ".to_owned() + &cpt.to_string() + " coffre(s) ."));
+        ajouter_notification(&("Vous avez trouvé ".to_owned() + &cpt.to_string() + " coffre(s) ."));
     }
 
     pub fn supprimer_coffre(&mut self, num : usize) {
