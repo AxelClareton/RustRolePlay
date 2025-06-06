@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt;
 use std::fs::{File};
 use std::io::{self, Read, Write};
@@ -6,6 +7,7 @@ use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
 use crate::inventaire::{Inventaire, ObjetInventaire};
+use crate::objet::{Objet, OBJETS_DISPONIBLES};
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum EtatPartie {
@@ -444,6 +446,20 @@ pub struct PNJ {
 }
 
 impl PNJ {
+    pub fn prochain_id_pnj(fichier: &str) -> io::Result<u32> {
+        let mut file = File::open(fichier)?;
+        let mut contenu = String::new();
+        file.read_to_string(&mut contenu)?;
+
+        let pnjs: Vec<PNJ> = serde_json::from_str(&contenu)?;
+
+        let max_id = pnjs.iter()
+            .map(|pnj| pnj.personnage.id)
+            .max()
+            .unwrap_or(0);
+
+        Ok(max_id + 1)
+    }
     pub fn creer_pnj(
         nom: &str, 
         description: &str, 
@@ -451,8 +467,8 @@ impl PNJ {
         zone_id: u32, 
         multiplicateur_prix: f32
     ) -> io::Result<Self> {
-        let prochain_id = Personnage::prochain_id("src/json/pnj.json")?;
-        let inventaire = Inventaire { taille: 10, objets: vec![] };
+        let prochain_id = PNJ::prochain_id_pnj("src/json/pnj.json")?;
+        let inventaire = PNJ::choisir_objets_inventaire()?;;
         let parties_du_corps = creer_parties_du_corps();
 
         let mut rng: ThreadRng = rand::rng();
@@ -479,6 +495,55 @@ impl PNJ {
 
         pnj.sauvegarder_pnj("src/json/pnj.json")?;
         Ok(pnj)
+    }
+
+    pub fn choisir_objets_inventaire() -> io::Result<Inventaire> {
+        let objets_disponibles = OBJETS_DISPONIBLES.read().unwrap();
+        let mut inventaire = Inventaire { taille: 10, objets: Vec::new() };
+
+        println!("Entrez les objets que le marchand aura parmi ceux-ci :");
+        for (id, objet) in objets_disponibles.iter() {
+            println!("{}: {}", id, objet.nom);
+        }
+
+        println!("Précisez le nombre d'exemplaires pour chaque objet sous cette forme : numéro_de_l'objet:quantité, numéro_de_l'objet:quantité");
+        println!("Par exemple : 1:3,2:5");
+        print!("Votre choix : ");
+        io::stdout().flush()?;
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input)?;
+
+        let choix: Vec<&str> = input.trim().split(',').collect();
+        for choix_item in choix {
+            let parts: Vec<&str> = choix_item.split(':').map(|s| s.trim()).collect();
+            if parts.len() == 2 {
+                if let Ok(objet_id) = parts[0].parse::<u8>() {
+                    if let Ok(quantite) = parts[1].parse::<u8>() {
+                        if objets_disponibles.contains_key(&objet_id) {
+                            for _ in 0..quantite {
+                                inventaire.ajouter_objet(objet_id);
+                            }
+                        } else {
+                            println!("Objet avec l'ID {} non trouvé.", objet_id);
+                        }
+                    } else {
+                        println!("Quantité invalide : {}", parts[1]);
+                    }
+                } else {
+                    println!("ID d'objet invalide : {}", parts[0]);
+                }
+            } else {
+                println!("Format invalide : {}", choix_item);
+            }
+        }
+
+        if inventaire.objets.len() > 10 {
+            println!("Attention : L'inventaire ne peut pas contenir plus de 10 objets.");
+            inventaire.objets.truncate(10);
+        }
+
+        Ok(inventaire)
     }
 
     pub fn sauvegarder_pnj(&self, fichier: &str) -> io::Result<()> {
@@ -665,6 +730,95 @@ impl PNJ {
 
     pub fn modifier_multiplicateur_prix(&mut self, nouveau_multiplicateur: f32) {
         self.multiplicateur_prix = nouveau_multiplicateur.max(0.1); // Minimum 10% du prix de base
+    }
+
+    pub fn interagir(&mut self, joueur: &mut Personnage) {
+        println!("Vous rencontrez {}. Que voulez-vous faire ?", self.personnage.nom);
+        println!("1. Combattre");
+        println!("2. Voir l'inventaire");
+        println!("3. Quitter");
+
+        let mut choix = String::new();
+        io::stdin().read_line(&mut choix).expect("Erreur de lecture !");
+
+        match choix.trim() {
+            "1" => {
+                println!("Vous avez choisi de combattre !");
+                // Implémentez la logique de combat ici
+            }
+            "2" => {
+                self.afficher_inventaire();
+                self.acheter_objet(joueur);
+            }
+            "3" => {
+                println!("Vous quittez l'interaction avec le PNJ.");
+            }
+            _ => println!("Choix invalide !"),
+        }
+    }
+
+    fn afficher_inventaire(&self) {
+        println!("Inventaire de {}:", self.personnage.nom);
+        for (index, objet) in self.personnage.inventaire.objets.iter().enumerate() {
+            if let Some(o) = OBJETS_DISPONIBLES.read().unwrap().get(&objet.objet_id) {
+                println!("{}: {} (x{}) - Prix: {} /unité",
+                         index + 1,
+                         o.nom,
+                         objet.nombre,
+                         self.calculer_prix_vente(o.prix));
+            }
+        }
+    }
+
+    fn acheter_objet(&mut self, joueur: &mut Personnage) {
+        println!("Vous avez {} d'argent.", joueur.argent);
+        println!("Entrez le numéro de l'objet que vous souhaitez acheter ou 'q' pour quitter :");
+
+        let mut choix = String::new();
+        io::stdin().read_line(&mut choix).expect("Erreur de lecture !");
+
+        if choix.trim().eq_ignore_ascii_case("q") {
+            println!("Vous quittez l'interaction avec le PNJ.");
+            return;
+        }
+
+        if let Ok(index) = choix.trim().parse::<usize>() {
+            if index > 0 && index <= self.personnage.inventaire.objets.len() {
+                let objet_inv = self.personnage.inventaire.objets[index - 1].clone();
+                if let Some(objet) = OBJETS_DISPONIBLES.read().unwrap().get(&objet_inv.objet_id) {
+                    println!("Combien voulez-vous acheter de {} ?", objet.nom);
+                    let mut quantite = String::new();
+                    io::stdin().read_line(&mut quantite).expect("Erreur de lecture !");
+
+                    if let Ok(quantite) = quantite.trim().parse::<u8>() {
+                        let prix_total = self.calculer_prix_vente(objet.prix) * quantite as u32;
+                        if quantite <= objet_inv.nombre && joueur.argent >= prix_total {
+                            joueur.retirer_argent(prix_total);
+                            self.personnage.argent += prix_total;
+
+                            // Ajouter l'objet à l'inventaire du joueur
+                            for _ in 0..quantite {
+                                joueur.inventaire.ajouter_objet(objet_inv.objet_id);
+                            }
+
+                            // Retirer l'objet de l'inventaire du PNJ
+                            self.personnage.inventaire.objets[index - 1].nombre -= quantite;
+                            if self.personnage.inventaire.objets[index - 1].nombre == 0 {
+                                self.personnage.inventaire.objets.remove(index - 1);
+                            }
+
+                            println!("Achat réussi !");
+                        } else {
+                            println!("Quantité invalide ou pas assez d'argent !");
+                        }
+                    }
+                }
+            } else {
+                println!("Numéro d'objet invalide !");
+            }
+        } else {
+            println!("Entrée invalide !");
+        }
     }
 }
 

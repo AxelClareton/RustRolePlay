@@ -7,6 +7,7 @@ mod personnage;
 mod affichage;
 mod combat;
 
+use std::io;
 use zone::Zone;
 use moteur::{charger_zones};
 use rand::Rng;
@@ -71,9 +72,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut current_zone_index = zones.iter_mut().position(|zone| zone.id == 1)
         .expect("⚠️ La zone avec l'id 1 n'a pas été trouvée !");
 
-    // ajouter_objet(1, "Épée");
-    // ajouter_objet(2, "Potion");
-    // ajouter_objet(3, "Bouclier");
+    let mut pnjs = PNJ::charger_pnj("src/json/pnj.json")?;
 
     let _inventaire = &mut Inventaire {
         taille: 5,
@@ -216,14 +215,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "c".to_string(), // fouiller la zone
             "i".to_string(), // autre option
             "t".to_string(), // autre option
-            "p".to_string(),
         ];
+
+
+        let pnjs_in_zone: Vec<usize> = pnjs.iter()
+            .enumerate()
+            .filter(|(_, p)| p.zone_id == zones[current_zone_index].id as u32)
+            .map(|(i, _)| i)
+            .collect();
+
+        if !pnjs_in_zone.is_empty() {
+            options.push("p".to_string()); // interagir avec les PNJ
+        }
+
         for i in 1..=nbr_coffres {
             options.push(i.to_string());
         }
 
         let choix = affichage::faire_choix(
-            "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, le numéro du coffre) :",&options
+            "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, 'p' pour parler aux PNJ si présent dans la zone ou le numéro du coffre) :",&options
         );
         match choix.as_str() {
             "q" => {
@@ -231,7 +241,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                   break Ok(());
               }
             "p" => {
-                println!("{}", perso_joueur)
+                if !pnjs_in_zone.is_empty() {
+                    println!("Choisissez un PNJ pour interagir :");
+                    for (index, &pnj_index) in pnjs_in_zone.iter().enumerate() {
+                        println!("{}. {}", index + 1, pnjs[pnj_index].personnage.nom);
+                    }
+
+                    let mut choix_pnj = String::new();
+                    io::stdin().read_line(&mut choix_pnj).expect("Erreur de lecture !");
+                    if let Ok(index) = choix_pnj.trim().parse::<usize>() {
+                        if index > 0 && index <= pnjs_in_zone.len() {
+                            let pnj_index = pnjs_in_zone[index - 1];
+                            pnjs[pnj_index].interagir(&mut perso_joueur);
+                        } else {
+                            println!("Numéro de PNJ invalide !");
+                        }
+                    } else {
+                        println!("Entrée invalide !");
+                    }
+                }
             }
             "i" => {
                 println!("Votre inventaire : ");
