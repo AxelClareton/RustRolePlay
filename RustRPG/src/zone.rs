@@ -20,6 +20,7 @@ pub struct Zone {
     pub coffres: Vec<Coffre>,
     pub objet_zone : Inventaire,
     pub mob_present: bool,
+    pub prix: u32,
 }
 
 impl Zone {

@@ -22,10 +22,9 @@ use personnage::Mob;
 use crate::combat::{combattre, CombatResultat};
 use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
-use crate::inventaire::ObjetInventaire;
 
 
-fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str) {
+fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str, perso_joueur: &mut Personnage) {
     let current_zone = &zones[*current_zone_index];
 
     // Trouver la connexion
@@ -63,12 +62,17 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
                 );
                 match choix.as_str() {
                     "oui" => {
-                        zones[new_index].ouvert = true;
-                        //déduire le prix
-                        *current_zone_index = new_index; // Mise à jour de l'index
-                        affichage::notifier(&zones[*current_zone_index], "Déplacement...");
-                        sleep(Duration::from_secs(5));
-                        affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone");
+                        let prix_zone = zones[new_index].prix;
+                        if perso_joueur.argent >= prix_zone {
+                            perso_joueur.retirer_argent(prix_zone);
+                            zones[new_index].ouvert = true;
+                            *current_zone_index = new_index;
+                            affichage::notifier(&zones[*current_zone_index], "Déplacement...");
+                            sleep(Duration::from_secs(5));
+                            affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone");
+                        } else {
+                            affichage::notifier(&zones[*current_zone_index], "❌ Vous n'avez pas assez d'argent pour acheter cette zone !");
+                        }
                     }
                     _ => {
                         affichage::notifier(&zones[*current_zone_index], "Zone non achetée, vous restez dans la même zone");
@@ -443,7 +447,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "🚪 Vers quelle direction voulez-vous aller ?",
                     &vec!["nord".to_string(), "sud".to_string(), "est".to_string(), "ouest".to_string()]
                 );
-                se_deplacer(&mut zones, &mut current_zone_index, &direction);
+                se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut perso_joueur);
                 if(zones[current_zone_index].mob_present){
                     let mut rng = rand::rng();
                     let chance: f32 = rng.random(); // génère un float entre 0.0 et 1.0
@@ -480,7 +484,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 
             }
             "nord" | "sud" | "est" | "ouest" => {
-                se_deplacer(&mut zones, &mut current_zone_index, &choix);
+                se_deplacer(&mut zones, &mut current_zone_index, &choix, &mut perso_joueur);
                 if rng.random_range(0..99) < 10 {
                     affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !");
                 }
