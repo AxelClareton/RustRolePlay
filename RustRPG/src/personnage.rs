@@ -45,7 +45,6 @@ impl fmt::Display for PartieDuCorps {
     }
 }
 
-
 impl PartieDuCorps {
     pub fn new(nom: String, vie_max: u32) -> Self {
         Self {
@@ -181,7 +180,6 @@ impl PartieDuCorps {
 
         objet
     }
-
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -202,7 +200,6 @@ pub struct Personnage {
     pub parties_du_corps: Vec<PartieDuCorps>,
     pub argent: u32,
     pub est_vivant: bool,
-    
 }
 
 impl fmt::Display for Personnage {
@@ -219,8 +216,6 @@ impl fmt::Display for Personnage {
         Ok(())
     }
 }
-
-
 
 impl Personnage {
     pub fn gerer_blessure(&mut self, nom_partie: &str, degats: u32) -> ResultatBlessure {
@@ -296,13 +291,11 @@ impl Personnage {
         if !self.est_vivant {
             return false;
         }
-        // Vérifier que la tête et le torse sont vivants (non morts)
         let tete_vivante = self.parties_du_corps.iter().any(|p| p.nom.to_lowercase().contains("tête") && !p.est_morte());
         let torse_vivant = self.parties_du_corps.iter().any(|p| p.nom.to_lowercase().contains("torse") && !p.est_morte());
         if !tete_vivante || !torse_vivant {
             return false;
         }
-        // Vérifier qu'au moins un bras et une jambe sont vivants
         let bras_fonctionnels = self.parties_du_corps.iter().filter(|p| p.nom.to_lowercase().contains("bras") && !p.est_morte()).count();
         let jambes_fonctionnelles = self.parties_du_corps.iter().filter(|p| p.nom.to_lowercase().contains("jambe") && !p.est_morte()).count();
         bras_fonctionnels > 0 && jambes_fonctionnelles > 0
@@ -407,9 +400,6 @@ impl Personnage {
         }
     }
 
-    /// Soigne les parties du corps après un combat selon les règles :
-    /// - Si une partie est à 0%, on la remet à 100% et on met la guérison à +1h
-    /// - Si une partie est blessée (pas à 100% et pas à 0%), on la remet à 100% sans conséquence
     pub fn soigner_apres_combat(&mut self) {
         if !self.est_vivant {
             return;
@@ -417,12 +407,10 @@ impl Personnage {
         let maintenant = chrono::Utc::now();
         for partie in &mut self.parties_du_corps {
             if partie.est_morte() {
-                // On remet la vie au max et on met la guérison à +1h
                 partie.vie_actuelle = partie.vie_max;
                 partie.etat = EtatPartie::Saine;
                 partie.guerison = maintenant + chrono::Duration::hours(1);
             } else if partie.vie_actuelle < partie.vie_max {
-                // Blessée mais pas morte : on remet à 100% sans délai
                 partie.vie_actuelle = partie.vie_max;
                 partie.etat = EtatPartie::Saine;
                 partie.guerison = maintenant;
@@ -450,22 +438,26 @@ pub struct Joueur {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PNJ {
     pub personnage: Personnage,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Mob {
-    pub personnage: Personnage,
+    pub dialogues: Vec<String>,
+    pub zone_id: u32,
+    pub multiplicateur_prix: f32,
 }
 
 impl PNJ {
-    pub fn creer_pnj(nom: &str, description: &str) -> io::Result<Self> {
+    pub fn creer_pnj(
+        nom: &str, 
+        description: &str, 
+        dialogues: Vec<String>, 
+        zone_id: u32, 
+        multiplicateur_prix: f32
+    ) -> io::Result<Self> {
         let prochain_id = Personnage::prochain_id("src/json/pnj.json")?;
         let inventaire = Inventaire { taille: 10, objets: vec![] };
         let parties_du_corps = creer_parties_du_corps();
 
         let mut rng: ThreadRng = rand::rng();
         let valeur = rng.random_range(80..120);
-        let valeur2 = rng.random_range(0..20);
+        let valeur2 = rng.random_range(50..200); // Plus d'argent pour les marchands
 
         let personnage = Personnage {
             id: prochain_id,
@@ -478,41 +470,138 @@ impl PNJ {
             est_vivant: true,
         };
 
-        personnage.sauvegarder_json("src/json/pnj.json")?;
-        Ok(PNJ { personnage })
+        let pnj = PNJ {
+            personnage,
+            dialogues,
+            zone_id,
+            multiplicateur_prix,
+        };
+
+        pnj.sauvegarder_pnj("src/json/pnj.json")?;
+        Ok(pnj)
     }
 
-    pub fn charger_pnj(fichier: &str) -> io::Result<Vec<Personnage>> {
-        let pnjs = Personnage::charger_depuis_json(fichier)?;
-        if pnjs.is_empty() {
-            println!("Aucun PNJ trouvé, création de PNJs de test...");
-            Self::creer_pnjs_test_direct()?;
-            return Personnage::charger_depuis_json(fichier);
+    pub fn sauvegarder_pnj(&self, fichier: &str) -> io::Result<()> {
+        let mut pnjs = match Self::lire_pnjs_json(fichier)? {
+            Some(pnjs) => pnjs,
+            None => vec![],
+        };
+        
+        pnjs.push(self.clone());
+        let json = serde_json::to_string_pretty(&pnjs)?;
+        let mut file = File::create(fichier)?;
+        file.write_all(json.as_bytes())
+    }
+
+    fn lire_pnjs_json(fichier: &str) -> io::Result<Option<Vec<PNJ>>> {
+        let mut file = match File::open(fichier) {
+            Ok(file) => file,
+            Err(_) => return Ok(None),
+        };
+        
+        let mut contenu = String::new();
+        file.read_to_string(&mut contenu)?;
+        
+        if contenu.trim().is_empty() {
+            return Ok(None);
         }
-        Ok(pnjs)
+        
+        match serde_json::from_str(&contenu) {
+            Ok(pnjs) => Ok(Some(pnjs)),
+            Err(_) => Ok(None),
+        }
+    }
+
+    pub fn charger_pnj(fichier: &str) -> io::Result<Vec<PNJ>> {
+        match Self::lire_pnjs_json(fichier)? {
+            Some(pnjs) => Ok(pnjs),
+            None => {
+                println!("Aucun PNJ trouvé, création de PNJs de test...");
+                Self::creer_pnjs_test_direct()?;
+                match Self::lire_pnjs_json(fichier)? {
+                    Some(pnjs) => Ok(pnjs),
+                    None => Ok(vec![]),
+                }
+            }
+        }
     }
 
     pub fn creer_pnjs_test_direct() -> io::Result<()> {
+        // Possible de leur mettre l'inventaire içi pour choisir les objets qu'ils vendent
         let pnjs_test = vec![
-            ("Marcus le Marchand", "Un marchand expérimenté qui vend des équipements"),
-            ("Elena la Guérisseuse", "Une soigneuse capable de guérir les blessures"),
-            ("Gareth le Garde", "Un garde robuste qui protège la ville"),
-            ("Lydia l'Informatrice", "Une espionne qui connaît tous les secrets"),
-            ("Thomas le Forgeron", "Un artisan qui fabrique des armes et armures")
+            (
+                "Marcus le Marchand",
+                "Un marchand expérimenté qui vend des équipements de qualité",
+                vec![
+                    "Bienvenue dans ma boutique !".to_string(),
+                    "J'ai les meilleurs équipements de la région.".to_string(),
+                    "Mes prix sont justes pour la qualité proposée.".to_string(),
+                    "Revenez me voir quand vous voulez !".to_string(),
+                ],
+                1,
+                1.2, // Prix 20% plus cher
+            ),
+            (
+                "Elena la Guérisseuse",
+                "Une soigneuse qui vend potions et remèdes",
+                vec![
+                    "Que puis-je faire pour votre santé ?".to_string(),
+                    "Mes potions sont préparées avec les meilleures herbes.".to_string(),
+                    "La santé n'a pas de prix, mais mes potions si !".to_string(),
+                    "Prenez soin de vous, aventurier.".to_string(),
+                ],
+                2,
+                1.5, // Prix 50% plus cher (produits rares)
+            ),
+            (
+                "Gareth le Garde-Marchand",
+                "Un ancien garde qui vend des armes et armures",
+                vec![
+                    "Vous cherchez de l'équipement de combat ?".to_string(),
+                    "J'ai servi dans l'armée, je connais le bon matériel.".to_string(),
+                    "Ces armes ont fait leurs preuves au combat.".to_string(),
+                    "Que vos armes vous portent chance !".to_string(),
+                ],
+                3,
+                1.1, // Prix 10% plus cher
+            ),
+            (
+                "Lydia l'Informatrice",
+                "Une espionne qui vend des informations et objets rares",
+                vec![
+                    "Chut... Approchez-vous, j'ai ce qu'il vous faut.".to_string(),
+                    "Mes objets sont... difficiles à trouver ailleurs.".to_string(),
+                    "Gardez le secret sur nos transactions.".to_string(),
+                    "Les murs ont des oreilles, soyez discret.".to_string(),
+                ],
+                4,
+                2.0, // Prix doublés
+            ),
+            (
+                "Thomas le Forgeron",
+                "Un artisan qui fabrique et vend des outils",
+                vec![
+                    "Mes outils sont forgés avec passion !".to_string(),
+                    "Rien ne vaut un bon outil bien fait.".to_string(),
+                    "Je garantis la qualité de mes créations.".to_string(),
+                    "Que votre travail soit fructueux !".to_string(),
+                ],
+                5,
+                0.9, // Prix 10% moins cher
+            ),
         ];
 
-        let mut personnages = vec![];
-        let mut current_id = 1;
+        let mut pnjs = vec![];
 
-        for (nom, description) in pnjs_test {
+        for (id, (nom, description, dialogues, zone_id, multiplicateur_prix)) in pnjs_test.into_iter().enumerate() {
             let inventaire = Inventaire { taille: 10, objets: vec![] };
             let parties_du_corps = creer_parties_du_corps();
             let mut rng: ThreadRng = rand::rng();
-            let valeur = rng.random_range(80..120);
-            let valeur2 = rng.random_range(0..20);
+            let valeur = rng.random_range(100..140); // plus de force pour les marchands
+            let valeur2 = rng.random_range(100..300); // Plus d'argent pour les marchands
 
             let personnage = Personnage {
-                id: current_id,
+                id: (id + 1) as u32,
                 nom: nom.to_string(),
                 description: description.to_string(),
                 force: valeur,
@@ -522,21 +611,83 @@ impl PNJ {
                 est_vivant: true,
             };
 
-            personnages.push(personnage);
-            current_id += 1;
+            let pnj = PNJ {
+                personnage,
+                dialogues,
+                zone_id,
+                multiplicateur_prix,
+            };
+
+            pnjs.push(pnj);
         }
 
-        let json = serde_json::to_string_pretty(&personnages)?;
+        let json = serde_json::to_string_pretty(&pnjs)?;
         let mut file = File::create("src/json/pnj.json")?;
         file.write_all(json.as_bytes())?;
         
-        println!("5 PNJs de test créés avec succès !");
+        println!("5 PNJs marchands de test créés avec succès !");
         Ok(())
     }
 
     pub fn creer_pnjs_test() -> io::Result<()> {
         Self::creer_pnjs_test_direct()
     }
+
+    pub fn obtenir_dialogue_aleatoire(&self) -> Option<&String> {
+        if self.dialogues.is_empty() {
+            return None;
+        }
+        let mut rng = rand::rng();
+        let index = rng.random_range(0..self.dialogues.len());
+        self.dialogues.get(index)
+    }
+
+    pub fn calculer_prix_vente(&self, prix_base: u32) -> u32 {
+        ((prix_base as f32) * self.multiplicateur_prix) as u32
+    }
+
+    pub fn calculer_prix_achat(&self, prix_base: u32) -> u32 {
+        let prix_achat_base = (prix_base as f32) * 0.5;
+        (prix_achat_base / self.multiplicateur_prix) as u32
+    }
+
+    pub fn est_dans_zone(&self, zone_id: u32) -> bool {
+        self.zone_id == zone_id
+    }
+
+    pub fn ajouter_dialogue(&mut self, nouveau_dialogue: String) {
+        self.dialogues.push(nouveau_dialogue);
+    }
+
+    pub fn changer_zone(&mut self, nouvelle_zone: u32) {
+        self.zone_id = nouvelle_zone;
+    }
+
+    pub fn modifier_multiplicateur_prix(&mut self, nouveau_multiplicateur: f32) {
+        self.multiplicateur_prix = nouveau_multiplicateur.max(0.1); // Minimum 10% du prix de base
+    }
+}
+
+// Affichage personnalisé pour les PNJ
+impl fmt::Display for PNJ {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "=== PNJ Marchand #{} ===", self.personnage.id)?;
+        writeln!(f, "Nom         : {}", self.personnage.nom)?;
+        writeln!(f, "Description : {}", self.personnage.description)?;
+        writeln!(f, "Zone        : {}", self.zone_id)?;
+        writeln!(f, "Multiplicateur prix : {:.1}", self.multiplicateur_prix)?;
+        writeln!(f, "Argent      : {}", self.personnage.argent)?;
+        writeln!(f, "Dialogues   :")?;
+        for (i, dialogue) in self.dialogues.iter().enumerate() {
+            writeln!(f, "  {}: \"{}\"", i + 1, dialogue)?;
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Mob {
+    pub personnage: Personnage,
 }
 
 impl Mob {

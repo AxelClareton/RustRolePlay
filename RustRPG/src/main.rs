@@ -22,6 +22,8 @@ use personnage::Mob;
 use crate::combat::{combattre, CombatResultat};
 use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
+use crate::inventaire::ObjetInventaire;
+
 
 fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str) {
     let current_zone = &zones[*current_zone_index];
@@ -171,8 +173,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             let mut description = String::new();
                             std::io::stdin().read_line(&mut description).expect("❌ Erreur de lecture !");
                             let description = description.trim();
-    
-                            match PNJ::creer_pnj(nom, description) {
+                            // Crée le PNJ (nom, description (&str), plusieurs dialogues (vec<String>), numéro de zone attitré(u32), multiplicateur de prix(f32))
+                            // Demander les dialogues
+                            println!("Entrez les dialogues du PNJ (séparés par des /) : ");
+                            let mut dialogues = String::new();
+                            std::io::stdin().read_line(&mut dialogues).expect("❌ Erreur de lecture !");
+                            let dialogues: Vec<String> = dialogues.trim().split('/').map(|s| s.trim().to_string()).collect();
+                            // demander le nom, la description, les dialogues, le numéro de zone et le multiplicateur de prix
+                            println!("Entrez le numéro de la zone attitrée (u32) : ");
+                            let mut zone_attribuee = String::new();
+                            std::io::stdin().read_line(&mut zone_attribuee).expect("❌ Erreur de lecture !");
+                            let zone_attribuee: u32 = zone_attribuee.trim().parse().expect("❌ Erreur de lecture du numéro de zone");
+                            println!("Entrez le multiplicateur de prix (f32) : ");
+                            let mut multiplicateur_prix = String::new();
+                            std::io::stdin().read_line(&mut multiplicateur_prix).expect("❌ Erreur de lecture !");
+                            let multiplicateur_prix: f32 = multiplicateur_prix.trim().parse().expect("❌ Erreur de lecture du multiplicateur de prix");
+                            // Crée le PNJ
+                            match PNJ::creer_pnj(nom, description, dialogues, zone_attribuee, multiplicateur_prix) {
                                 Ok(pnj) => println!("✅ PNJ créé : {:#?}", pnj),
                                 Err(e) => println!("❌ Erreur lors de la création du PNJ : {}", e),
                             }
