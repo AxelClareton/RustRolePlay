@@ -467,11 +467,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
                                 for p in resultat.etat_final_mob.parties_du_corps{
                                     println!("{}", p);
-                                    let objet = &p.equipement().objets[1];
-                                    zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                                    if p.equipement().objets.len() > 1 {
+                                        let objet = &p.equipement().objets[1];
+                                        zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                                    }
                                 }
                                 
-                                println!("Vous avez gagné")
+                                println!("Vous avez gagné");
+                                perso_joueur.ajouter_argent(mob_choisi.argent);
+                                println!("Vous ramassez {} pièces d'or sur le mob !", mob_choisi.argent);
                             }
                             else { 
                                 println!("Malheureusement vous venez de perdre la partie s'arrete pour vous ... \n N'hésitez pas a refaire une partie");
