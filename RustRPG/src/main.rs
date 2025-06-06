@@ -9,15 +9,18 @@ mod combat;
 
 use zone::Zone;
 use moteur::{charger_zones};
-use rand::Rng;
+use rand::{rng, Rng};
 use crate::moteur::charger_objets;
 use std::thread::sleep;
 use std::time::Duration;
+use rand::seq::IndexedRandom;
 use inventaire::Inventaire;
 use personnage::Joueur;
 use personnage::Personnage;
 use personnage::PNJ;
 use personnage::Mob;
+use crate::combat::{combattre, CombatResultat};
+use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
 use crate::inventaire::ObjetInventaire;
 
@@ -29,6 +32,24 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
     if let Some(conn) = current_zone.connection.iter().find(|c| c.direction == direction) {
         // Trouver la nouvelle zone via l'ID de la connexion
         if let Some(new_index) = zones.iter().position(|z| z.id == conn.id_dest.parse::<u8>().unwrap()) {
+            if(zones[new_index].mob_present){
+                let mob_choix = affichage::faire_choix(
+                    &format!("Il y a un ennemie dans la zone {}, voulez-vous y aller quand même ? (oui/non)", conn.id_dest),
+                    &vec!["oui".to_string(), "non".to_string()]
+                );
+                match mob_choix.as_str() {
+                    "oui" => {
+                        //println!("Début du combat");
+                    }
+                    _ => { 
+                        println!("Vous avez peur de l'ennemie, vous restez dans la même zone");
+                        return
+                    }
+                }
+            }
+            else { 
+                println!("Il y a aucun mob")
+            }
             if zones[new_index].ouvert {
                 *current_zone_index = new_index; // Mise à jour de l'index
                 affichage::notifier(&zones[*current_zone_index], "Déplacement...");
@@ -82,7 +103,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //Initiliasation du personnage avec l'id 1 au cas où il n'y a pas de personnage.
     let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
     let mut perso_joueur : Personnage = personnages.into_iter().find(|j| j.id == 1).expect("No player found with this ID");
-
+    
     loop {
         let choix_perso = affichage::faire_choix(
             "Choisissez quoi faire (1 créer perso, 2 charger perso) : ",
@@ -204,6 +225,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     // Message d'accueil
     affichage::notifier(&zones[current_zone_index], "✨ Bienvenue dans le RustRPG !");
+    
+    
     affichage::afficher_zone(&zones[current_zone_index]);
     let mut rng = rand::rng();
     // Boucle principale du jeu
@@ -364,7 +387,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                             }
                             _ => {
-                                println!("Vous vous débarassez de l'objet");
+                                //println!("Vous vous débarassez de l'objet");
+                                let choix_jeter = affichage::faire_choix(
+                                    "Voulez vous jeter l'objet ? (oui ou non)",
+                                    &vec!["oui".to_string(), "non".to_string()]
+                                );
+
+                                match choix_jeter.as_str() {
+                                    "oui" => {
+                                        let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                        zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                                        println!("VOus vous débarassé de l'objet")
+                                        //perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
+                                    }
+                                    _ => {
+                                        println!("Vous ne faites rien de cette objet.")
+                                    }
+                                }
                             }
                         }
                     }
@@ -383,11 +422,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 match zones[current_zone_index].objet_zone.afficher(false){
                     Some(obj)=> {
                         let choix_recuperer = affichage::faire_choix(
-                            "Voulez vous récupérer l'objet ? (o/n)",
-                            &vec!["o".to_string(), "n".to_string()]
+                            "Voulez vous récupérer l'objet ? (oui/non)",
+                            &vec!["oui".to_string(), "non".to_string()]
                         );
                         match choix_recuperer.as_str() {
-                            "u" => {
+                            "oui" => {
                                 perso_joueur.inventaire.ajouter_objet(obj as u8);
                                 println!("Vous récupérez l'objet {}", obj)
                             }
@@ -405,10 +444,40 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &vec!["nord".to_string(), "sud".to_string(), "est".to_string(), "ouest".to_string()]
                 );
                 se_deplacer(&mut zones, &mut current_zone_index, &direction);
+                if(zones[current_zone_index].mob_present){
+                    let mut rng = rand::rng();
+                    let chance: f32 = rng.random(); // génère un float entre 0.0 et 1.0
 
-                if rng.random_range(0..99) < 10 {
-                    affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !");
+                    if chance < 0.9 {
+                        // Le mob apparaît (60 % de chances)
+                        let mobs = Mob::charger_mob("src/json/mob.json")?;
+
+                        let mut rng = rand::rng();
+                        if let Some(mob_choisi) = mobs.choose(&mut rng) {
+                            println!(
+                                "Mob choisi au hasard : ID: {}, Nom: {}, Description: {}",
+                                mob_choisi.id, mob_choisi.nom, mob_choisi.description
+                            );
+                            let resultat = combattre(perso_joueur.clone(), mob_choisi.clone());
+                            if(resultat.etat_final_joueur.est_vivant){
+                                perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
+                                for p in resultat.etat_final_mob.parties_du_corps{
+                                    println!("{}", p);
+                                    let objet = &p.equipement().objets[1];
+                                    zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                                }
+                                
+                                println!("Vous avez gagné")
+                            }
+                            else { 
+                                println!("Malheureusement vous venez de perdre la partie s'arrete pour vous ... \n N'hésitez pas a refaire une partie");
+                                return Ok(());
+                            }
+                        }
+
+                    }
                 }
+                
             }
             "nord" | "sud" | "est" | "ouest" => {
                 se_deplacer(&mut zones, &mut current_zone_index, &choix);

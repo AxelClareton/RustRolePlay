@@ -2,6 +2,7 @@ use serde::Deserialize;
 use crate::coffre::Coffre;
 use crate::inventaire::Inventaire;
 use crate::affichage::notifier;
+use crate::personnage::Mob;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Connexion {
@@ -18,6 +19,7 @@ pub struct Zone {
     pub connection: Vec<Connexion>,
     pub coffres: Vec<Coffre>,
     pub objet_zone : Inventaire,
+    pub mob_present: bool,
 }
 
 impl Zone {
