@@ -769,12 +769,15 @@ impl PNJ {
                     println!("Vous avez gagné le combat contre le PNJ !");
                     // Drop de l'inventaire du PNJ
                     for objet in &self.personnage.inventaire.objets {
-                        zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                        for _ in 0..objet.nombre {
+                            zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
+                        }
                     }
                     self.personnage.inventaire.objets.clear();
+                    self.personnage.est_vivant = false;
                     // Récupération de l'argent
                     joueur.ajouter_argent(self.personnage.argent);
-                    println!("Vous ramassez {} pièces d'or sur le PNJ !", self.personnage.argent);
+                    println!("Vous ramassez {} d'argent sur le PNJ !", self.personnage.argent);
                     self.personnage.argent = 0;
                 } else {
                     *joueur = resultat.etat_final_joueur;
