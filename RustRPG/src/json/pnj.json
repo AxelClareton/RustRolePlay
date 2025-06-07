@@ -1,0 +1,385 @@
+[
+  {
+    "personnage": {
+      "id": 1,
+      "nom": "Paul",
+      "description": "moche",
+      "force": 82,
+      "inventaire": {
+        "taille": 10,
+        "objets": []
+      },
+      "parties_du_corps": [
+        {
+          "nom": "Tête",
+          "vie_max": 50,
+          "vie_actuelle": 50,
+          "etat": "Saine",
+          "guerison": "2025-06-05T18:49:17.529317200Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Torse",
+          "vie_max": 100,
+          "vie_actuelle": 100,
+          "etat": "Saine",
+          "guerison": "2025-06-05T18:49:17.529319400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras droit",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-05T18:49:17.529320Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras gauche",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-05T18:49:17.529320400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe droite",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-05T18:49:17.529320700Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe gauche",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-05T18:49:17.529321Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        }
+      ],
+      "argent": 180,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "salut le sang"
+    ],
+    "zone_id": 1,
+    "multiplicateur_prix": 1.2
+  },
+  {
+    "personnage": {
+      "id": 2,
+      "nom": "Pierre",
+      "description": "gentil",
+      "force": 92,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          {
+            "nombre": 3,
+            "objet_id": 7
+          },
+          {
+            "nombre": 2,
+            "objet_id": 1
+          },
+          {
+            "nombre": 5,
+            "objet_id": 10
+          }
+        ]
+      },
+      "parties_du_corps": [
+        {
+          "nom": "Tête",
+          "vie_max": 50,
+          "vie_actuelle": 50,
+          "etat": "Saine",
+          "guerison": "2025-06-06T17:57:43.872308400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Torse",
+          "vie_max": 100,
+          "vie_actuelle": 100,
+          "etat": "Saine",
+          "guerison": "2025-06-06T17:57:43.872310700Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras droit",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-06T17:57:43.872311100Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras gauche",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-06T17:57:43.872311400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe droite",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-06T17:57:43.872311600Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe gauche",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-06T17:57:43.872311900Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        }
+      ],
+      "argent": 160,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "salut"
+    ],
+    "zone_id": 1,
+    "multiplicateur_prix": 2.0
+  },
+  {
+    "personnage": {
+      "id": 3,
+      "nom": "jean",
+      "description": "dsds",
+      "force": 89,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          {
+            "nombre": 5,
+            "objet_id": 5
+          },
+          {
+            "nombre": 2,
+            "objet_id": 6
+          }
+        ]
+      },
+      "parties_du_corps": [
+        {
+          "nom": "Tête",
+          "vie_max": 50,
+          "vie_actuelle": 50,
+          "etat": "Saine",
+          "guerison": "2025-06-06T18:21:21.596766400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Torse",
+          "vie_max": 100,
+          "vie_actuelle": 100,
+          "etat": "Saine",
+          "guerison": "2025-06-06T18:21:21.596788300Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras droit",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-06T18:21:21.596788900Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras gauche",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-06T18:21:21.596789500Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe droite",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-06T18:21:21.596789900Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe gauche",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-06T18:21:21.596790200Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        }
+      ],
+      "argent": 138,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "sfsf"
+    ],
+    "zone_id": 1,
+    "multiplicateur_prix": 1.5
+  },
+  {
+    "personnage": {
+      "id": 4,
+      "nom": "hugo",
+      "description": "ljkhk",
+      "force": 105,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          {
+            "nombre": 2,
+            "objet_id": 5
+          },
+          {
+            "nombre": 6,
+            "objet_id": 4
+          },
+          {
+            "nombre": 1,
+            "objet_id": 7
+          }
+        ]
+      },
+      "parties_du_corps": [
+        {
+          "nom": "Tête",
+          "vie_max": 50,
+          "vie_actuelle": 50,
+          "etat": "Saine",
+          "guerison": "2025-06-06T20:58:41.970118500Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Torse",
+          "vie_max": 100,
+          "vie_actuelle": 100,
+          "etat": "Saine",
+          "guerison": "2025-06-06T20:58:41.970128400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras droit",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-06T20:58:41.970128800Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Bras gauche",
+          "vie_max": 75,
+          "vie_actuelle": 75,
+          "etat": "Saine",
+          "guerison": "2025-06-06T20:58:41.970129100Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe droite",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-06T20:58:41.970129400Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        },
+        {
+          "nom": "Jambe gauche",
+          "vie_max": 80,
+          "vie_actuelle": 80,
+          "etat": "Saine",
+          "guerison": "2025-06-06T20:58:41.970129800Z",
+          "equipement": {
+            "taille": 1,
+            "objets": []
+          }
+        }
+      ],
+      "argent": 89,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "jhjg"
+    ],
+    "zone_id": 2,
+    "multiplicateur_prix": 1.3
+  }
+]

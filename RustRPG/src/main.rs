@@ -271,7 +271,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
 
         let choix = affichage::faire_choix(
-            "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, 'p' pour parler aux PNJ si présent dans la zone ou le numéro du coffre) :",&options
+            "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, 't' pour fouiller le sol de la zone et afficher les objets au sol, 'p' pour parler aux PNJ si présent dans la zone ou le numéro du coffre) :",&options
         );
         match choix.as_str() {
             "q" => {
@@ -282,7 +282,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if !pnjs_in_zone.is_empty() {
                     println!("Choisissez un PNJ pour interagir :");
                     for (index, &pnj_index) in pnjs_in_zone.iter().enumerate() {
-                        println!("{}. {}", index + 1, pnjs[pnj_index].personnage.nom);
+                        if pnjs[pnj_index].personnage.est_vivant {
+                            println!("{}. {}", index + 1, pnjs[pnj_index].personnage.nom);
+                        }
                     }
 
                     let mut choix_pnj = String::new();
