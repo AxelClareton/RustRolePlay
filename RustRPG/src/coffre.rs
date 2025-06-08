@@ -3,11 +3,11 @@ use crate::affichage;
 
 #[derive(Debug, Clone)]
 pub struct Coffre {
-    pub id: u8,
-    pub id_zone: u8,
-    pub cle: bool,
+    pub _id: u8,
+    pub _id_zone: u8,
+    pub _cle: bool,
     pub ouvert: bool,
-    pub description: String,
+    pub _description: String,
     pub inventaire: Inventaire,
     pub visible: bool,
 }
@@ -36,4 +36,24 @@ impl Coffre {
     }
 
 
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_coffre_creation() {
+        let coffre = Coffre {
+            _id: 1,
+            _id_zone: 1,
+            _cle: false,
+            ouvert: false,
+            _description: "Un coffre".to_string(),
+            inventaire: Inventaire { taille: 1, objets: vec![] },
+            visible: true,
+        };
+        assert_eq!(coffre._id, 1);
+        assert!(!coffre.ouvert);
+    }
 }

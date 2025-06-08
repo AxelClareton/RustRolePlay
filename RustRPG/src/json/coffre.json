@@ -3,56 +3,56 @@
     "type" : "coffre",
     "id" : "1",
     "id_zone" : "1",
-    "cle": "false",
-    "ouvert": "false",
-    "visible": "true",
+    "_cle": "false",
+    "_ouvert": "false",
+    "_visible": "true",
     "desc" : "test coffre",
-    "inventaire" : [{
-      "taille" : "3",
-      "objets" : [
-        {"nombre":1, "objet_id": 1}, {"nombre":2, "objet_id": 2}, {"nombre":1, "objet_id": 3}]
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : [
+        {"_nombre":1, "_objet_id": 1}, {"_nombre":2, "_objet_id": 2}, {"_nombre":1, "_objet_id": 3}]
     }]
   },
   {
     "type" : "coffre",
     "id" : "2",
     "id_zone" : "1",
-    "cle": "true",
-    "ouvert": "true",
-    "visible": "false",
+    "_cle": "true",
+    "_ouvert": "true",
+    "_visible": "false",
     "desc" : "coffre lpedleldpe",
-    "inventaire" : [{
-      "taille" : "1",
-      "objets" : [
-        {"nombre":1, "objet_id": 1}]
+    "_inventaire" : [{
+      "_taille_texte" : "1",
+      "_objets" : [
+        {"_nombre":1, "_objet_id": 1}]
     }]
   },
   {
     "type" : "coffre",
     "id" : "3",
     "id_zone" : "1",
-    "cle": "false",
-    "ouvert": "true",
-    "visible": "true",
+    "_cle": "false",
+    "_ouvert": "true",
+    "_visible": "true",
     "desc" : "test coffre",
-    "inventaire" : [{
-      "taille" : "3",
-      "objets" : [
-        {"nombre":1, "objet_id": 1}, {"nombre":2, "objet_id": 2}, {"nombre":1, "objet_id": 3}]
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : [
+        {"_nombre":1, "_objet_id": 1}, {"_nombre":2, "_objet_id": 2}, {"_nombre":1, "_objet_id": 3}]
     }]
   },
   {
     "type" : "coffre",
     "id" : "4",
     "id_zone" : "1",
-    "cle": "false",
-    "ouvert": "true",
-    "visible": "true",
+    "_cle": "false",
+    "_ouvert": "true",
+    "_visible": "true",
     "desc" : "test coffre",
-    "inventaire" : [{
-      "taille" : "3",
-      "objets" : [
-        {"nombre":1, "objet_id": 1}, {"nombre":2, "objet_id": 2}, {"nombre":1, "objet_id": 3}]
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : [
+        {"_nombre":1, "_objet_id": 1}, {"_nombre":2, "_objet_id": 2}, {"_nombre":1, "_objet_id": 3}]
     }]
   }
 ]

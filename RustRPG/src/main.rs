@@ -108,15 +108,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     //Initiliasation du personnage avec l'id 1 au cas où il n'y a pas de personnage.
     let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
-    let mut perso_joueur : Personnage = personnages.into_iter().find(|j| j.id == 1).expect("No player found with this ID");
+    let mut _perso_joueur : Personnage = personnages.into_iter().find(|j| j.id == 1).expect("No player found with this ID");
     
     loop {
         let choix_perso = affichage::faire_choix(
-            "Choisissez quoi faire (1 créer perso, 2 charger perso) : ",
-            &vec!["1".to_string(), "2".to_string(), "admin".to_string()]
+            "Choisissez quoi faire (1 créer perso, 2 charger perso, q quitter) : ",
+            &vec!["1".to_string(), "2".to_string(), "admin".to_string(), "q".to_string()]
         );
     
         match choix_perso.as_str() {
+            "q" => {
+                println!("👋 Au revoir !");
+                return Ok(());
+            }
             "1" => {
                 println!("Entrez le nom de votre personnage : ");
                 let mut nom = String::new();
@@ -133,7 +137,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
                 let joueur = personnages.into_iter().find(|j| j.id == joueur_id);
                 println!("Joueur créé: {:#?}", joueur);
-                perso_joueur = joueur.expect("Aucun personnage trouvé avec cet ID.");
+                _perso_joueur = joueur.expect("Aucun personnage trouvé avec cet ID.");
                 break;
             }
             "2" => {
@@ -166,7 +170,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     
                 if let Some(joueur) = personnages.into_iter().find(|j| j.id == id_choisi) {
                     println!("Joueur chargé : {:#?}", joueur);
-                    perso_joueur = joueur;
+                    _perso_joueur = joueur;
                     break;
                 } else {
                     println!("❌ Aucun personnage trouvé avec cet ID.");
@@ -314,7 +318,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     if let Ok(index) = choix_pnj.trim().parse::<usize>() {
                         if index > 0 && index <= pnjs_in_zone.len() {
                             let pnj_index = pnjs_in_zone[index - 1];
-                            pnjs[pnj_index].interagir(&mut perso_joueur, &mut zones, current_zone_index);
+                            pnjs[pnj_index].interagir(&mut _perso_joueur, &mut zones, current_zone_index);
                         } else {
                             println!("Numéro de PNJ invalide !");
                         }
@@ -325,7 +329,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             "i" => {
                 println!("Votre inventaire : ");
-                match perso_joueur.inventaire.afficher(true, &zones[current_zone_index], &pnjs){
+                match _perso_joueur.inventaire.afficher(true, &zones[current_zone_index], &pnjs){
                     Some(obj)=> {
                         let choix_utiliser = affichage::faire_choix(
                             "Voulez vous utiliser l'objet ? (oui ou non)",
@@ -334,7 +338,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                         match choix_utiliser.as_str() {
                             "oui" => {
-                                let id = perso_joueur.inventaire.objets[obj].objet_id;
+                                let id = _perso_joueur.inventaire.objets[obj].objet_id;
                                 if let Some(o) = OBJETS_DISPONIBLES.read().unwrap().get(&(id as u8)) {
                                     println!("{}", o);
                                     if o.est_equipement() {
@@ -346,9 +350,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                         }
 
                                         for i in tableau{
-                                            if perso_joueur.parties_du_corps[i].equipement().objets.is_empty() {
-                                                let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
+                                            if _perso_joueur.parties_du_corps[i].equipement().objets.is_empty() {
+                                                let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                _perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
                                                 println!("Equipement équipé !");
                                             }
                                             else {
@@ -358,10 +362,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                                 );
                                                 match new_choix.as_str() {
                                                     "oui" => {
-                                                        let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                        let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[i].récupérer_objet(obj);
-                                                        perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
-                                                        perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
+                                                        let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                        let objet2 : ObjetInventaire = _perso_joueur.parties_du_corps[i].récupérer_objet(obj);
+                                                        _perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
+                                                        _perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
                                                     }
 
                                                     _ => {
@@ -378,9 +382,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                         );
                                         match choix.as_str() {
                                             "g" => {
-                                                if perso_joueur.parties_du_corps[3].equipement().objets.is_empty() {
-                                                    let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                    perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
+                                                if _perso_joueur.parties_du_corps[3].equipement().objets.is_empty() {
+                                                    let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                    _perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
                                                     println!("Equipement équipé !");
                                                 }
                                                 else {
@@ -390,10 +394,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                                     );
                                                     match new_choix.as_str() {
                                                         "oui" => {
-                                                            let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                            let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[3].récupérer_objet(obj);
-                                                            perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
-                                                            perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
+                                                            let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                            let objet2 : ObjetInventaire = _perso_joueur.parties_du_corps[3].récupérer_objet(obj);
+                                                            _perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
+                                                            _perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
                                                         }
 
                                                         _ => {
@@ -403,9 +407,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                                 }
                                             }
                                             "d" => {
-                                                if perso_joueur.parties_du_corps[2].equipement().objets.is_empty() {
-                                                    let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                    perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
+                                                if _perso_joueur.parties_du_corps[2].equipement().objets.is_empty() {
+                                                    let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                    _perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
                                                     println!("Equipement équipé !");
                                                 }
                                                 else {
@@ -415,10 +419,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                                     );
                                                     match new_choix.as_str() {
                                                         "oui" => {
-                                                            let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
-                                                            let objet2 : ObjetInventaire = perso_joueur.parties_du_corps[2].récupérer_objet(obj);
-                                                            perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
-                                                            perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
+                                                            let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
+                                                            let objet2 : ObjetInventaire = _perso_joueur.parties_du_corps[2].récupérer_objet(obj);
+                                                            _perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
+                                                            _perso_joueur.inventaire.ajouter_objet(objet2.objet_id);
                                                         }
 
                                                         _ => {
@@ -462,7 +466,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                                 match choix_jeter.as_str() {
                                     "oui" => {
-                                        let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
+                                        let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
                                         zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
                                         println!("Vous vous débarassez de l'objet")
                                         //perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
@@ -497,7 +501,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         );
                         match choix_recuperer.as_str() {
                             "oui" => {
-                                perso_joueur.inventaire.ajouter_objet(obj as u8);
+                                _perso_joueur.inventaire.ajouter_objet(obj as u8);
                                 let objets_all = OBJETS_DISPONIBLES.read().unwrap();
                                 let nom_objet = objets_all.get(&(obj as u8)).map(|o| o.nom.clone()).unwrap_or_else(|| format!("ID {}", obj));
                                 let msg = format!("Vous récupérez l'objet : {}", nom_objet);
@@ -523,7 +527,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     "🚪 Vers quelle direction voulez-vous aller ?",
                     &directions_disponibles
                 );
-                se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut perso_joueur, &pnjs);
+                se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut _perso_joueur, &pnjs);
                 if zones[current_zone_index].mob_present {
                     let mut rng = rand::rng();
                     let chance: f32 = rng.random();
@@ -538,13 +542,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 mob_choisi.id, mob_choisi.nom, mob_choisi.description
                             );
                             let resultat = combattre(
-                                perso_joueur.clone(),
+                                _perso_joueur.clone(),
                                 mob_choisi.clone(),
                                 &zones[current_zone_index],
                                 &pnjs
                             );
                             if resultat.etat_final_joueur.est_vivant {
-                                perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
+                                _perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
                                 /*for p in resultat.etat_final_mob.parties_du_corps{
                                     println!("{}", p);
                                     if p.equipement().objets.len() > 1 {
@@ -552,14 +556,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                         zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
                                     }
                                 }*/
-                                for p in &perso_joueur.parties_du_corps{
+                                for p in &_perso_joueur.parties_du_corps{
                                     if !p.est_saine() {
                                         let msg = format!("Votre {} est blessé", p.nom());
                                         affichage::notifier(&zones[current_zone_index], &msg, &pnjs)
                                     }
                                 }
                                 affichage::notifier(&zones[current_zone_index], "Vous avez gagné le combat !", &pnjs);
-                                perso_joueur.ajouter_argent(mob_choisi.argent);
+                                _perso_joueur.ajouter_argent(mob_choisi.argent);
                                 let msg = format!("Vous ramassez {} pièces d'or sur le mob !", mob_choisi.argent);
                                 affichage::notifier(&zones[current_zone_index], &msg, &pnjs)
                             }
@@ -578,17 +582,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 
             }
             "nord" | "sud" | "est" | "ouest" => {
-                se_deplacer(&mut zones, &mut current_zone_index, &choix, &mut perso_joueur, &pnjs);
+                se_deplacer(&mut zones, &mut current_zone_index, &choix, &mut _perso_joueur, &pnjs);
                 if rng.random_range(0..99) < 10 {
                     affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !", &pnjs);
                 }
             }
             "s" => {
-                println!("\n=== État de santé de {} ===", perso_joueur.nom);
-                println!("Argent : {} pièces", perso_joueur.argent);
-                println!("Statut: {}", if perso_joueur.est_vivant { "Vivant" } else { "Mort" });
+                println!("\n=== État de santé de {} ===", _perso_joueur.nom);
+                println!("Argent : {} pièces", _perso_joueur.argent);
+                println!("Statut: {}", if _perso_joueur.est_vivant { "Vivant" } else { "Mort" });
                 let now = Utc::now();
-                for partie in &perso_joueur.parties_du_corps {
+                for partie in &_perso_joueur.parties_du_corps {
                     let statut = match &partie.etat() {
                         personnage::EtatPartie::Saine => "Saine".to_string(),
                         personnage::EtatPartie::Blessee(p) => format!("Blessée ({}%)", p),
@@ -626,7 +630,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let coffre = &mut zones[current_zone_index].coffres[num-1]; // Récupère le coffre sélectionné
                         match coffre.ouvrir(&zone_clone, &pnjs) {
                             Some(objet) => {
-                                perso_joueur.inventaire.ajouter_objet(objet as u8);
+                                _perso_joueur.inventaire.ajouter_objet(objet as u8);
                                 if coffre.inventaire.objets.is_empty() {
                                     zones[current_zone_index].supprimer_coffre(num-1);
                                 }
@@ -641,7 +645,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             },
         }
-        if !perso_joueur.est_vivant {
+        if !_perso_joueur.est_vivant {
             let msg = format!("Vous êtes mort... La partie est terminée !");
             affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
             break Ok(());

@@ -4,9 +4,9 @@ use crate::objet::{OBJETS_DISPONIBLES, TypeObjet};
 use crate::affichage;
 
 pub struct CombatResultat {
-    pub vainqueur: Option<String>,
+    pub _vainqueur: Option<String>,
     pub etat_final_joueur: Personnage,
-    pub etat_final_mob: Personnage,
+    pub _etat_final_mob: Personnage,
 }
 
 pub fn combattre(mut p1: Personnage, mut p2: Personnage, zone: &crate::zone::Zone, tous_les_pnjs: &[crate::personnage::PNJ]) -> CombatResultat {
@@ -89,8 +89,35 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage, zone: &crate::zone::Zon
     };
     affichage::afficher_zone(zone, tous_les_pnjs);
     CombatResultat {
-        vainqueur,
+        _vainqueur: vainqueur,
         etat_final_joueur: p1,
-        etat_final_mob: p2,
+        _etat_final_mob: p2,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::personnage::{Personnage, PartieDuCorps};
+
+    #[test]
+    fn test_combatresultat_structure() {
+        let p1 = Personnage {
+            id: 1,
+            nom: "A".to_string(),
+            description: "desc".to_string(),
+            force: 10,
+            inventaire: crate::inventaire::Inventaire { taille: 1, objets: vec![] },
+            parties_du_corps: vec![PartieDuCorps::new("Tête".to_string(), 10)],
+            argent: 0,
+            est_vivant: true,
+        };
+        let p2 = p1.clone();
+        let res = CombatResultat {
+            _vainqueur: Some("A".to_string()),
+            etat_final_joueur: p1,
+            _etat_final_mob: p2,
+        };
+        assert_eq!(res._vainqueur, Some("A".to_string()));
     }
 }
