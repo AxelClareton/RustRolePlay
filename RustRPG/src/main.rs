@@ -461,7 +461,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                     "oui" => {
                                         let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
                                         zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
-                                        println!("VOus vous débarassé de l'objet")
+                                        println!("Vous vous débarassez de l'objet")
                                         //perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
                                     }
                                     _ => {

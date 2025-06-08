@@ -27,62 +27,62 @@ impl Inventaire {
             }
             return None
         }
-        println!("📦 Inventaire (Taille: {}):", self.taille);
+        let mut message = format!("📦 Inventaire (Taille: {}):\n", self.taille);
         let objets_all: RwLockReadGuard<_> = OBJETS_DISPONIBLES.read().unwrap();
-        if self.objets.is_empty() {
-            println!("  - (vide)");
-            None
-        } else {
-            self.trier_quantite();
-            for (index, obj) in self.objets.iter().enumerate() {
-                if let Some(o) = objets_all.get(&obj.objet_id) {
-                    println!("  {} : {} (x{})", index + 1, o.nom, obj.nombre);
-                } else {
-                    println!("  Objet inconnu (ID: {})", obj.objet_id);
-                }
-            }
-            if est_joueur {
-                println!("Saisir 'q' pour fermer l'inventaire, ou le nombre correspondant à l'item que vous voulez utilisé\nEntrez votre choix :");
-                let mut choix = String::new();
-                std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
-                let choix = choix.trim();
-                match choix {
-                    "q" => {
-                        println!("Fermeture de l'inventaire...");
-                        None
-                    }
-                    _ => match choix.parse::<u8>() {
-                        Ok(index) if index <= self.objets.len() as u8  => {
-                            Some((index - 1) as usize)
-                        }
-                        _ => {
-                            println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
-                            None
-                        }
-                    },
-                }
+        self.trier_quantite();
+        for (index, obj) in self.objets.iter().enumerate() {
+            if let Some(o) = objets_all.get(&obj.objet_id) {
+                message.push_str(&format!("  {} : {} (x{})\n", index + 1, o.nom, obj.nombre));
             } else {
-                println!("Saisir 'q' pour fermer le coffre, ou le nombre correspondant à l'item que vous voulez récupéré\nEntrez votre choix :");
-                let mut choix = String::new();
-                std::io::stdin().read_line(&mut choix).expect("❌ Erreur de lecture !");
-                let choix = choix.trim();
-                match choix {
-                    "q" => {
-                        println!("Fermeture du coffre...");
+                message.push_str(&format!("  Objet inconnu (ID: {})\n", obj.objet_id));
+            }
+        }
+        if est_joueur {
+            message.push_str("Saisir 'q' pour fermer l'inventaire, ou le nombre correspondant à l'item que vous voulez utiliser\n");
+            message.push_str("Entrez votre choix :");
+            let mut choix_possibles: Vec<String> = (1..=self.objets.len()).map(|i| i.to_string()).collect();
+            choix_possibles.push("q".to_string());
+            let choix = affichage::faire_choix(&message, &choix_possibles);
+            match choix.as_str() {
+                "q" => {
+                    affichage::notifier(zone, "Fermeture de l'inventaire...", pnjs);
+                    None
+                }
+                _ => match choix.parse::<u8>() {
+                    Ok(index) if index > 0 && (index as usize) <= self.objets.len() => {
+                        Some((index - 1) as usize)
+                    }
+                    _ => {
+                        affichage::notifier(zone, "❌ Entrée invalide ! Veuillez entrer un nombre valide.", pnjs);
                         None
                     }
-                    _ => match choix.parse::<u8>() {
-                        Ok(index) if index <= self.objets.len() as u8  => {
-                            let obj = self.récupérer_objet((index-1) as usize);
-                            println!("Vous avez récupérer l'objet {}", obj);
-                            Some(obj)
-                        }
-                        _ => {
-                            println!("❌ Entrée invalide ! Veuillez entrer un nombre valide.");
-                            None
-                        }
-                    },
+                },
+            }
+        } else {
+            message.push_str("Saisir 'q' pour fermer le coffre, ou le nombre correspondant à l'item que vous voulez récupérer\n");
+            message.push_str("Entrez votre choix :");
+            let mut choix_possibles: Vec<String> = (1..=self.objets.len()).map(|i| i.to_string()).collect();
+            choix_possibles.push("q".to_string());
+            let choix = affichage::faire_choix(&message, &choix_possibles);
+            match choix.as_str() {
+                "q" => {
+                    affichage::notifier(zone, "Fermeture du coffre...", pnjs);
+                    None
                 }
+                _ => match choix.parse::<u8>() {
+                    Ok(index) if index > 0 && (index as usize) <= self.objets.len() => {
+                        let obj_id = self.objets[index as usize - 1].objet_id;
+                        let obj = self.récupérer_objet((index - 1) as usize);
+                        let objets_all = OBJETS_DISPONIBLES.read().unwrap();
+                        let nom_objet = objets_all.get(&obj_id).map(|o| o.nom.clone()).unwrap_or_else(|| format!("ID {}", obj_id));
+                        affichage::notifier(zone, &format!("Vous avez récupéré l'objet : {}", nom_objet), pnjs);
+                        Some(obj)
+                    }
+                    _ => {
+                        affichage::notifier(zone, "❌ Entrée invalide ! Veuillez entrer un nombre valide.", pnjs);
+                        None
+                    }
+                },
             }
         }
     }
