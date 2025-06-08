@@ -495,7 +495,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         match choix_recuperer.as_str() {
                             "oui" => {
                                 perso_joueur.inventaire.ajouter_objet(obj as u8);
-                                let msg = format!("Vous récupérez l'objet {}", obj);
+                                let objets_all = OBJETS_DISPONIBLES.read().unwrap();
+                                let nom_objet = objets_all.get(&(obj as u8)).map(|o| o.nom.clone()).unwrap_or_else(|| format!("ID {}", obj));
+                                let msg = format!("Vous récupérez l'objet : {}", nom_objet);
                                 affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                             }
                             _ => {
@@ -524,7 +526,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     let chance: f32 = rng.random();
 
                     if chance < 0.9 {
-                        // Le mob apparaît (60 % de chances)
                         let mobs = Mob::charger_mob("src/json/mob.json")?;
 
                         let mut rng = rand::rng();

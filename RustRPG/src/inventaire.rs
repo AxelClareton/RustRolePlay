@@ -23,7 +23,7 @@ impl Inventaire {
                 affichage::notifier(zone, "📦 Votre inventaire est vide", pnjs);
             }
             else {
-                affichage::notifier(zone, "📦 Malheureusement le coffre est vide", pnjs);
+                affichage::notifier(zone, "📦 Malheureusement c'est vide", pnjs);
             }
             return None
         }
