@@ -484,9 +484,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
             "d" => {
+                let directions_disponibles: Vec<String> = zones[current_zone_index]
+                    .connection
+                    .iter()
+                    .map(|c| c.direction.clone())
+                    .collect();
+
                 let direction = affichage::faire_choix(
                     "🚪 Vers quelle direction voulez-vous aller ?",
-                    &vec!["nord".to_string(), "sud".to_string(), "est".to_string(), "ouest".to_string()]
+                    &directions_disponibles
                 );
                 se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut perso_joueur, &pnjs);
                 if(zones[current_zone_index].mob_present){
