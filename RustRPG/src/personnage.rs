@@ -193,6 +193,10 @@ impl PartieDuCorps {
     pub fn etat(&self) -> &EtatPartie {
         &self.etat
     }
+
+    pub fn guerison(&self) -> chrono::DateTime<chrono::Utc> {
+        self.guerison
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

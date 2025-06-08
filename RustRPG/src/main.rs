@@ -23,6 +23,7 @@ use personnage::Mob;
 use crate::combat::combattre;
 use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
+use chrono::Utc;
 
 
 fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str, perso_joueur: &mut Personnage, pnjs: &Vec<PNJ>) {
@@ -255,6 +256,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "c".to_string(), // fouiller la zone
             "i".to_string(), // autre option
             "t".to_string(), // autre option
+            "s".to_string(), // afficher l'état de santé
         ];
 
 
@@ -276,15 +278,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut message_commandes = String::from("\nCommandes disponibles :\n");
         message_commandes.push_str("  d : Se déplacer dans une direction\n");
         message_commandes.push_str("  i : Ouvrir l'inventaire\n");
-        message_commandes.push_str("  c : Fouiller la zone\n");
+        message_commandes.push_str("  c : Fouiller la zone (coffres)\n");
         message_commandes.push_str("  t : Fouiller le sol de la zone (objets au sol)\n");
         message_commandes.push_str("  p : Parler/interagir avec les PNJ (si présents)\n");
-        message_commandes.push_str("  q : Quitter le jeu\n");
+        message_commandes.push_str("  s : Voir l'état de santé du joueur\n");
         if nbr_coffres > 0 {
             for i in 1..=nbr_coffres {
                 message_commandes.push_str(&format!("  {} : Ouvrir le coffre {}\n", i, i));
             }
         }
+        message_commandes.push_str("  q : Quitter le jeu\n");
         message_commandes.push('\n');
         message_commandes.push_str("Que voulez-vous faire ? :");
 
@@ -579,6 +582,42 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 if rng.random_range(0..99) < 10 {
                     affichage::notifier(&zones[current_zone_index], "🎉 L'événement rare s'est produit !", &pnjs);
                 }
+            }
+            "s" => {
+                println!("\n=== État de santé de {} ===", perso_joueur.nom);
+                println!("Argent : {} pièces", perso_joueur.argent);
+                println!("Statut: {}", if perso_joueur.est_vivant { "Vivant" } else { "Mort" });
+                let now = Utc::now();
+                for partie in &perso_joueur.parties_du_corps {
+                    let statut = match &partie.etat() {
+                        personnage::EtatPartie::Saine => "Saine".to_string(),
+                        personnage::EtatPartie::Blessee(p) => format!("Blessée ({}%)", p),
+                        personnage::EtatPartie::Morte => "Détruite".to_string(),
+                    };
+                    let mut guerison_str = String::new();
+                    if let personnage::EtatPartie::Blessee(_) = &partie.etat() {
+                        let duree = partie.guerison().signed_duration_since(now);
+                        if duree.num_seconds() > 0 {
+                            let min = duree.num_minutes();
+                            let sec = duree.num_seconds() % 60;
+                            guerison_str = format!(" (guérison dans {}min {}s)", min, sec.abs());
+                        } else {
+                            guerison_str = " (guérison imminente)".to_string();
+                        }
+                    }
+                    // Affichage de l'équipement
+                    let equipement = &partie.equipement().objets;
+                    let equipement_str = if equipement.is_empty() {
+                        "Aucun".to_string()
+                    } else {
+                        let objets_all = OBJETS_DISPONIBLES.read().unwrap();
+                        equipement.iter()
+                            .map(|obj| objets_all.get(&obj.objet_id).map(|o| o.nom.clone()).unwrap_or_else(|| format!("ID {}", obj.objet_id)))
+                            .collect::<Vec<_>>().join(", ")
+                    };
+                    println!("  {} - Vie: {}/{} - État: {}{} - Équipement: {}", partie.nom(), partie.vie_actuelle(), partie.vie_max(), statut, guerison_str, equipement_str);
+                }
+                println!("======================\n");
             }
             _ => {
                 if let Ok(num) = choix.parse::<usize>() {
