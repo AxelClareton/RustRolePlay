@@ -10,7 +10,7 @@ mod combat;
 use std::io;
 use zone::Zone;
 use moteur::{charger_zones};
-use rand::{rng, Rng};
+use rand::Rng;
 use crate::moteur::charger_objets;
 use std::thread::sleep;
 use std::time::Duration;
@@ -20,7 +20,7 @@ use personnage::Joueur;
 use personnage::Personnage;
 use personnage::PNJ;
 use personnage::Mob;
-use crate::combat::{combattre, CombatResultat};
+use crate::combat::combattre;
 use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
 
@@ -32,7 +32,7 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
     if let Some(conn) = current_zone.connection.iter().find(|c| c.direction == direction) {
         // Trouver la nouvelle zone via l'ID de la connexion
         if let Some(new_index) = zones.iter().position(|z| z.id == conn.id_dest.parse::<u8>().unwrap()) {
-            if(zones[new_index].mob_present){
+            if zones[new_index].mob_present {
                 let mob_choix = affichage::faire_choix(
                     &format!("Il y a un ennemie dans la zone {}, il se peut qu'il vous attaque ,voulez-vous y aller quand même ? (oui/non)", conn.id_dest),
                     &vec!["oui".to_string(), "non".to_string()]
@@ -330,8 +330,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 let id = perso_joueur.inventaire.objets[obj].objet_id;
                                 if let Some(o) = OBJETS_DISPONIBLES.read().unwrap().get(&(id as u8)) {
                                     println!("{}", o);
-                                    if(o.est_equipement()){
-                                        if(o.est_pour_emplacement(Emplacement::Tete)){
+                                    if o.est_equipement() {
+                                        if o.est_pour_emplacement(Emplacement::Tete) {
                                             tableau = vec![0]
                                         }
                                         else {
@@ -339,7 +339,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                         }
 
                                         for i in tableau{
-                                            if(perso_joueur.parties_du_corps[i].equipement().objets.is_empty()){
+                                            if perso_joueur.parties_du_corps[i].equipement().objets.is_empty() {
                                                 let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
                                                 perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
                                                 println!("Equipement équipé !");
@@ -364,14 +364,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                             }
                                         }
                                     }
-                                    else if(o.est_arme()){
+                                    else if o.est_arme() {
                                         let choix = affichage::faire_choix(
                                             "Dans quelle main equipée l'objet ? (g ou d ou q)",
                                             &vec!["g".to_string(), "d".to_string()]
                                         );
                                         match choix.as_str() {
                                             "g" => {
-                                                if(perso_joueur.parties_du_corps[3].equipement().objets.is_empty()){
+                                                if perso_joueur.parties_du_corps[3].equipement().objets.is_empty() {
                                                     let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
                                                     perso_joueur.parties_du_corps[3].ajouter_equipement(objet.objet_id);
                                                     println!("Equipement équipé !");
@@ -396,7 +396,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                                 }
                                             }
                                             "d" => {
-                                                if(perso_joueur.parties_du_corps[2].equipement().objets.is_empty()){
+                                                if perso_joueur.parties_du_corps[2].equipement().objets.is_empty() {
                                                     let objet : ObjetInventaire = perso_joueur.inventaire.récupérer_objet_2(obj);
                                                     perso_joueur.parties_du_corps[2].ajouter_equipement(objet.objet_id);
                                                     println!("Equipement équipé !");
@@ -425,7 +425,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                             }
                                         }
                                     }
-                                    else if (o.est_soin()) {
+                                    else if o.est_soin() {
                                         let choix = affichage::faire_choix(
                                             "Sur quelle partie du corps utilisé l'objet ? (0 : tete, 1 : torse, 2 : bras droit, 3 : bras gauche, 4 : jambre droite, 5 : jambe gauche, q : quitter)",
                                             &vec!["0".to_string(), "1".to_string(), "2".to_string(), "3".to_string(), "4".to_string(), "5".to_string(), "q".to_string()]
@@ -513,7 +513,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     &directions_disponibles
                 );
                 se_deplacer(&mut zones, &mut current_zone_index, &direction, &mut perso_joueur, &pnjs);
-                if(zones[current_zone_index].mob_present){
+                if zones[current_zone_index].mob_present {
                     let mut rng = rand::rng();
                     let chance: f32 = rng.random();
 
@@ -533,7 +533,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 &zones[current_zone_index],
                                 &pnjs
                             );
-                            if(resultat.etat_final_joueur.est_vivant){
+                            if resultat.etat_final_joueur.est_vivant {
                                 perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
                                 /*for p in resultat.etat_final_mob.parties_du_corps{
                                     println!("{}", p);

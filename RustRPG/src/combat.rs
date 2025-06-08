@@ -1,7 +1,6 @@
 use rand::Rng;
 use crate::personnage::Personnage;
 use crate::objet::{OBJETS_DISPONIBLES, TypeObjet};
-use chrono;
 use crate::affichage;
 
 pub struct CombatResultat {

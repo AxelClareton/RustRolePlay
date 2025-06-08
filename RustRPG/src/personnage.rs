@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fmt;
 use std::fs::{File};
 use std::io::{self, Read, Write};
@@ -7,7 +6,7 @@ use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
 use crate::inventaire::{Inventaire, ObjetInventaire};
-use crate::objet::{Objet, OBJETS_DISPONIBLES};
+use crate::objet::OBJETS_DISPONIBLES;
 use crate::Zone;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
