@@ -261,16 +261,6 @@ impl Personnage {
         ResultatBlessure::RienGrave
     }
 
-    pub fn regeneration_naturelle(&mut self) {
-        if !self.est_vivant {
-            return;
-        }
-
-        for partie in &mut self.parties_du_corps {
-            partie.regeneration_naturelle();
-        }
-    }
-
     pub fn soigner_partie(&mut self, nom_partie: &str, soin: u32) -> bool {
         if !self.est_vivant {
             println!("{} est mort et ne peut pas être soigné.", self.nom);
@@ -727,10 +717,6 @@ impl PNJ {
         Ok(())
     }
 
-    pub fn creer_pnjs_test() -> io::Result<()> {
-        Self::creer_pnjs_test_direct()
-    }
-
     pub fn obtenir_dialogue_aleatoire(&self) -> Option<&String> {
         if self.dialogues.is_empty() {
             return None;
@@ -981,10 +967,7 @@ impl Mob {
         println!("7 Mobs de test créés avec succès !");
         Ok(())
     }
-
-    pub fn creer_mobs_test() -> io::Result<()> {
-        Self::creer_mobs_test_direct()
-    }
+    
 }
 
 impl Joueur {
@@ -1056,9 +1039,5 @@ impl Joueur {
 
         println!("5 joueurs de test créés avec succès !");
         Ok(())
-    }
-
-    pub fn creer_joueur_test() -> io::Result<()> {
-        Self::creer_joueur_test_direct()
     }
 }

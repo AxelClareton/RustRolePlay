@@ -1,7 +1,6 @@
 use serde::Deserialize;
 use crate::coffre::Coffre;
 use crate::inventaire::Inventaire;
-use crate::personnage::PNJ;
 use crate::affichage::ajouter_notification;
 
 #[derive(Debug, Deserialize, Clone)]
