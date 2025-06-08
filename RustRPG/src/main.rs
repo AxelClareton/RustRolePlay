@@ -60,13 +60,13 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
                 affichage::notifier(&zones[*current_zone_index],"Vous êtes arrivés dans la zone", &pnjs);
             }
             else {
+                let prix_zone = zones[new_index].prix;
                 let choix = affichage::faire_choix(
-                    &format!("La zone {} n'est pas ouverte, voulez-vous l'acheter ? (oui/non)", conn.id_dest),
+                    &format!("La zone {} n'est pas ouverte (prix : {} pièces, votre solde : {} pièces), voulez-vous l'acheter ? (oui/non)", conn.id_dest, prix_zone, perso_joueur.argent),
                     &vec!["oui".to_string(), "non".to_string()]
                 );
                 match choix.as_str() {
                     "oui" => {
-                        let prix_zone = zones[new_index].prix;
                         if perso_joueur.argent >= prix_zone {
                             perso_joueur.retirer_argent(prix_zone);
                             zones[new_index].ouvert = true;
