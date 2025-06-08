@@ -42,13 +42,15 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
                         //println!("Début du combat");
                     }
                     _ => { 
-                        println!("Vous avez peur de l'ennemie, vous restez dans la même zone");
+                        let msg = format!("Vous avez peur de l'ennemie, vous restez dans la même zone");
+                        affichage::notifier(&zones[*current_zone_index], &msg, &pnjs);
                         return
                     }
                 }
             }
             else { 
-                println!("Il y a aucun mob")
+                let msg = format!("Il y a aucun mob");
+                affichage::notifier(&zones[*current_zone_index], &msg, &pnjs);
             }
             if zones[new_index].ouvert {
                 *current_zone_index = new_index; // Mise à jour de l'index
@@ -270,6 +272,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             options.push(i.to_string());
         }
 
+        // Affichage amélioré des commandes disponibles
+        println!("\nCommandes disponibles :");
+        println!("  d : Se déplacer dans une direction");
+        println!("  i : Ouvrir l'inventaire");
+        println!("  c : Fouiller la zone");
+        println!("  t : Fouiller le sol de la zone (objets au sol)");
+        println!("  p : Parler/interagir avec les PNJ (si présents)");
+        println!("  q : Quitter le jeu");
+        if nbr_coffres > 0 {
+            println!("  1..{} : Ouvrir le coffre correspondant", nbr_coffres);
+        }
+        println!("");
+
         let choix = affichage::faire_choix(
             "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, 't' pour fouiller le sol de la zone et afficher les objets au sol, 'p' pour parler aux PNJ si présent dans la zone ou le numéro du coffre) :",&options
         );
@@ -462,7 +477,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 affichage::afficher_zone(&zones[current_zone_index], &pnjs);
             }
             "t" => {
-                println!("Fouillage de la zone en cours...");
+                let msg = format!("Fouillage de la zone en cours...");
+                affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                 sleep(Duration::from_secs(5));
                 match zones[current_zone_index].objet_zone.afficher(false){
                     Some(obj)=> {
@@ -473,10 +489,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         match choix_recuperer.as_str() {
                             "oui" => {
                                 perso_joueur.inventaire.ajouter_objet(obj as u8);
-                                println!("Vous récupérez l'objet {}", obj)
+                                let msg = format!("Vous récupérez l'objet {}", obj);
+                                affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                             }
                             _ => {
-                                println!("Vous laissez l'objet par terre ...");
+                                let msg = format!("Vous laissez l'objet par terre ...");
+                                affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                             }
                         }
                     }
@@ -509,29 +527,42 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 "Mob choisi au hasard : ID: {}, Nom: {}, Description: {}",
                                 mob_choisi.id, mob_choisi.nom, mob_choisi.description
                             );
-                            let resultat = combattre(perso_joueur.clone(), mob_choisi.clone());
+                            let resultat = combattre(
+                                perso_joueur.clone(),
+                                mob_choisi.clone(),
+                                &zones[current_zone_index],
+                                &pnjs
+                            );
                             if(resultat.etat_final_joueur.est_vivant){
                                 perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
-                                for p in resultat.etat_final_mob.parties_du_corps{
+                                /*for p in resultat.etat_final_mob.parties_du_corps{
                                     println!("{}", p);
                                     if p.equipement().objets.len() > 1 {
                                         let objet = &p.equipement().objets[1];
                                         zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
                                     }
+                                }*/
+                                for p in &perso_joueur.parties_du_corps{
+                                    if !p.est_saine() {
+                                        let msg = format!("Votre {} est blessé", p.nom());
+                                        affichage::notifier(&zones[current_zone_index], &msg, &pnjs)
+                                    }
                                 }
-                                
-                                println!("Vous avez gagné");
+                                affichage::notifier(&zones[current_zone_index], "Vous avez gagné le combat !", &pnjs);
                                 perso_joueur.ajouter_argent(mob_choisi.argent);
-                                println!("Vous ramassez {} pièces d'or sur le mob !", mob_choisi.argent);
+                                let msg = format!("Vous ramassez {} pièces d'or sur le mob !", mob_choisi.argent);
+                                affichage::notifier(&zones[current_zone_index], &msg, &pnjs)
                             }
                             else { 
-                                println!("Malheureusement vous venez de perdre la partie s'arrete pour vous ... \n N'hésitez pas a refaire une partie");
+                                let msg = format!("Malheureusement vous venez de perdre la partie s'arrete pour vous ... N'hésitez pas a refaire une partie");
+                                affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                                 return Ok(());
                             }
                         }
 
                     }else{
-                        println!("Vous êtes chanceux le mob ne vous attaque pas.")
+                        let msg = format!("Vous êtes chanceux le mob ne vous attaque pas.");
+                        affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                     }
                 }
                 
@@ -564,7 +595,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             },
         }
         if !perso_joueur.est_vivant {
-            println!("Vous êtes mort... La partie est terminée !");
+            let msg = format!("Vous êtes mort... La partie est terminée !");
+            affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
             break Ok(());
         }
     }

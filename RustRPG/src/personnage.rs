@@ -774,7 +774,12 @@ impl PNJ {
         match choix.trim() {
             "1" => {
                 println!("Vous avez choisi de combattre !");
-                let resultat = crate::combat::combattre(joueur.clone(), self.personnage.clone());
+                let resultat = crate::combat::combattre(
+                    joueur.clone(),
+                    self.personnage.clone(),
+                    &zones[current_zone_index],
+                    &crate::personnage::PNJ::charger_pnj("src/json/pnj.json").unwrap_or_default()
+                );
                 if resultat.etat_final_joueur.est_vivant {
                     *joueur = resultat.etat_final_joueur;
                     println!("Vous avez gagné le combat contre le PNJ !");

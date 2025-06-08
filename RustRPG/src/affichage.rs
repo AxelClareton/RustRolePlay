@@ -82,7 +82,7 @@ pub fn faire_choix(message: & str, choixpossibles: &Vec<String>) -> String {
         let choix = choix.trim();
 
         if choix.eq_ignore_ascii_case("q") {
-            return String::new();
+            return "q".to_string();
         }
 
         if choixpossibles.contains(&choix.to_string()) {

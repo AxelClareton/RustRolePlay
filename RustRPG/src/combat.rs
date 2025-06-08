@@ -2,6 +2,7 @@ use rand::Rng;
 use crate::personnage::Personnage;
 use crate::objet::{OBJETS_DISPONIBLES, TypeObjet};
 use chrono;
+use crate::affichage;
 
 pub struct CombatResultat {
     pub vainqueur: Option<String>,
@@ -9,7 +10,7 @@ pub struct CombatResultat {
     pub etat_final_mob: Personnage,
 }
 
-pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
+pub fn combattre(mut p1: Personnage, mut p2: Personnage, zone: &crate::zone::Zone, tous_les_pnjs: &[crate::personnage::PNJ]) -> CombatResultat {
     let mut rng = rand::rng();
     let mut attaquant = if rng.random_bool(0.5) { 0 } else { 1 };
     let mut tour = 0;
@@ -87,23 +88,10 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
     } else {
         None
     };
+    affichage::afficher_zone(zone, tous_les_pnjs);
     CombatResultat {
         vainqueur,
         etat_final_joueur: p1,
         etat_final_mob: p2,
     }
-}
-
-// Exemple de combat pour test
-pub fn exemple_combat() -> Result<(), Box<dyn std::error::Error>> {
-    let joueurs = crate::personnage::Joueur::charger_joueur("src/json/personnage.json")?;
-    let joueur = joueurs.into_iter().next().ok_or("Aucun joueur trouvé")?;
-    
-    let mob = crate::personnage::Mob::creer_mob("Gobelin Sauvage", "Un petit gobelin agressif aux dents pointues")?.personnage;
-    
-    let resultat = combattre(joueur, mob);
-    println!("Vainqueur : {:?}", resultat.vainqueur);
-    println!("État final du joueur :\n{}", resultat.etat_final_joueur);
-    println!("État final du mob :\n{}", resultat.etat_final_mob);
-    Ok(())
 }
