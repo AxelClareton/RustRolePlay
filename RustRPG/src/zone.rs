@@ -1,9 +1,6 @@
 use serde::Deserialize;
 use crate::coffre::Coffre;
 use crate::inventaire::Inventaire;
-use crate::affichage::notifier;
-use crate::personnage::Mob;
-use crate::personnage::PNJ;
 use crate::affichage::ajouter_notification;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -36,7 +33,7 @@ impl Zone {
         cpt
     }
 
-    pub fn fouiller_zone(&mut self, tous_les_pnjs: &[PNJ]) {
+    pub fn fouiller_zone(&mut self) {
         let mut cpt :u8 = 0;
         for coffre in &mut self.coffres {
             if !coffre.visible {

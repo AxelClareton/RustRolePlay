@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fmt;
 use std::fs::{File};
 use std::io::{self, Read, Write};
@@ -7,7 +6,7 @@ use chrono::{Utc, DateTime};
 use rand::Rng;
 use rand::rngs::ThreadRng;
 use crate::inventaire::{Inventaire, ObjetInventaire};
-use crate::objet::{Objet, OBJETS_DISPONIBLES};
+use crate::objet::OBJETS_DISPONIBLES;
 use crate::Zone;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
@@ -183,6 +182,21 @@ impl PartieDuCorps {
 
         objet
     }
+
+    pub fn vie_actuelle(&self) -> u32 {
+        self.vie_actuelle
+    }
+    pub fn vie_max(&self) -> u32 {
+        self.vie_max
+    }
+
+    pub fn etat(&self) -> &EtatPartie {
+        &self.etat
+    }
+
+    pub fn guerison(&self) -> chrono::DateTime<chrono::Utc> {
+        self.guerison
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -245,16 +259,6 @@ impl Personnage {
         }
         
         ResultatBlessure::RienGrave
-    }
-
-    pub fn regeneration_naturelle(&mut self) {
-        if !self.est_vivant {
-            return;
-        }
-
-        for partie in &mut self.parties_du_corps {
-            partie.regeneration_naturelle();
-        }
     }
 
     pub fn soigner_partie(&mut self, nom_partie: &str, soin: u32) -> bool {
@@ -469,7 +473,7 @@ impl PNJ {
         multiplicateur_prix: f32
     ) -> io::Result<Self> {
         let prochain_id = PNJ::prochain_id_pnj("src/json/pnj.json")?;
-        let inventaire = PNJ::choisir_objets_inventaire()?;;
+        let inventaire = PNJ::choisir_objets_inventaire()?;
         let parties_du_corps = creer_parties_du_corps();
 
         let mut rng: ThreadRng = rand::rng();
@@ -713,10 +717,6 @@ impl PNJ {
         Ok(())
     }
 
-    pub fn creer_pnjs_test() -> io::Result<()> {
-        Self::creer_pnjs_test_direct()
-    }
-
     pub fn obtenir_dialogue_aleatoire(&self) -> Option<&String> {
         if self.dialogues.is_empty() {
             return None;
@@ -763,7 +763,12 @@ impl PNJ {
         match choix.trim() {
             "1" => {
                 println!("Vous avez choisi de combattre !");
-                let resultat = crate::combat::combattre(joueur.clone(), self.personnage.clone());
+                let resultat = crate::combat::combattre(
+                    joueur.clone(),
+                    self.personnage.clone(),
+                    &zones[current_zone_index],
+                    &crate::personnage::PNJ::charger_pnj("src/json/pnj.json").unwrap_or_default()
+                );
                 if resultat.etat_final_joueur.est_vivant {
                     *joueur = resultat.etat_final_joueur;
                     println!("Vous avez gagné le combat contre le PNJ !");
@@ -962,10 +967,7 @@ impl Mob {
         println!("7 Mobs de test créés avec succès !");
         Ok(())
     }
-
-    pub fn creer_mobs_test() -> io::Result<()> {
-        Self::creer_mobs_test_direct()
-    }
+    
 }
 
 impl Joueur {
@@ -1037,9 +1039,5 @@ impl Joueur {
 
         println!("5 joueurs de test créés avec succès !");
         Ok(())
-    }
-
-    pub fn creer_joueur_test() -> io::Result<()> {
-        Self::creer_joueur_test_direct()
     }
 }
