@@ -129,11 +129,11 @@ impl Inventaire {
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
     }
 
-    pub fn tout_recuperer(&mut self, inventaire: &mut Inventaire){
-        //
-        self.objets.extend(inventaire.objets.drain(..));
-        inventaire.objets = Vec::new();
-    }
+    // pub fn tout_recuperer(&mut self, inventaire: &mut Inventaire){
+    //     //
+    //     self.objets.extend(inventaire.objets.drain(..));
+    //     inventaire.objets = Vec::new();
+    // }
 }
 
 impl fmt::Display for Inventaire {
@@ -148,5 +148,34 @@ impl fmt::Display for Inventaire {
             }
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ajouter_et_recuperer_objet() {
+        let mut inv = Inventaire { taille: 5, objets: vec![] };
+        inv.ajouter_objet(1);
+        assert_eq!(inv.objets.len(), 1);
+        assert_eq!(inv.objets[0].nombre, 1);
+        inv.ajouter_objet(1);
+        assert_eq!(inv.objets[0].nombre, 2);
+        let id = inv.récupérer_objet(0);
+        assert_eq!(id, 1);
+        assert_eq!(inv.objets[0].nombre, 1);
+    }
+
+    #[test]
+    fn test_trier_quantite() {
+        let mut inv = Inventaire { taille: 5, objets: vec![
+            ObjetInventaire { nombre: 1, objet_id: 2 },
+            ObjetInventaire { nombre: 3, objet_id: 1 },
+        ]};
+        inv.trier_quantite();
+        assert_eq!(inv.objets[0].objet_id, 1);
+        assert_eq!(inv.objets[0].nombre, 3);
     }
 }

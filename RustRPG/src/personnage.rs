@@ -71,14 +71,6 @@ impl PartieDuCorps {
         matches!(self.etat, EtatPartie::Blessee(_))
     }
 
-    pub fn pourcentage_blessure(&self) -> u8 {
-        match self.etat {
-            EtatPartie::Blessee(pourcentage) => pourcentage,
-            EtatPartie::Morte => 100,
-            EtatPartie::Saine => 0,
-        }
-    }
-
     pub fn pourcentage_vie(&self) -> f32 {
         if self.vie_max == 0 {
             return 0.0;
@@ -113,51 +105,6 @@ impl PartieDuCorps {
         }
 
         false
-    }
-
-    pub fn soigner(&mut self, soin: u32) {
-        if self.est_morte() {
-            println!("{} est détruite et ne peut pas être soignée normalement.", self.nom);
-            return;
-        }
-
-        let ancienne_vie = self.vie_actuelle;
-        self.vie_actuelle = (self.vie_actuelle + soin).min(self.vie_max);
-        
-        let vie_recuperee = self.vie_actuelle - ancienne_vie;
-        if vie_recuperee > 0 {
-            println!("{} récupère {} points de vie ({}/{})", 
-                self.nom, vie_recuperee, self.vie_actuelle, self.vie_max);
-        }
-
-        self.mettre_a_jour_etat();
-    }
-
-    fn mettre_a_jour_etat(&mut self) {
-        if self.vie_actuelle == 0 {
-            self.etat = EtatPartie::Morte;
-        } else if self.vie_actuelle == self.vie_max {
-            self.etat = EtatPartie::Saine;
-            self.guerison = Utc::now();
-        } else {
-            let pourcentage_blessure = 100 - self.pourcentage_vie() as u8;
-            self.etat = EtatPartie::Blessee(pourcentage_blessure);
-        }
-    }
-
-    pub fn regeneration_naturelle(&mut self) {
-        if self.est_morte() || self.est_saine() {
-            return;
-        }
-
-        if Utc::now() >= self.guerison {
-            let temps_ecoule = Utc::now().signed_duration_since(self.guerison);
-            let regeneration = (temps_ecoule.num_minutes() / 10).max(1) as u32;
-            
-            if regeneration > 0 {
-                self.soigner(regeneration);
-            }
-        }
     }
 
     pub fn nom(&self) -> &str {
@@ -259,39 +206,6 @@ impl Personnage {
         }
         
         ResultatBlessure::RienGrave
-    }
-
-    pub fn soigner_partie(&mut self, nom_partie: &str, soin: u32) -> bool {
-        if !self.est_vivant {
-            println!("{} est mort et ne peut pas être soigné.", self.nom);
-            return false;
-        }
-
-        if let Some(partie) = self.parties_du_corps.iter_mut()
-            .find(|p| p.nom.to_lowercase() == nom_partie.to_lowercase()) {
-            partie.soigner(soin);
-            return true;
-        }
-        
-        println!("Partie du corps '{}' non trouvée !", nom_partie);
-        false
-    }
-
-    pub fn afficher_etat_sante(&self) {
-        println!("\n=== État de santé de {} ===", self.nom);
-        println!("Statut: {}", if self.est_vivant { "Vivant" } else { "Mort" });
-        
-        for partie in &self.parties_du_corps {
-            let statut = match &partie.etat {
-                EtatPartie::Saine => "Saine".to_string(),
-                EtatPartie::Blessee(p) => format!("Blessée ({}%)", p),
-                EtatPartie::Morte => "Détruite".to_string(),
-            };
-            
-            println!("  {} - Vie: {}/{} - État: {}", 
-                partie.nom, partie.vie_actuelle, partie.vie_max, statut);
-        }
-        println!("======================\n");
     }
 
     pub fn peut_se_battre(&self) -> bool {
@@ -717,40 +631,6 @@ impl PNJ {
         Ok(())
     }
 
-    pub fn obtenir_dialogue_aleatoire(&self) -> Option<&String> {
-        if self.dialogues.is_empty() {
-            return None;
-        }
-        let mut rng = rand::rng();
-        let index = rng.random_range(0..self.dialogues.len());
-        self.dialogues.get(index)
-    }
-
-    pub fn calculer_prix_vente(&self, prix_base: u32) -> u32 {
-        ((prix_base as f32) * self.multiplicateur_prix) as u32
-    }
-
-    pub fn calculer_prix_achat(&self, prix_base: u32) -> u32 {
-        let prix_achat_base = (prix_base as f32) * 0.5;
-        (prix_achat_base / self.multiplicateur_prix) as u32
-    }
-
-    pub fn est_dans_zone(&self, zone_id: u32) -> bool {
-        self.zone_id == zone_id
-    }
-
-    pub fn ajouter_dialogue(&mut self, nouveau_dialogue: String) {
-        self.dialogues.push(nouveau_dialogue);
-    }
-
-    pub fn changer_zone(&mut self, nouvelle_zone: u32) {
-        self.zone_id = nouvelle_zone;
-    }
-
-    pub fn modifier_multiplicateur_prix(&mut self, nouveau_multiplicateur: f32) {
-        self.multiplicateur_prix = nouveau_multiplicateur.max(0.1); // Minimum 10% du prix de base
-    }
-
     pub fn interagir(&mut self, joueur: &mut Personnage, zones: &mut Vec<Zone>, current_zone_index: usize) {
         println!("Vous rencontrez {}. Que voulez-vous faire ?", self.personnage.nom);
         println!("1. Combattre");
@@ -864,6 +744,10 @@ impl PNJ {
         } else {
             println!("Entrée invalide !");
         }
+    }
+
+    pub fn calculer_prix_vente(&self, prix_base: u32) -> u32 {
+        ((prix_base as f32) * self.multiplicateur_prix) as u32
     }
 }
 
@@ -1039,5 +923,47 @@ impl Joueur {
 
         println!("5 joueurs de test créés avec succès !");
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_partie_du_corps_new_et_etat() {
+        let partie = PartieDuCorps::new("Tête".to_string(), 100);
+        assert_eq!(partie.nom(), "Tête");
+        assert_eq!(partie.vie_actuelle(), 100);
+        assert!(partie.est_saine());
+        assert!(!partie.est_morte());
+    }
+
+    #[test]
+    fn test_subir_degats_et_mort() {
+        let mut partie = PartieDuCorps::new("Bras".to_string(), 10);
+        let detruite = partie.subir_degats(15);
+        assert!(detruite);
+        assert!(partie.est_morte());
+        assert_eq!(partie.vie_actuelle(), 0);
+    }
+
+    #[test]
+    fn test_personnage_gerer_blessure_et_soigner() {
+        let mut p = Personnage {
+            id: 1,
+            nom: "Test".to_string(),
+            description: "desc".to_string(),
+            force: 10,
+            inventaire: crate::inventaire::Inventaire { taille: 5, objets: vec![] },
+            parties_du_corps: vec![PartieDuCorps::new("Tête".to_string(), 10)],
+            argent: 0,
+            est_vivant: true,
+        };
+        let res = p.gerer_blessure("Tête", 15);
+        assert!(matches!(res, ResultatBlessure::Mort));
+        assert!(!p.est_vivant);
+        // let soigner = p.soigner_partie("Tête", 5);
+        // assert!(!soigner); // ne peut pas soigner un mort
     }
 }

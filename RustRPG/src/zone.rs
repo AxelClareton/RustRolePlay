@@ -48,3 +48,29 @@ impl Zone {
         self.coffres.remove(num);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::coffre::Coffre;
+
+    #[test]
+    fn test_compter_coffre() {
+        let coffres = vec![
+            Coffre { _id: 1, _id_zone: 1, _cle: false, ouvert: true, _description: "C1".to_string(), inventaire: Inventaire { taille: 1, objets: vec![] }, visible: true },
+            Coffre { _id: 2, _id_zone: 1, _cle: false, ouvert: true, _description: "C2".to_string(), inventaire: Inventaire { taille: 1, objets: vec![] }, visible: false },
+        ];
+        let zone = Zone {
+            id: 1,
+            nom: "TestZone".to_string(),
+            ouvert: true,
+            description: "desc".to_string(),
+            connection: vec![],
+            coffres,
+            objet_zone: Inventaire { taille: 1, objets: vec![] },
+            mob_present: false,
+            prix: 0,
+        };
+        assert_eq!(zone.compter_coffre(), 1);
+    }
+}

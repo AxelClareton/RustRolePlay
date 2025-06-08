@@ -27,7 +27,7 @@ struct ZoneTemporaire {
     ouvert: String,
     connection: Vec<Connexion>,
     #[serde(rename = "objet_zone")]
-    objet_zone: Inventaire,
+    _objet_zone: Inventaire,
     #[serde(default)]
     mob_present: bool,
 }
@@ -35,8 +35,8 @@ struct ZoneTemporaire {
 
 #[derive(Debug, Deserialize)]
 struct ObjetInventaireTemporaire {
-    nombre : u8,
-    objet_id: u8,
+    _nombre : u8,
+    _objet_id: u8,
 }
 
 // #[derive(Debug, Deserialize)]
@@ -48,9 +48,8 @@ struct ObjetInventaireTemporaire {
 // }
 #[derive(Debug, Deserialize)]
 struct InventaireTemporaire {
-    #[serde(rename = "taille")]
-    taille_texte: String,
-    objets: Vec<ObjetInventaireTemporaire>,
+    _taille_texte: String,
+    _objets: Vec<ObjetInventaireTemporaire>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -61,13 +60,10 @@ struct CoffreTemporaire {
     id_zone_texte: String,
     #[serde(rename = "desc")]
     description: String,
-    #[serde(rename = "cle")]
-    cle: String,
-    #[serde(rename = "ouvert")]
-    ouvert: String,
-    #[serde(rename = "visible")]
-    visible: String,
-    inventaire: Vec<InventaireTemporaire>, // Le JSON utilise un tableau
+    _cle: String,
+    _ouvert: String,
+    _visible: String,
+    _inventaire: Vec<InventaireTemporaire>, // Le JSON utilise un tableau
 }
 pub fn charger_json(chemin: &str)->Result<String, Box<dyn Error>>{
     let contenu = fs::read_to_string(chemin)?;
@@ -129,15 +125,15 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
         let id_zone = coffre.id_zone_texte.parse::<u8>()?;
         let id = coffre.id_texte.parse::<u8>()?;
         let mut cle = true;
-        if coffre.ouvert == "false" {
+        if coffre._ouvert == "false" {
             cle = false;
         }
         let mut ouvert = true;
-        if coffre.ouvert == "false" {
+        if coffre._ouvert == "false" {
             ouvert = false;
         }
         let mut visible = true;
-        if coffre.visible == "false" {
+        if coffre._visible == "false" {
             visible = false;
         }
         // Récupérer le premier élément de la liste `inventaire`
@@ -156,11 +152,11 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
         };
 
         let c = Coffre {
-            id,
-            id_zone,
-            description: coffre.description.clone(),
+            _id: id,
+            _id_zone: id_zone,
+            _description: coffre.description.clone(),
             inventaire,
-            cle:cle,
+            _cle:cle,
             ouvert: ouvert,
             visible : visible,
         };

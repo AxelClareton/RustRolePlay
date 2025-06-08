@@ -124,3 +124,44 @@ impl Objet {
             .map_or(false, |e| e == cible || e == Emplacement::Tous)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_objet_est_arme_equipement_soin() {
+        let arme = Objet {
+            id: 1,
+            nom: "Épée".to_string(),
+            poids: 2,
+            prix: 100,
+            objet_type: TypeObjet::Arme { degats: 10, proba_degats: 1.0, frequence_degats: 1 },
+        };
+        assert!(arme.est_arme());
+        assert!(!arme.est_equipement());
+        assert!(!arme.est_soin());
+
+        let equip = Objet {
+            id: 2,
+            nom: "Casque".to_string(),
+            poids: 1,
+            prix: 50,
+            objet_type: TypeObjet::Equipement { protection: 5, emplacement: Emplacement::Tete },
+        };
+        assert!(equip.est_equipement());
+        assert!(!equip.est_arme());
+        assert!(!equip.est_soin());
+
+        let soin = Objet {
+            id: 3,
+            nom: "Potion".to_string(),
+            poids: 1,
+            prix: 20,
+            objet_type: TypeObjet::Soin { vie: 10, emplacement: Emplacement::Tous },
+        };
+        assert!(soin.est_soin());
+        assert!(!soin.est_arme());
+        assert!(!soin.est_equipement());
+    }
+}
