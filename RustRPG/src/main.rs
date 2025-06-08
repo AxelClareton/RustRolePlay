@@ -272,21 +272,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             options.push(i.to_string());
         }
 
-        // Affichage amélioré des commandes disponibles
-        println!("\nCommandes disponibles :");
-        println!("  d : Se déplacer dans une direction");
-        println!("  i : Ouvrir l'inventaire");
-        println!("  c : Fouiller la zone");
-        println!("  t : Fouiller le sol de la zone (objets au sol)");
-        println!("  p : Parler/interagir avec les PNJ (si présents)");
-        println!("  q : Quitter le jeu");
+        // Construction du message des commandes disponibles
+        let mut message_commandes = String::from("\nCommandes disponibles :\n");
+        message_commandes.push_str("  d : Se déplacer dans une direction\n");
+        message_commandes.push_str("  i : Ouvrir l'inventaire\n");
+        message_commandes.push_str("  c : Fouiller la zone\n");
+        message_commandes.push_str("  t : Fouiller le sol de la zone (objets au sol)\n");
+        message_commandes.push_str("  p : Parler/interagir avec les PNJ (si présents)\n");
+        message_commandes.push_str("  q : Quitter le jeu\n");
         if nbr_coffres > 0 {
-            println!("  1..{} : Ouvrir le coffre correspondant", nbr_coffres);
+            for i in 1..=nbr_coffres {
+                message_commandes.push_str(&format!("  {} : Ouvrir le coffre {}\n", i, i));
+            }
         }
-        println!("");
+        message_commandes.push('\n');
+        message_commandes.push_str("Que voulez-vous faire ? :");
 
         let choix = affichage::faire_choix(
-            "Que voulez-vous faire ? ('d' pour vous déplacer, 'i' pour ouvrir l'inventaire, 'q' pour quitter, 'c' pour fouiller la zone, 't' pour fouiller le sol de la zone et afficher les objets au sol, 'p' pour parler aux PNJ si présent dans la zone ou le numéro du coffre) :",&options
+            &message_commandes,
+            &options
         );
         match choix.as_str() {
             "q" => {
@@ -318,7 +322,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             "i" => {
                 println!("Votre inventaire : ");
-                match perso_joueur.inventaire.afficher(true){
+                match perso_joueur.inventaire.afficher(true, &zones[current_zone_index], &pnjs){
                     Some(obj)=> {
                         let choix_utiliser = affichage::faire_choix(
                             "Voulez vous utiliser l'objet ? (oui ou non)",
@@ -473,14 +477,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "c" => {
                 affichage::notifier(&zones[current_zone_index], "Fouillage de la zone en cours...", &pnjs);
                 sleep(Duration::from_secs(5));
-                zones[current_zone_index].fouiller_zone(&pnjs);
+                zones[current_zone_index].fouiller_zone();
                 affichage::afficher_zone(&zones[current_zone_index], &pnjs);
             }
             "t" => {
                 let msg = format!("Fouillage de la zone en cours...");
                 affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                 sleep(Duration::from_secs(5));
-                match zones[current_zone_index].objet_zone.afficher(false){
+                let zone_clone = zones[current_zone_index].clone();
+                let objet_zone = &mut zones[current_zone_index].objet_zone;
+                match objet_zone.afficher(false, &zone_clone, &pnjs){
                     Some(obj)=> {
                         let choix_recuperer = affichage::faire_choix(
                             "Voulez vous récupérer l'objet ? (oui/non)",
@@ -576,8 +582,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             _ => {
                 if let Ok(num) = choix.parse::<usize>() {
                     if (1..=nbr_coffres).contains(&num) {
+                        let zone_clone = zones[current_zone_index].clone();
                         let coffre = &mut zones[current_zone_index].coffres[num-1]; // Récupère le coffre sélectionné
-                        match coffre.ouvrir() {
+                        match coffre.ouvrir(&zone_clone, &pnjs) {
                             Some(objet) => {
                                 perso_joueur.inventaire.ajouter_objet(objet as u8);
                                 if coffre.inventaire.objets.is_empty() {

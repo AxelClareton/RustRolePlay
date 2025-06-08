@@ -3,6 +3,8 @@ use std::cmp::Reverse;
 use std::fmt;
 use crate::objet::OBJETS_DISPONIBLES;
 use std::sync::RwLockReadGuard;
+use crate::affichage;
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Inventaire {
     pub taille: u8,
@@ -15,13 +17,13 @@ pub struct ObjetInventaire {
 }
 
 impl Inventaire {
-    pub fn afficher(&mut self, est_joueur : bool) -> Option<usize> {
+    pub fn afficher(&mut self, est_joueur : bool, zone: &crate::zone::Zone, pnjs: &Vec<crate::personnage::PNJ>) -> Option<usize> {
         if self.objets.is_empty(){
             if est_joueur {
-                println!("📦 Votre inventaire est vide")
+                affichage::notifier(zone, "📦 Votre inventaire est vide", pnjs);
             }
             else {
-                println!("📦 Malheureusement le coffre est vide");
+                affichage::notifier(zone, "📦 Malheureusement le coffre est vide", pnjs);
             }
             return None
         }

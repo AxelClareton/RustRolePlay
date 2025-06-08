@@ -13,7 +13,7 @@ pub struct Coffre {
 }
 
 impl Coffre {
-    pub fn ouvrir(&mut self) -> Option<usize>{
+    pub fn ouvrir(&mut self, zone: &crate::zone::Zone, pnjs: &Vec<crate::personnage::PNJ>) -> Option<usize>{
         if !self.ouvert {
             let choix = affichage::faire_choix(
                 "Ce coffre est fermé voulez-vous utiliser une clé pour l'ouvrir ? (oui/non)",
@@ -31,7 +31,7 @@ impl Coffre {
             }
         }
         println!("Ouverture du coffre ! ");
-        let obj = self.inventaire.afficher(false);
+        let obj = self.inventaire.afficher(false, zone, pnjs);
         obj
     }
 

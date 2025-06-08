@@ -479,7 +479,7 @@ impl PNJ {
         multiplicateur_prix: f32
     ) -> io::Result<Self> {
         let prochain_id = PNJ::prochain_id_pnj("src/json/pnj.json")?;
-        let inventaire = PNJ::choisir_objets_inventaire()?;;
+        let inventaire = PNJ::choisir_objets_inventaire()?;
         let parties_du_corps = creer_parties_du_corps();
 
         let mut rng: ThreadRng = rand::rng();

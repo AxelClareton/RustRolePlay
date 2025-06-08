@@ -34,7 +34,7 @@ impl Zone {
         cpt
     }
 
-    pub fn fouiller_zone(&mut self, tous_les_pnjs: &[PNJ]) {
+    pub fn fouiller_zone(&mut self) {
         let mut cpt :u8 = 0;
         for coffre in &mut self.coffres {
             if !coffre.visible {
