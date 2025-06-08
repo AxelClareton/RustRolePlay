@@ -38,8 +38,8 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
         if parties_cibles.is_empty() {
             break;
         }
-        let (_, partie_cible) = parties_cibles[rng.random_range(0..parties_cibles.len())];
-        let nom_partie = partie_cible.nom().to_string();
+        let (index_cible, _) = parties_cibles[rng.random_range(0..parties_cibles.len())];
+        let nom_partie = def.parties_du_corps[index_cible].nom().to_string();
 
         // calcul les degats
         let (degats, proba, nom_arme) = if let Some(arme) = &arme {
@@ -53,7 +53,7 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
         };
         
         if rng.random_bool(proba as f64) {
-            let protection: i32 = partie_cible.equipement().objets.iter().map(|obj_inv| {
+            let protection: i32 = def.parties_du_corps[index_cible].equipement().objets.iter().map(|obj_inv| {
                 let objets = OBJETS_DISPONIBLES.read().unwrap();
                 objets.get(&obj_inv.objet_id).and_then(|o| match &o.objet_type {
                     TypeObjet::Equipement { protection, .. } => Some(*protection as i32),
@@ -61,7 +61,7 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
                 }).unwrap_or(0)
             }).sum();
             let degats_finals = if protection > 0 {
-                let diviseur = (1.5 * protection as f32).floor().max(1.0); 
+                let diviseur = (1.5 * protection as f32).floor().max(1.0);
                 ((degats as f32) / diviseur).floor() as u32
             } else {
                 degats.max(0) as u32
@@ -71,6 +71,8 @@ pub fn combattre(mut p1: Personnage, mut p2: Personnage) -> CombatResultat {
             }
         }
         println!("Tour {tour} : {} attaque {} avec {} sur {} (dégâts: {})", att.nom, def.nom, nom_arme, nom_partie, degats);
+        let partie_cible = &def.parties_du_corps[index_cible];
+        println!("  -> {} de {} : {}/{} HP, état : {}", nom_partie, def.nom, partie_cible.vie_actuelle(), partie_cible.vie_max(), partie_cible.etat());
 
         attaquant = 1 - attaquant;
         tour += 1;

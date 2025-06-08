@@ -183,6 +183,17 @@ impl PartieDuCorps {
 
         objet
     }
+
+    pub fn vie_actuelle(&self) -> u32 {
+        self.vie_actuelle
+    }
+    pub fn vie_max(&self) -> u32 {
+        self.vie_max
+    }
+
+    pub fn etat(&self) -> &EtatPartie {
+        &self.etat
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
