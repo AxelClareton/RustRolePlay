@@ -52,7 +52,9 @@ pub fn afficher_zone(zone: &Zone, tous_les_pnjs: &[PNJ]) {
     if !pnjs_dans_la_zone.is_empty() {
         println!("👥 PNJ présents :");
         for pnj in pnjs_dans_la_zone {
-            println!("- {}", pnj.personnage.nom);
+            if (pnj.personnage.est_vivant){
+                println!("- {}", pnj.personnage.nom);
+            }
         }
     }
     println!("------------------------------");
