@@ -535,13 +535,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             );
                             if resultat.etat_final_joueur.est_vivant {
                                 _perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
-                                /*for p in resultat.etat_final_mob.parties_du_corps{
-                                    println!("{}", p);
-                                    if p.equipement().objets.len() > 1 {
-                                        let objet = &p.equipement().objets[1];
-                                        zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
-                                    }
-                                }*/
                                 for p in &_perso_joueur.parties_du_corps{
                                     if !p.est_saine() {
                                         let msg = format!("Votre {} est blessé", p.nom());
@@ -615,7 +608,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         let zone_clone = zones[current_zone_index].clone();
                         let coffre = &mut zones[current_zone_index].coffres[num-1]; // Récupère le coffre sélectionné
 
-                        if coffre.ouvrir(&zone_clone, &pnjs).is_none() {
+                        if coffre.ouvrir(&zone_clone, &mut _perso_joueur , &pnjs).is_none() {
                             continue;
                         }
 

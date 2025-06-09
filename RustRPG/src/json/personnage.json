@@ -76,7 +76,7 @@
         }
       }
     ],
-    "argent": 6,
+    "argent": 152,
     "est_vivant": true
   },
   {
@@ -156,7 +156,7 @@
         }
       }
     ],
-    "argent": 4,
+    "argent": 251,
     "est_vivant": true
   },
   {
@@ -236,7 +236,7 @@
         }
       }
     ],
-    "argent": 13,
+    "argent": 145,
     "est_vivant": true
   },
   {
@@ -316,7 +316,7 @@
         }
       }
     ],
-    "argent": 14,
+    "argent": 136,
     "est_vivant": true
   },
   {
@@ -396,7 +396,7 @@
         }
       }
     ],
-    "argent": 100000,
+    "argent": 124,
     "est_vivant": true
   }
 ]

@@ -88,7 +88,7 @@
     "id" : "8",
     "id_zone" : "3",
     "_ouvert": "true",
-    "_visible": "true",
+    "_visible": "false",
     "desc" : "test coffre",
     "_inventaire" : [{
       "_taille_texte" : "3",
@@ -101,6 +101,18 @@
     "id_zone" : "3",
     "_ouvert": "false",
     "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "21",
+    "id_zone" : "3",
+    "_ouvert": "false",
+    "_visible": "false",
     "desc" : "test coffre",
     "_inventaire" : [{
       "_taille_texte" : "3",

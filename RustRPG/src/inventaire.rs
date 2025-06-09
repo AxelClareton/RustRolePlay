@@ -197,6 +197,20 @@ impl Inventaire {
         objet
     }
 
+    pub fn retirer_par_id(&mut self, id: u8) -> bool {
+        for i in 0..self.objets.len() {
+            if self.objets[i].objet_id == id {
+                self.objets[i].nombre -= 1;
+                if self.objets[i].nombre == 0 {
+                    self.objets.remove(i);
+                }
+                self.trier_quantite();
+                return true;
+            }
+        }
+        false
+    }
+
     pub fn trier_quantite(&mut self){
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
     }

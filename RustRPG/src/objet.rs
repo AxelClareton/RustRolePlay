@@ -39,6 +39,7 @@ pub enum Emplacement {
     Tete,
     Torse,
     Tous,
+    Aucun,
 }
 
 impl FromStr for Emplacement {
@@ -51,6 +52,7 @@ impl FromStr for Emplacement {
             "Tete" => Ok(Emplacement::Tete),
             "Torse" => Ok(Emplacement::Torse),
             "Tous" => Ok(Emplacement::Tous),
+            "Aucun" => Ok(Emplacement::Aucun),
             _ => Err(format!("Emplacement inconnu : {}", s)),
         }
     }
@@ -100,7 +102,11 @@ impl fmt::Display for Objet {
 
 impl Objet {
     pub fn est_equipement(&self) -> bool {
-        matches!(self.objet_type, TypeObjet::Equipement { .. })
+        match &self.objet_type{
+            TypeObjet::Equipement { emplacement: Emplacement::Aucun, .. } => false,
+            TypeObjet::Equipement { .. } => true,
+            _ => false,
+        }
     }
 
     pub fn est_arme(&self) -> bool {
@@ -120,8 +126,11 @@ impl Objet {
     }
     
     pub fn est_pour_emplacement(&self, cible: Emplacement) -> bool {
-        self.emplacement()
-            .map_or(false, |e| e == cible || e == Emplacement::Tous)
+        match self.emplacement() {
+            Some(Emplacement::Aucun) => false,
+            Some(e) => e == cible || e == Emplacement::Tous,
+            None => false,
+        }
     }
 }
 

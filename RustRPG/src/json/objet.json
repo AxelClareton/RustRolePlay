@@ -134,5 +134,17 @@
         "emplacement": "Tous"
       }
     }
+  },
+  {
+    "id": "12",
+    "nom": "Clé",
+    "poids": "10",
+    "prix": "25",
+    "objet_type": {
+      "Equipement": {
+        "protection": "0",
+        "emplacement": "Aucun"
+      }
+    }
   }
 ]
