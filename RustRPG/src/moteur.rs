@@ -60,7 +60,6 @@ struct CoffreTemporaire {
     id_zone_texte: String,
     #[serde(rename = "desc")]
     description: String,
-    _cle: String,
     _ouvert: String,
     _visible: String,
     _inventaire: Vec<InventaireTemporaire>, // Le JSON utilise un tableau
@@ -124,10 +123,6 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
     for coffre in coffres_temp {
         let id_zone = coffre.id_zone_texte.parse::<u8>()?;
         let id = coffre.id_texte.parse::<u8>()?;
-        let mut cle = true;
-        if coffre._ouvert == "false" {
-            cle = false;
-        }
         let mut ouvert = true;
         if coffre._ouvert == "false" {
             ouvert = false;
@@ -156,7 +151,6 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
             _id_zone: id_zone,
             _description: coffre.description.clone(),
             inventaire,
-            _cle:cle,
             ouvert: ouvert,
             visible : visible,
         };

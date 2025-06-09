@@ -42,14 +42,14 @@ fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction:
                     "oui" => {
                         //println!("Début du combat");
                     }
-                    _ => { 
+                    _ => {
                         let msg = format!("Vous avez peur de l'ennemie, vous restez dans la même zone");
                         affichage::notifier(&zones[*current_zone_index], &msg, &pnjs);
                         return
                     }
                 }
             }
-            else { 
+            else {
                 let msg = format!("Il y a aucun mob");
                 affichage::notifier(&zones[*current_zone_index], &msg, &pnjs);
             }
@@ -109,7 +109,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //Initiliasation du personnage avec l'id 1 au cas où il n'y a pas de personnage.
     let personnages = Joueur::charger_joueur("src/json/personnage.json")?;
     let mut _perso_joueur : Personnage = personnages.into_iter().find(|j| j.id == 1).expect("No player found with this ID");
-    
+
+    // Message d'accueil
+    affichage::notifier(&zones[current_zone_index], "✨ Bienvenue dans le RustRPG !", &pnjs);
     loop {
         let choix_perso = affichage::faire_choix(
             "Choisissez quoi faire (1 créer perso, 2 charger perso, q quitter) : ",
@@ -243,10 +245,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             _ => println!("❌ Option inconnue !"),
         }
     }
-    
+
+
     // Message d'accueil
-    affichage::notifier(&zones[current_zone_index], "✨ Bienvenue dans le RustRPG !", &pnjs);
-    
+    // affichage::notifier(&zones[current_zone_index], "✨ Bienvenue dans le RustRPG !", &pnjs);
     
     affichage::afficher_zone(&zones[current_zone_index], &pnjs);
     let mut rng = rand::rng();
@@ -285,7 +287,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         message_commandes.push_str("  c : Fouiller la zone (coffres)\n");
         message_commandes.push_str("  t : Fouiller le sol de la zone (objets au sol)\n");
         message_commandes.push_str("  p : Parler/interagir avec les PNJ (si présents)\n");
-        message_commandes.push_str("  s : Voir l'état de santé du joueur\n");
+        message_commandes.push_str("  s : Voir l'état de santé du joueur, son équipement et son argent\n");
         if nbr_coffres > 0 {
             for i in 1..=nbr_coffres {
                 message_commandes.push_str(&format!("  {} : Ouvrir le coffre {}\n", i, i));
@@ -469,7 +471,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                                         let objet : ObjetInventaire = _perso_joueur.inventaire.récupérer_objet_2(obj);
                                         zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
                                         println!("Vous vous débarassez de l'objet")
-                                        //perso_joueur.parties_du_corps[i].ajouter_equipement(objet.objet_id);
                                     }
                                     _ => {
                                         println!("Vous ne faites rien de cette objet.")
@@ -493,27 +494,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 sleep(Duration::from_secs(5));
                 let zone_clone = zones[current_zone_index].clone();
                 let objet_zone = &mut zones[current_zone_index].objet_zone;
-                match objet_zone.afficher(false, &zone_clone, &pnjs){
-                    Some(obj)=> {
-                        let choix_recuperer = affichage::faire_choix(
-                            "Voulez vous récupérer l'objet ? (oui/non)",
-                            &vec!["oui".to_string(), "non".to_string()]
-                        );
-                        match choix_recuperer.as_str() {
-                            "oui" => {
-                                _perso_joueur.inventaire.ajouter_objet(obj as u8);
-                                let objets_all = OBJETS_DISPONIBLES.read().unwrap();
-                                let nom_objet = objets_all.get(&(obj as u8)).map(|o| o.nom.clone()).unwrap_or_else(|| format!("ID {}", obj));
-                                let msg = format!("Vous récupérez l'objet : {}", nom_objet);
-                                affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
-                            }
-                            _ => {
-                                let msg = format!("Vous laissez l'objet par terre ...");
-                                affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
-                            }
-                        }
-                    }
-                    None => ()
+
+                if let Some(()) = objet_zone.afficher_inventaire_zone_et_coffre(&zone_clone, &mut _perso_joueur, &pnjs)
+                {
+                } else {
+                    let msg = format!("Vous laissez l'objet par terre ...");
+                    affichage::notifier(&zones[current_zone_index], &msg, &pnjs);
                 }
             }
             "d" => {
@@ -549,13 +535,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                             );
                             if resultat.etat_final_joueur.est_vivant {
                                 _perso_joueur.parties_du_corps = resultat.etat_final_joueur.parties_du_corps;
-                                /*for p in resultat.etat_final_mob.parties_du_corps{
-                                    println!("{}", p);
-                                    if p.equipement().objets.len() > 1 {
-                                        let objet = &p.equipement().objets[1];
-                                        zones[current_zone_index].objet_zone.ajouter_objet(objet.objet_id);
-                                    }
-                                }*/
                                 for p in &_perso_joueur.parties_du_corps{
                                     if !p.est_saine() {
                                         let msg = format!("Votre {} est blessé", p.nom());
@@ -628,14 +607,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     if (1..=nbr_coffres).contains(&num) {
                         let zone_clone = zones[current_zone_index].clone();
                         let coffre = &mut zones[current_zone_index].coffres[num-1]; // Récupère le coffre sélectionné
-                        match coffre.ouvrir(&zone_clone, &pnjs) {
-                            Some(objet) => {
-                                _perso_joueur.inventaire.ajouter_objet(objet as u8);
-                                if coffre.inventaire.objets.is_empty() {
-                                    zones[current_zone_index].supprimer_coffre(num-1);
-                                }
-                            },
-                            None => affichage::notifier(&zones[current_zone_index], "Aucun objet à récupérer", &pnjs),
+
+                        if coffre.ouvrir(&zone_clone, &mut _perso_joueur , &pnjs).is_none() {
+                            continue;
+                        }
+
+                        if let Some(()) = coffre
+                            .inventaire
+                            .afficher_inventaire_zone_et_coffre(&zone_clone, &mut _perso_joueur, &pnjs)
+                        {
+                            if coffre.inventaire.objets.is_empty() {
+                                zones[current_zone_index].supprimer_coffre(num - 1);
+                            }
+                        } else {
+                            affichage::notifier(&zones[current_zone_index], "Vous laissez les objets dans le coffre...", &pnjs);
                         }
                     } else {
                         affichage::notifier(&zones[current_zone_index], "❌ Commande inconnue !", &pnjs);

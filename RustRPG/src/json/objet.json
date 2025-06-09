@@ -137,13 +137,13 @@
   },
   {
     "id": "12",
-    "nom": "Pantalon du SWAT",
-    "poids": "50",
-    "prix": "15",
+    "nom": "Clé",
+    "poids": "10",
+    "prix": "25",
     "objet_type": {
       "Equipement": {
-        "protection": "10",
-        "emplacement": "Jambe"
+        "protection": "0",
+        "emplacement": "Aucun"
       }
     }
   }

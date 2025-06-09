@@ -3,56 +3,252 @@
     "type" : "coffre",
     "id" : "1",
     "id_zone" : "1",
-    "_cle": "false",
     "_ouvert": "false",
     "_visible": "true",
     "desc" : "test coffre",
     "_inventaire" : [{
-      "_taille_texte" : "3",
-      "_objets" : [
-        {"_nombre":1, "_objet_id": 1}, {"_nombre":2, "_objet_id": 2}, {"_nombre":1, "_objet_id": 3}]
+      "_taille_texte" : "10",
+      "_objets" : []
     }]
   },
   {
     "type" : "coffre",
     "id" : "2",
     "id_zone" : "1",
-    "_cle": "true",
     "_ouvert": "true",
     "_visible": "false",
     "desc" : "coffre lpedleldpe",
     "_inventaire" : [{
-      "_taille_texte" : "1",
-      "_objets" : [
-        {"_nombre":1, "_objet_id": 1}]
+      "_taille_texte" : "10",
+      "_objets" : []
     }]
   },
   {
     "type" : "coffre",
     "id" : "3",
     "id_zone" : "1",
-    "_cle": "false",
     "_ouvert": "true",
     "_visible": "true",
     "desc" : "test coffre",
     "_inventaire" : [{
-      "_taille_texte" : "3",
-      "_objets" : [
-        {"_nombre":1, "_objet_id": 1}, {"_nombre":2, "_objet_id": 2}, {"_nombre":1, "_objet_id": 3}]
+      "_taille_texte" : "10",
+      "_objets" : []
     }]
   },
   {
     "type" : "coffre",
     "id" : "4",
-    "id_zone" : "1",
-    "_cle": "false",
+    "id_zone" : "2",
     "_ouvert": "true",
     "_visible": "true",
     "desc" : "test coffre",
     "_inventaire" : [{
       "_taille_texte" : "3",
-      "_objets" : [
-        {"_nombre":1, "_objet_id": 1}, {"_nombre":2, "_objet_id": 2}, {"_nombre":1, "_objet_id": 3}]
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "5",
+    "id_zone" : "2",
+    "_ouvert": "false",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "6",
+    "id_zone" : "2",
+    "_ouvert": "true",
+    "_visible": "false",
+    "desc" : "coffre lpedleldpe",
+    "_inventaire" : [{
+      "_taille_texte" : "1",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "7",
+    "id_zone" : "2",
+    "_ouvert": "true",
+    "_visible": "false",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "8",
+    "id_zone" : "3",
+    "_ouvert": "true",
+    "_visible": "false",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "9",
+    "id_zone" : "3",
+    "_ouvert": "false",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "21",
+    "id_zone" : "3",
+    "_ouvert": "false",
+    "_visible": "false",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "10",
+    "id_zone" : "4",
+    "_ouvert": "true",
+    "_visible": "false",
+    "desc" : "coffre lpedleldpe",
+    "_inventaire" : [{
+      "_taille_texte" : "1",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "11",
+    "id_zone" : "4",
+    "_ouvert": "true",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "12",
+    "id_zone" : "4",
+    "_ouvert": "true",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "13",
+    "id_zone" : "5",
+    "_ouvert": "false",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "14",
+    "id_zone" : "6",
+    "_ouvert": "true",
+    "_visible": "false",
+    "desc" : "coffre lpedleldpe",
+    "_inventaire" : [{
+      "_taille_texte" : "1",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "15",
+    "id_zone" : "6",
+    "_ouvert": "true",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "16",
+    "id_zone" : "7",
+    "_ouvert": "true",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "17",
+    "id_zone" : "7",
+    "_ouvert": "false",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "18",
+    "id_zone" : "8",
+    "_ouvert": "true",
+    "_visible": "false",
+    "desc" : "coffre lpedleldpe",
+    "_inventaire" : [{
+      "_taille_texte" : "1",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "19",
+    "id_zone" : "9",
+    "_ouvert": "true",
+    "_visible": "true",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
+    }]
+  },
+  {
+    "type" : "coffre",
+    "id" : "20",
+    "id_zone" : "9",
+    "_ouvert": "false",
+    "_visible": "false",
+    "desc" : "test coffre",
+    "_inventaire" : [{
+      "_taille_texte" : "3",
+      "_objets" : []
     }]
   }
 ]

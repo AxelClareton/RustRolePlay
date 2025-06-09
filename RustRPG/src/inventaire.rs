@@ -87,6 +87,78 @@ impl Inventaire {
         }
     }
 
+    pub fn afficher_inventaire_zone_et_coffre(&mut self, zone: &crate::zone::Zone, joueur: &mut crate::personnage::Personnage, pnjs: &Vec<crate::personnage::PNJ>) -> Option<()> {
+        use std::io;
+
+        if self.objets.is_empty() {
+            affichage::notifier(zone, "📦 Malheureusement c'est vide", pnjs);
+            return None
+        }
+        let mut message = format!("📦 Inventaire (Taille: {}):\n", self.taille);
+        let objets_all: RwLockReadGuard<_> = OBJETS_DISPONIBLES.read().unwrap();
+        self.trier_quantite();
+        for (index, obj) in self.objets.iter().enumerate() {
+            if let Some(o) = objets_all.get(&obj.objet_id) {
+                message.push_str(&format!("  {} : {} (x{})\n", index + 1, o.nom, obj.nombre));
+            } else {
+                message.push_str(&format!("  Objet inconnu (ID: {})\n", obj.objet_id));
+            }
+        }
+
+        message.push_str("Saisir 'q' pour fermer, ou entrez le nombre correspondant à l'item que vous voulez récupérer\n");
+        message.push_str("Entrez votre choix :");
+        let mut choix_possibles: Vec<String> = (1..=self.objets.len()).map(|i| i.to_string()).collect();
+        choix_possibles.push("q".to_string());
+        let choix = affichage::faire_choix(&message, &choix_possibles);
+        if choix == "q" {
+            affichage::notifier(zone, "Fermeture de l'inventaire...", pnjs);
+            return None
+        }
+
+        let index = choix.parse::<usize>().unwrap() - 1;
+        let disponible = self.objets[index].nombre;
+
+        println!("Combien voulez-vous récupérer ? (max {})", disponible);
+        let mut buf = String::new();
+        io::stdin().read_line(&mut buf).expect("❌ Erreur de lecture !");
+        let qty = match buf.trim().parse::<u8>() {
+            Ok(n) if n > 0 && n <= disponible => n,
+            _ => {
+                affichage::notifier(zone, "❌ Quantité invalide.", pnjs);
+                return None;
+            }
+        };
+
+        // 5. Vérification de la place dans l'inventaire du joueur
+        let place_actuelle: u8 = joueur
+            .inventaire
+            .objets
+            .iter()
+            .map(|o| o.nombre)
+            .sum();
+        if place_actuelle + qty > joueur.inventaire.taille {
+            affichage::notifier(zone, "❌ Pas assez de place dans votre inventaire !", pnjs);
+            return None;
+        }
+
+        // 6. On retire qty fois de la zone et on ajoute dans l'inventaire du joueur
+        let obj_id = self.objets[index].objet_id;
+        for _ in 0..qty {
+            let retire = self.récupérer_objet(index);
+            joueur.inventaire.ajouter_objet(retire as u8);
+        }
+
+        // 7. Notification finale
+        let nom = objets_all
+            .get(&obj_id)
+            .map(|o| o.nom.clone())
+            .unwrap_or_else(|| format!("ID {}", obj_id));
+        let msg = format!("✅ Vous récupérez {} x{}", nom, qty);
+        affichage::notifier(zone, &msg, pnjs);
+
+        Some(())
+    }
+
     pub fn ajouter_objet(&mut self, id: u8){
         for objet in &mut self.objets {
             if objet.objet_id == id {
@@ -125,15 +197,23 @@ impl Inventaire {
         objet
     }
 
+    pub fn retirer_par_id(&mut self, id: u8) -> bool {
+        for i in 0..self.objets.len() {
+            if self.objets[i].objet_id == id {
+                self.objets[i].nombre -= 1;
+                if self.objets[i].nombre == 0 {
+                    self.objets.remove(i);
+                }
+                self.trier_quantite();
+                return true;
+            }
+        }
+        false
+    }
+
     pub fn trier_quantite(&mut self){
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
     }
-
-    // pub fn tout_recuperer(&mut self, inventaire: &mut Inventaire){
-    //     //
-    //     self.objets.extend(inventaire.objets.drain(..));
-    //     inventaire.objets = Vec::new();
-    // }
 }
 
 impl fmt::Display for Inventaire {
