@@ -57,8 +57,8 @@ mod tests {
     #[test]
     fn test_compter_coffre() {
         let coffres = vec![
-            Coffre { _id: 1, _id_zone: 1, _cle: false, ouvert: true, _description: "C1".to_string(), inventaire: Inventaire { taille: 1, objets: vec![] }, visible: true },
-            Coffre { _id: 2, _id_zone: 1, _cle: false, ouvert: true, _description: "C2".to_string(), inventaire: Inventaire { taille: 1, objets: vec![] }, visible: false },
+            Coffre { _id: 1, _id_zone: 1, ouvert: true, _description: "C1".to_string(), inventaire: Inventaire { taille: 1, objets: vec![] }, visible: true },
+            Coffre { _id: 2, _id_zone: 1, ouvert: true, _description: "C2".to_string(), inventaire: Inventaire { taille: 1, objets: vec![] }, visible: false },
         ];
         let zone = Zone {
             id: 1,
