@@ -330,7 +330,7 @@
       "id": 11,
       "nom": "Mohamed \"Loadout\" Ben Ali",
       "description": "Spécialiste en packs tactiques pour forces spéciales",
-      "force": 275,
+      "force": 250,
       "inventaire": {
         "taille": 10,
         "objets": [
