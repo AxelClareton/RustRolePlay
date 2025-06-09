@@ -2,86 +2,32 @@
   {
     "personnage": {
       "id": 1,
-      "nom": "Paul",
-      "description": "moche",
-      "force": 82,
+      "nom": "Maxime \"Deadeye\" Leroy",
+      "description": "Tireur d’élite reconverti en vendeur d’armes de poing",
+      "force": 172,
       "inventaire": {
         "taille": 10,
-        "objets": []
+        "objets": [
+          { "nombre": 4, "objet_id": 12 },
+          { "nombre": 2, "objet_id": 10 },
+          { "nombre": 1, "objet_id": 3 }
+        ]
       },
       "parties_du_corps": [
-        {
-          "nom": "Tête",
-          "vie_max": 50,
-          "vie_actuelle": 50,
-          "etat": "Saine",
-          "guerison": "2025-06-05T18:49:17.529317200Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Torse",
-          "vie_max": 100,
-          "vie_actuelle": 100,
-          "etat": "Saine",
-          "guerison": "2025-06-05T18:49:17.529319400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras droit",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-05T18:49:17.529320Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras gauche",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-05T18:49:17.529320400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe droite",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-05T18:49:17.529320700Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe gauche",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-05T18:49:17.529321Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        }
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
       ],
       "argent": 180,
       "est_vivant": true
     },
     "dialogues": [
-      "salut le sang"
+      "Bonjour, j'espère que tu trouveras ton bonheur parmi mon stock.",
+      "J'ai quelques clés (25 €) et bandages (40 €) disponibles.",
+      "Reviens me voir si tu manques d’accessoires."
     ],
     "zone_id": 1,
     "multiplicateur_prix": 1.2
@@ -89,297 +35,359 @@
   {
     "personnage": {
       "id": 2,
-      "nom": "Pierre",
-      "description": "gentil",
-      "force": 92,
+      "nom": "Élodie \"Silencer\" Dubois",
+      "description": "Spécialiste en silencieux et accessoires furtifs",
+      "force": 195,
       "inventaire": {
         "taille": 10,
         "objets": [
-          {
-            "nombre": 3,
-            "objet_id": 7
-          },
-          {
-            "nombre": 2,
-            "objet_id": 1
-          },
-          {
-            "nombre": 5,
-            "objet_id": 10
-          }
+          { "nombre": 3, "objet_id": 12 },
+          { "nombre": 3, "objet_id": 10 },
+          { "nombre": 1, "objet_id": 6 }
         ]
       },
       "parties_du_corps": [
-        {
-          "nom": "Tête",
-          "vie_max": 50,
-          "vie_actuelle": 50,
-          "etat": "Saine",
-          "guerison": "2025-06-06T17:57:43.872308400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Torse",
-          "vie_max": 100,
-          "vie_actuelle": 100,
-          "etat": "Saine",
-          "guerison": "2025-06-06T17:57:43.872310700Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras droit",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-06T17:57:43.872311100Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras gauche",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-06T17:57:43.872311400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe droite",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-06T17:57:43.872311600Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe gauche",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-06T17:57:43.872311900Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        }
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
       ],
       "argent": 160,
       "est_vivant": true
     },
     "dialogues": [
-      "salut"
+      "Salut, tu trouveras ici des clés (25 €) et bandages (40 €).",
+      "Dis-moi si tu veux autre chose.",
+      "À bientôt !"
     ],
     "zone_id": 1,
-    "multiplicateur_prix": 2.0
+    "multiplicateur_prix": 1.0
   },
   {
     "personnage": {
       "id": 3,
-      "nom": "jean",
-      "description": "dsds",
-      "force": 89,
+      "nom": "Karim \"Techshot\" Bensaïd",
+      "description": "Ingénieur en modules électroniques d’armement",
+      "force": 210,
       "inventaire": {
         "taille": 10,
         "objets": [
-          {
-            "nombre": 5,
-            "objet_id": 5
-          },
-          {
-            "nombre": 2,
-            "objet_id": 6
-          }
+          { "nombre": 3, "objet_id": 12 },
+          { "nombre": 2, "objet_id": 10 },
+          { "nombre": 1, "objet_id": 8 }
         ]
       },
       "parties_du_corps": [
-        {
-          "nom": "Tête",
-          "vie_max": 50,
-          "vie_actuelle": 50,
-          "etat": "Saine",
-          "guerison": "2025-06-06T18:21:21.596766400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Torse",
-          "vie_max": 100,
-          "vie_actuelle": 100,
-          "etat": "Saine",
-          "guerison": "2025-06-06T18:21:21.596788300Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras droit",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-06T18:21:21.596788900Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras gauche",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-06T18:21:21.596789500Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe droite",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-06T18:21:21.596789900Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe gauche",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-06T18:21:21.596790200Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        }
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
       ],
-      "argent": 138,
+      "argent": 230,
       "est_vivant": true
     },
     "dialogues": [
-      "sfsf"
+      "Bonjour, clés (25 €) et bandages (40 €) sont en rayon.",
+      "Je peux aussi installer des modules sur place.",
+      "Passe une bonne journée."
     ],
-    "zone_id": 1,
-    "multiplicateur_prix": 1.5
+    "zone_id": 2,
+    "multiplicateur_prix": 1.3
   },
   {
     "personnage": {
       "id": 4,
-      "nom": "hugo",
-      "description": "ljkhk",
-      "force": 105,
+      "nom": "Julie \"ArmorX\" Martin",
+      "description": "Vendeuse de protections balistiques et tactiques",
+      "force": 180,
       "inventaire": {
         "taille": 10,
         "objets": [
-          {
-            "nombre": 2,
-            "objet_id": 5
-          },
-          {
-            "nombre": 6,
-            "objet_id": 4
-          },
-          {
-            "nombre": 1,
-            "objet_id": 7
-          }
+          { "nombre": 3, "objet_id": 12 },
+          { "nombre": 3, "objet_id": 10 },
+          { "nombre": 1, "objet_id": 5 }
         ]
       },
       "parties_du_corps": [
-        {
-          "nom": "Tête",
-          "vie_max": 50,
-          "vie_actuelle": 50,
-          "etat": "Saine",
-          "guerison": "2025-06-06T20:58:41.970118500Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Torse",
-          "vie_max": 100,
-          "vie_actuelle": 100,
-          "etat": "Saine",
-          "guerison": "2025-06-06T20:58:41.970128400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras droit",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-06T20:58:41.970128800Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Bras gauche",
-          "vie_max": 75,
-          "vie_actuelle": 75,
-          "etat": "Saine",
-          "guerison": "2025-06-06T20:58:41.970129100Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe droite",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-06T20:58:41.970129400Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        },
-        {
-          "nom": "Jambe gauche",
-          "vie_max": 80,
-          "vie_actuelle": 80,
-          "etat": "Saine",
-          "guerison": "2025-06-06T20:58:41.970129800Z",
-          "equipement": {
-            "taille": 1,
-            "objets": []
-          }
-        }
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
       ],
-      "argent": 89,
+      "argent": 145,
       "est_vivant": true
     },
     "dialogues": [
-      "jhjg"
+      "Salut, tu trouveras clés (25 €) et bandages (40 €) ici.",
+      "Fais-moi signe si tu veux autre chose.",
+      "Bonne journée !"
     ],
     "zone_id": 2,
-    "multiplicateur_prix": 1.3
+    "multiplicateur_prix": 0.8
+  },
+  {
+    "personnage": {
+      "id": 5,
+      "nom": "Antoine \"Drone\" Fournier",
+      "description": "Expert en drones de reconnaissance",
+      "force": 200,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 3, "objet_id": 1 },
+          { "nombre": 3, "objet_id": 2 },
+          { "nombre": 3, "objet_id": 3 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 220,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Bonjour, découvre mes drones et équipement de base.",
+      "Je peux ajuster tout module sur place.",
+      "Reviens pour tes prochaines missions."
+    ],
+    "zone_id": 3,
+    "multiplicateur_prix": 1.1
+  },
+  {
+    "personnage": {
+      "id": 6,
+      "nom": "Sophie \"MedKit\" Leroy",
+      "description": "Paramédical de combat, trousses de secours prêtes à l’emploi",
+      "force": 185,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 3, "objet_id": 4 },
+          { "nombre": 3, "objet_id": 5 },
+          { "nombre": 3, "objet_id": 6 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 140,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Salut, je vends casques et protections légères.",
+      "Dis-moi ce dont tu as besoin.",
+      "À bientôt pour renforcer ta sécurité."
+    ],
+    "zone_id": 3,
+    "multiplicateur_prix": 1.4
+  },
+  {
+    "personnage": {
+      "id": 7,
+      "nom": "Viktor \"Blade\" Petrov",
+      "description": "Coutelier urbain, vende couteaux et gilets tactiques",
+      "force": 250,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 3, "objet_id": 7 },
+          { "nombre": 3, "objet_id": 8 },
+          { "nombre": 3, "objet_id": 9 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 250,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Bonjour, je vends gilets et couteaux de qualité.",
+      "Tout est testé en conditions réelles.",
+      "Bonne visite !"
+    ],
+    "zone_id": 4,
+    "multiplicateur_prix": 1.5
+  },
+  {
+    "personnage": {
+      "id": 8,
+      "nom": "Laura \"Shield\" Rossi",
+      "description": "Ingénieure balistique vend boucliers anti-émeute",
+      "force": 230,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 3, "objet_id": 11 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 175,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Bonjour, mon stock est prêt à l’emploi.",
+      "Demande si tu veux un bouclier sur mesure.",
+      "Au plaisir de te revoir."
+    ],
+    "zone_id": 4,
+    "multiplicateur_prix": 1.2
+  },
+  {
+    "personnage": {
+      "id": 9,
+      "nom": "Camille \"Scope\" Dumas",
+      "description": "Opticienne balistique, jumelles et lunettes tactiques",
+      "force": 165,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 1, "objet_id": 1 },
+          { "nombre": 2, "objet_id": 7 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 130,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Salut, j’ai des jumelles et équipements optiques.",
+      "Dis-moi ce que tu cherches.",
+      "Bonne exploration."
+    ],
+    "zone_id": 5,
+    "multiplicateur_prix": 1.0
+  },
+  {
+    "personnage": {
+      "id": 10,
+      "nom": "Romain \"Ammo\" Garnier",
+      "description": "Grossiste en munitions de tous calibres",
+      "force": 240,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 2, "objet_id": 3 },
+          { "nombre": 1, "objet_id": 9 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 200,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Bonjour, munitions et rechargements ici.",
+      "Gros volumes = meilleurs tarifs.",
+      "À bientôt pour ton prochaine commande."
+    ],
+    "zone_id": 6,
+    "multiplicateur_prix": 0.8
+  },
+  {
+    "personnage": {
+      "id": 11,
+      "nom": "Mohamed \"Loadout\" Ben Ali",
+      "description": "Spécialiste en packs tactiques pour forces spéciales",
+      "force": 275,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 1, "objet_id": 6 },
+          { "nombre": 1, "objet_id": 11 },
+          { "nombre": 1, "objet_id": 4 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 180,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Bonjour, assemble ton kit raid ici.",
+      "Tout est modulable selon ta mission.",
+      "Reviens quand tu veux upgrader."
+    ],
+    "zone_id": 7,
+    "multiplicateur_prix": 1.0
+  },
+  {
+    "personnage": {
+      "id": 12,
+      "nom": "Yasmine \"EMP\" Khelifi",
+      "description": "Hacker-électronicienne vend dispositifs EMP portables",
+      "force": 190,
+      "inventaire": {
+        "taille": 10,
+        "objets": [
+          { "nombre": 2, "objet_id": 2 },
+          { "nombre": 1, "objet_id": 5 }
+        ]
+      },
+      "parties_du_corps": [
+        { "nom": "Tête", "vie_max": 50, "vie_actuelle": 50, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Torse", "vie_max": 100, "vie_actuelle": 100, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras droit", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Bras gauche", "vie_max": 75, "vie_actuelle": 75, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe droite", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } },
+        { "nom": "Jambe gauche", "vie_max": 80, "vie_actuelle": 80, "etat": "Saine", "guerison": "2025-06-09T12:00:00Z", "equipement": { "taille": 1, "objets": [] } }
+      ],
+      "argent": 210,
+      "est_vivant": true
+    },
+    "dialogues": [
+      "Salut, modules EMP et accessoires ici.",
+      "Testés pour neutraliser tout électronique.",
+      "Reviens pour plus d’innovations."
+    ],
+    "zone_id": 8,
+    "multiplicateur_prix": 1.4
   }
 ]
