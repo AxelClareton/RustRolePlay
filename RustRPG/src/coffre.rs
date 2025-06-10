@@ -4,17 +4,38 @@ use crate::zone::Zone;
 use crate::personnage::PNJ;
 use crate::personnage::Personnage;
 
+/// Représente un coffre contenant des objets dans une zone du jeu.
+/// Un coffre peut être visible ou non, ouvert ou fermé, et possède un inventaire propre.
 #[derive(Debug, Clone)]
 pub struct Coffre {
+    /// Identifiant unique du coffre.
     pub _id: u8,
+    /// Identifiant de la zone dans laquelle se trouve le coffre.
     pub _id_zone: u8,
+    /// Indique si le coffre est ouvert (`true`) ou fermé (`false`).
     pub ouvert: bool,
+    /// Description du coffre, affichée lors de l'interaction.
     pub _description: String,
+    /// Inventaire du coffre contenant les objets qu'il renferme.
     pub inventaire: Inventaire,
+    /// Indique si le coffre est visible dans la zone (`true`) ou caché (`false`).
     pub visible: bool,
 }
 
 impl Coffre {
+    /// Tente d'ouvrir le coffre.
+    ///
+    /// Si le coffre est fermé, demande au joueur s’il souhaite utiliser une clé
+    /// (objet d’ID 12) pour l’ouvrir. Si la clé est disponible dans l'inventaire du joueur,
+    /// elle est consommée et le coffre est ouvert.
+    ///
+    /// Retourne `Some(())` si le coffre a été ouvert avec succès, ou s’il l’était déjà.
+    /// Retourne `None` si l’utilisateur annule ou s’il n’a pas de clé.
+    ///
+    /// # Arguments
+    /// - `zone` : Référence à la zone actuelle (pour les notifications).
+    /// - `joueur` : Le personnage joueur interagissant avec le coffre.
+    /// - `pnjs` : Liste des PNJs présents dans la zone.
     pub fn ouvrir(&mut self, zone: &Zone, joueur: &mut Personnage, pnjs: &Vec<PNJ>) -> Option<()>{
         if !self.ouvert {
             let choix = affichage::faire_choix(

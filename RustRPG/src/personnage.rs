@@ -9,6 +9,12 @@ use crate::inventaire::{Inventaire, ObjetInventaire};
 use crate::objet::OBJETS_DISPONIBLES;
 use crate::Zone;
 
+/// Représente l’état d’une partie du corps.
+///
+/// Peut être :
+/// - `Saine` : la partie est intacte.
+/// - `Blessee(u8)` : blessée à un certain pourcentage.
+/// - `Morte` : complètement détruite.
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum EtatPartie {
     Saine,
@@ -16,6 +22,9 @@ pub enum EtatPartie {
     Morte,
 }
 
+
+/// Structure représentant une partie du corps avec sa vie, son état de santé,
+/// un temps de guérison et un inventaire d’équipement.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PartieDuCorps {
     nom: String,
@@ -48,6 +57,9 @@ impl fmt::Display for PartieDuCorps {
 }
 
 impl PartieDuCorps {
+    /// Crée une nouvelle partie du corps avec un nom et une vie maximale.
+    ///
+    /// L’état initial est `Saine`, avec un équipement vide.
     pub fn new(nom: String, vie_max: u32) -> Self {
         Self {
             nom,
@@ -59,18 +71,22 @@ impl PartieDuCorps {
         }
     }
 
+    /// Vérifie si la partie est saine et a terminé sa guérison.
     pub fn est_saine(&self) -> bool {
         matches!(self.etat, EtatPartie::Saine) && Utc::now() >= self.guerison
     }
 
+    /// Vérifie si la partie est morte.
     pub fn est_morte(&self) -> bool {
         matches!(self.etat, EtatPartie::Morte)
     }
 
+    /// Vérifie si la partie est bléssée.
     pub fn est_blessee(&self) -> bool {
         matches!(self.etat, EtatPartie::Blessee(_))
     }
 
+    /// Renvoie le pourcentage de vie restante (0 à 100).
     pub fn pourcentage_vie(&self) -> f32 {
         if self.vie_max == 0 {
             return 0.0;
@@ -78,6 +94,14 @@ impl PartieDuCorps {
         (self.vie_actuelle as f32 / self.vie_max as f32) * 100.0
     }
 
+
+    /// Inflige des dégâts à la partie du corps.
+    ///
+    /// Met à jour la vie actuelle, l’état (`Blessee` ou `Morte`),
+    /// et calcule un délai de guérison.
+    ///
+    /// # Retour
+    /// `true` si la partie est détruite, `false` sinon.
     pub fn subir_degats(&mut self, degats: u32) -> bool {
         if self.est_morte() {
             return false;
@@ -107,18 +131,24 @@ impl PartieDuCorps {
         false
     }
 
+    /// Renvoie le nom de la partie.
     pub fn nom(&self) -> &str {
         &self.nom
     }
-    
+
+    /// Renvoie une référence à l'inventaire de la partie.
     pub fn equipement(&self) -> &crate::inventaire::Inventaire {
         &self.equipement
     }
-    
+
+    /// Ajoute un objet à l’équipement de cette partie.
     pub fn ajouter_equipement(&mut self, objet : u8){
         let _ = &self.equipement.ajouter_objet(objet);
     }
 
+    /// Récupère un objet de l’inventaire à un index donné.
+    ///
+    /// Diminue la quantité ou supprime l’objet si sa quantité tombe à 0.
     pub fn récupérer_objet(&mut self, index: usize) -> ObjetInventaire {
         let objet = self.equipement.objets[index].clone();
         self.equipement.objets[index].nombre -= 1;
@@ -130,39 +160,58 @@ impl PartieDuCorps {
         objet
     }
 
+    /// Renvoie la vie actuelle.
     pub fn vie_actuelle(&self) -> u32 {
         self.vie_actuelle
     }
+
+    /// Renvoie la vie maximale.
     pub fn vie_max(&self) -> u32 {
         self.vie_max
     }
 
+    /// Renvoie l’état actuel.
     pub fn etat(&self) -> &EtatPartie {
         &self.etat
     }
 
+    /// Renvoie la date de fin de guérison.
     pub fn guerison(&self) -> chrono::DateTime<chrono::Utc> {
         self.guerison
     }
 }
 
+/// Représente le résultat d'une blessure infligée à un personnage.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum ResultatBlessure {
+    /// La partie est mort.
     Mort,
+    /// Une partie du corps est détruite.
     PartieDetruite,
+    /// Une blessure a été infligée, mais pas mortelle.
     Blesse,
+    /// Aucun dégât grave.
     RienGrave,
 }
 
+/// Représente un personnage jouable ou non-jouable dans le jeu.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Personnage {
+    /// Identifiant unique du personnage.
     pub id: u32,
+    /// Nom du personnage.
     pub nom: String,
+    /// Brève description du personnage.
     pub description: String,
+    /// Force physique du personnage.
     pub force: u8,
+    /// Inventaire d’objets possédé par le personnage.
     pub inventaire: crate::inventaire::Inventaire,
+    /// Liste des parties du corps et leur état.
     pub parties_du_corps: Vec<PartieDuCorps>,
+    /// Montant d'argent possédé.
     pub argent: u32,
+    /// Indique si le personnage est vivant.
     pub est_vivant: bool,
 }
 
@@ -182,6 +231,12 @@ impl fmt::Display for Personnage {
 }
 
 impl Personnage {
+    /// Gère les dégâts reçus par une partie du corps et retourne le résultat.
+    ///
+    /// # Arguments
+    ///
+    /// * `nom_partie` - Le nom de la partie ciblée.
+    /// * `degats` - Le montant de dégâts infligés.
     pub fn gerer_blessure(&mut self, nom_partie: &str, degats: u32) -> ResultatBlessure {
         if let Some(partie) = self.parties_du_corps.iter_mut()
             .find(|p| p.nom.to_lowercase() == nom_partie.to_lowercase()) {
@@ -208,6 +263,7 @@ impl Personnage {
         ResultatBlessure::RienGrave
     }
 
+    /// Vérifie si le personnage peut encore se battre.
     pub fn peut_se_battre(&self) -> bool {
         if !self.est_vivant {
             return false;
@@ -222,6 +278,7 @@ impl Personnage {
         bras_fonctionnels > 0 && jambes_fonctionnelles > 0
     }
 
+    /// Calcule la force effective du personnage en fonction des blessures.
     pub fn force_effective(&self) -> u8 {
         if !self.est_vivant {
             return 0;
@@ -249,6 +306,10 @@ impl Personnage {
         ((self.force as f32) * modificateur) as u8
     }
 
+    /// Lit un fichier JSON contenant une liste de personnages.
+    ///
+    /// Retourne `Ok(Some(vec))` si des personnages sont trouvés,
+    /// `Ok(None)` si le fichier est vide ou introuvable.
     fn lire_fichier_json(fichier: &str) -> io::Result<Option<Vec<Personnage>>> {
         let mut file = match File::open(fichier) {
             Ok(file) => file,
@@ -268,6 +329,11 @@ impl Personnage {
         }
     }
 
+    /// Sauvegarde ce personnage dans un fichier JSON existant ou nouveau.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Le chemin du fichier dans lequel sauvegarder.
     pub fn sauvegarder_json(&self, fichier: &str) -> io::Result<()> {
         let mut personnages = match Self::lire_fichier_json(fichier)? {
             Some(personnages) => personnages,
@@ -280,6 +346,8 @@ impl Personnage {
         file.write_all(json.as_bytes())
     }
 
+    /// Charge une liste de personnages à partir d’un fichier JSON.
+    /// Crée des personnages de test si le fichier est vide ou manquant.
     pub fn charger_depuis_json(fichier: &str) -> io::Result<Vec<Personnage>> {
         match Self::lire_fichier_json(fichier)? {
             Some(personnages) => Ok(personnages),
@@ -300,6 +368,7 @@ impl Personnage {
         }
     }
 
+    /// Calcule le prochain identifiant disponible en fonction des personnages existants.
     pub fn prochain_id(fichier: &str) -> io::Result<u32> {
         let personnages = match Self::lire_fichier_json(fichier)? {
             Some(personnages) => personnages,
@@ -309,10 +378,12 @@ impl Personnage {
         Ok(max_id + 1)
     }
 
+    /// Ajoute de l’argent au personnage.
     pub fn ajouter_argent(&mut self, montant: u32) {
         self.argent += montant;
     }
 
+    /// Retire de l’argent au personnage.
     pub fn retirer_argent(&mut self, montant: u32) {
         if self.argent < montant {
             println!("Vous n'avez pas assez d'argent !");
@@ -321,6 +392,7 @@ impl Personnage {
         }
     }
 
+    /// Soigne toutes les parties du corps après un combat.
     pub fn soigner_apres_combat(&mut self) {
         if !self.est_vivant {
             return;
@@ -340,6 +412,7 @@ impl Personnage {
     }
 }
 
+/// Crée et retourne les parties du corps standards d’un personnage.
 fn creer_parties_du_corps() -> Vec<PartieDuCorps> {
     vec![
         PartieDuCorps::new("Tête".to_string(), 50),
@@ -351,20 +424,36 @@ fn creer_parties_du_corps() -> Vec<PartieDuCorps> {
     ]
 }
 
+/// Représente un joueur contrôlé par l'utilisateur.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Joueur {
+    /// Le personnage associé au joueur.
     pub personnage: Personnage,
 }
 
+/// Représente un personnage non-joueur (PNJ), comme un marchand ou un habitant.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PNJ {
+    /// Le personnage associé au PNJ.
     pub personnage: Personnage,
+    /// Liste des dialogues que le PNJ peut prononcer.
     pub dialogues: Vec<String>,
+    /// Identifiant de la zone où se trouve ce PNJ.
     pub zone_id: u32,
+    /// Multiplicateur appliqué aux prix (ex. : pour vendre plus cher).
     pub multiplicateur_prix: f32,
 }
 
 impl PNJ {
+    /// Calcule le prochain identifiant disponible pour un PNJ à partir du fichier JSON.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Le chemin du fichier JSON contenant les PNJ existants.
+    ///
+    /// # Retour
+    ///
+    /// Retourne l'identifiant suivant disponible.
     pub fn prochain_id_pnj(fichier: &str) -> io::Result<u32> {
         let mut file = File::open(fichier)?;
         let mut contenu = String::new();
@@ -379,6 +468,20 @@ impl PNJ {
 
         Ok(max_id + 1)
     }
+
+    /// Crée un nouveau PNJ et le sauvegarde dans le fichier JSON.
+    ///
+    /// # Arguments
+    ///
+    /// * `nom` - Nom du PNJ.
+    /// * `description` - Description du PNJ.
+    /// * `dialogues` - Liste de dialogues que le PNJ peut utiliser.
+    /// * `zone_id` - ID de la zone dans laquelle il se trouve.
+    /// * `multiplicateur_prix` - Facteur multiplicatif appliqué aux prix des objets.
+    ///
+    /// # Retour
+    ///
+    /// Retourne le PNJ créé.
     pub fn creer_pnj(
         nom: &str, 
         description: &str, 
@@ -416,6 +519,21 @@ impl PNJ {
         Ok(pnj)
     }
 
+    /// Permet de sélectionner les objets à ajouter dans l’inventaire du PNJ à partir d’une
+    /// liste d’objets disponibles.
+    ///
+    /// Affiche tous les objets disponibles, et demande à l'utilisateur de saisir
+    /// les objets et quantités sous le format `id:quantité`.
+    ///
+    /// La somme des quantités ne peut pas dépasser la capacité maximale de l'inventaire (10).
+    ///
+    /// # Exemple d'entrée utilisateur
+    ///
+    /// `1:3,2:2` — ajoute 3 objets d'ID 1 et 2 objets d'ID 2.
+    ///
+    /// # Retour
+    ///
+    /// Retourne un `Inventaire` rempli avec les objets choisis.
     pub fn choisir_objets_inventaire() -> io::Result<Inventaire> {
         let objets_disponibles = OBJETS_DISPONIBLES.read().unwrap();
         let mut inventaire = Inventaire { taille: 10, objets: Vec::new() };
@@ -483,6 +601,18 @@ impl PNJ {
         Ok(inventaire)
     }
 
+    /// Sauvegarde ce PNJ dans un fichier JSON.
+    ///
+    /// Si le fichier existe, ajoute ce PNJ à la liste existante.
+    /// Sinon, crée un nouveau fichier avec ce PNJ seul.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Le chemin du fichier JSON où sauvegarder les PNJs.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur si l'écriture dans le fichier échoue.
     pub fn sauvegarder_pnj(&self, fichier: &str) -> io::Result<()> {
         let mut pnjs = match Self::lire_pnjs_json(fichier)? {
             Some(pnjs) => pnjs,
@@ -495,6 +625,20 @@ impl PNJ {
         file.write_all(json.as_bytes())
     }
 
+    /// Lit la liste des PNJs depuis un fichier JSON.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Le chemin du fichier JSON contenant la liste des PNJs.
+    ///
+    /// # Retour
+    ///
+    /// Retourne `Ok(Some(Vec<PNJ>))` si la lecture et la désérialisation réussissent.
+    /// Retourne `Ok(None)` si le fichier est vide ou introuvable.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur si la lecture du fichier échoue.
     fn lire_pnjs_json(fichier: &str) -> io::Result<Option<Vec<PNJ>>> {
         let mut file = match File::open(fichier) {
             Ok(file) => file,
@@ -514,6 +658,21 @@ impl PNJ {
         }
     }
 
+    /// Charge la liste des PNJs depuis un fichier JSON.
+    ///
+    /// Si aucun PNJ n'est trouvé, crée des PNJs de test et réessaie la lecture.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Le chemin du fichier JSON.
+    ///
+    /// # Retour
+    ///
+    /// Retourne la liste des PNJs ou une liste vide si aucun PNJ n'est disponible.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur en cas d'échec de lecture ou création des PNJs de test.
     pub fn charger_pnj(fichier: &str) -> io::Result<Vec<PNJ>> {
         match Self::lire_pnjs_json(fichier)? {
             Some(pnjs) => Ok(pnjs),
@@ -528,6 +687,17 @@ impl PNJ {
         }
     }
 
+    /// Crée et sauvegarde une liste de PNJs marchands de test dans un fichier JSON.
+    ///
+    /// Les PNJs de test ont des dialogues, des multiplicateurs de prix, et un inventaire vide.
+    ///
+    /// # Retour
+    ///
+    /// Retourne `Ok(())` si la création et la sauvegarde réussissent.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur si l'écriture dans le fichier JSON échoue.
     pub fn creer_pnjs_test_direct() -> io::Result<()> {
         // Possible de leur mettre l'inventaire içi pour choisir les objets qu'ils vendent
         let pnjs_test = vec![
@@ -631,6 +801,14 @@ impl PNJ {
         Ok(())
     }
 
+    /// Gère l’interaction entre le joueur et ce PNJ.
+    ///
+    /// Propose au joueur plusieurs choix : combattre, voir l’inventaire, ou quitter.
+    ///
+    /// # Arguments
+    /// * `joueur` - Référence mutable au personnage joueur.
+    /// * `zones` - Référence mutable à la liste des zones du jeu.
+    /// * `current_zone_index` - Indice de la zone actuelle dans laquelle se trouve le joueur.
     pub fn interagir(&mut self, joueur: &mut Personnage, zones: &mut Vec<Zone>, current_zone_index: usize) {
         println!("Vous rencontrez {}. Que voulez-vous faire ?", self.personnage.nom);
         println!("1. Combattre");
@@ -681,6 +859,10 @@ impl PNJ {
         }
     }
 
+
+    /// Permet au joueur d’acheter un objet dans l’inventaire du PNJ.
+    ///
+    /// Vérifie la quantité disponible, l’argent du joueur, et la place dans son inventaire.
     fn afficher_inventaire(&self) {
         println!("Inventaire de {}:", self.personnage.nom);
         for (index, objet) in self.personnage.inventaire.objets.iter().enumerate() {
@@ -694,6 +876,13 @@ impl PNJ {
         }
     }
 
+    /// Calcule le prix de vente d’un objet en appliquant le multiplicateur de prix du PNJ.
+    ///
+    /// # Arguments
+    /// * `prix_base` - Prix de base de l'objet.
+    ///
+    /// # Retour
+    /// Le prix ajusté selon le multiplicateur du PNJ.
     fn acheter_objet(&mut self, joueur: &mut Personnage) {
         println!("Vous avez {} d'argent.", joueur.argent);
         println!("Entrez le numéro de l'objet que vous souhaitez acheter ou 'q' pour quitter :");
@@ -767,13 +956,30 @@ impl fmt::Display for PNJ {
         Ok(())
     }
 }
-
+/// Représente un Mob (monstre ou créature non-joueur) dans le jeu.
+///
+/// Contient un personnage avec ses attributs (force, inventaire, etc.).
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Mob {
+    /// Le personnage associé au Mob.
     pub personnage: Personnage,
 }
 
 impl Mob {
+    /// Crée un nouveau Mob avec un nom et une description.
+    ///
+    /// Le Mob est initialisé avec des valeurs aléatoires pour la force et l'argent,
+    /// un inventaire vide et des parties du corps générées.
+    /// Le Mob est sauvegardé dans le fichier JSON spécifié.
+    ///
+    /// # Arguments
+    ///
+    /// * `nom` - Nom du Mob.
+    /// * `description` - Description du Mob.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur d'entrée/sortie si la sauvegarde échoue.
     pub fn creer_mob(nom: &str, description: &str) -> io::Result<Self> {
         let prochain_id = Personnage::prochain_id("src/json/mob.json")?;
         let inventaire = Inventaire { taille: 10, objets: vec![] };
@@ -798,6 +1004,17 @@ impl Mob {
         Ok(Mob { personnage })
     }
 
+    /// Charge la liste des Mobs depuis un fichier JSON.
+    ///
+    /// Si aucun Mob n'est trouvé, crée une série de Mobs de test puis les charge.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Chemin vers le fichier JSON des Mobs.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur d'entrée/sortie si le fichier ne peut être lu ou parsé.
     pub fn charger_mob(fichier: &str) -> io::Result<Vec<Personnage>> {
         let mobs = Personnage::charger_depuis_json(fichier)?;
         if mobs.is_empty() {
@@ -808,6 +1025,13 @@ impl Mob {
         Ok(mobs)
     }
 
+    /// Crée directement plusieurs Mobs de test avec des valeurs prédéfinies.
+    ///
+    /// Les Mobs sont sauvegardés dans `src/json/mob.json`.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur d'entrée/sortie si la sauvegarde échoue.
     pub fn creer_mobs_test_direct() -> io::Result<()> {
         let mobs_test = vec![
             ("Gobelin Sauvage", "Un petit gobelin agressif aux dents pointues"),
@@ -855,6 +1079,20 @@ impl Mob {
 }
 
 impl Joueur {
+    /// Crée un nouveau Joueur avec un nom et une description.
+    ///
+    /// Le Joueur est initialisé avec des valeurs aléatoires pour la force et l'argent,
+    /// un inventaire vide et des parties du corps générées.
+    /// Le Joueur est sauvegardé dans le fichier JSON spécifié.
+    ///
+    /// # Arguments
+    ///
+    /// * `nom` - Nom du Joueur.
+    /// * `description` - Description du Joueur.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur d'entrée/sortie si la sauvegarde échoue.
     pub fn creer_joueur(nom: &str, description: &str) -> io::Result<Self> {
         let prochain_id = Personnage::prochain_id("src/json/personnage.json")?;
         let inventaire = Inventaire { taille: 10, objets: vec![] };
@@ -879,10 +1117,26 @@ impl Joueur {
         Ok(Joueur { personnage })
     }
 
+    /// Charge la liste des Joueurs depuis un fichier JSON.
+    ///
+    /// # Arguments
+    ///
+    /// * `fichier` - Chemin vers le fichier JSON des Joueurs.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur d'entrée/sortie si le fichier ne peut être lu ou parsé.
     pub fn charger_joueur(fichier: &str) -> io::Result<Vec<Personnage>> {
         Personnage::charger_depuis_json(fichier)
     }
 
+    /// Crée directement plusieurs Joueurs de test avec des valeurs prédéfinies.
+    ///
+    /// Les Joueurs sont sauvegardés dans `src/json/personnage.json`.
+    ///
+    /// # Erreurs
+    ///
+    /// Retourne une erreur d'entrée/sortie si la sauvegarde échoue.
     pub fn creer_joueur_test_direct() -> io::Result<()> {
         let joueurs_test = vec![
             ("Marc le fou furieux", "Un aventurier téméraire à la recherche de gloire"),

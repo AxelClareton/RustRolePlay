@@ -5,18 +5,32 @@ use crate::objet::OBJETS_DISPONIBLES;
 use std::sync::RwLockReadGuard;
 use crate::affichage;
 
+/// Représente un inventaire avec une capacité maximale (`taille`)
+/// et une liste d'objets stockés (`objets`).
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Inventaire {
+    /// Capacité maximale de l'inventaire
     pub taille: u8,
+    /// Liste des objets présents dans l'inventaire
     pub objets: Vec<ObjetInventaire>,
 }
+
+/// Représente un objet dans l'inventaire avec un identifiant et une quantité.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ObjetInventaire {
+    /// Nombre d'exemplaires de l'objet
     pub nombre : u8,
+    /// Identifiant unique de l'objet
     pub objet_id: u8,
 }
 
 impl Inventaire {
+    /// Affiche l'inventaire à l'écran avec interaction utilisateur.
+    /// Retourne `Some(index)` de l'objet sélectionné, ou `None` si l'utilisateur quitte.
+    ///
+    /// - `est_joueur` : true si l'inventaire appartient au joueur.
+    /// - `zone` : la zone actuelle.
+    /// - `pnjs` : PNJs présents pour notification.
     pub fn afficher(&mut self, est_joueur : bool, zone: &crate::zone::Zone, pnjs: &Vec<crate::personnage::PNJ>) -> Option<usize> {
         if self.objets.is_empty(){
             if est_joueur {
@@ -87,6 +101,14 @@ impl Inventaire {
         }
     }
 
+    /// Affiche l'inventaire d’une zone ou d’un coffre avec interaction utilisateur
+    /// permettant de transférer un objet vers l’inventaire du joueur.
+    ///
+    /// Retourne `Some(())` si un transfert a eu lieu, sinon `None`.
+    ///
+    /// - `zone` : zone d’origine.
+    /// - `joueur` : personnage du joueur qui récupère les objets.
+    /// - `pnjs` : PNJs pour feedback.
     pub fn afficher_inventaire_zone_et_coffre(&mut self, zone: &crate::zone::Zone, joueur: &mut crate::personnage::Personnage, pnjs: &Vec<crate::personnage::PNJ>) -> Option<()> {
         use std::io;
 
@@ -159,6 +181,10 @@ impl Inventaire {
         Some(())
     }
 
+    /// Ajoute un objet à l'inventaire en augmentant la quantité si présent,
+    /// ou en l'ajoutant s'il est nouveau.
+    ///
+    /// - `id` : identifiant de l'objet à ajouter.
     pub fn ajouter_objet(&mut self, id: u8){
         for objet in &mut self.objets {
             if objet.objet_id == id {
@@ -174,6 +200,11 @@ impl Inventaire {
         self.trier_quantite();
     }
 
+    /// Récupère un objet de l'inventaire à l'index donné et diminue la quantité.
+    ///
+    /// Retourne l’identifiant de l’objet.
+    ///
+    /// - `index` : position de l’objet dans la liste.
     pub fn récupérer_objet(&mut self, index: usize) -> usize {
         let obj: usize = self.objets[index].objet_id as usize;
         let _o: &ObjetInventaire = &self.objets[index];
@@ -186,6 +217,10 @@ impl Inventaire {
         obj
     }
 
+    /// Variante de `récupérer_objet` retournant un objet complet (`ObjetInventaire`)
+    /// au lieu de son ID.
+    ///
+    /// - `index` : position de l’objet dans la liste.
     pub fn récupérer_objet_2(&mut self, index: usize) -> ObjetInventaire {
         let objet = self.objets[index].clone();
         self.objets[index].nombre -= 1;
@@ -197,6 +232,11 @@ impl Inventaire {
         objet
     }
 
+    /// Retire un objet de l’inventaire par son identifiant.
+    ///
+    /// Retourne `true` si l’objet a été trouvé et retiré.
+    ///
+    /// - `id` : identifiant de l’objet
     pub fn retirer_par_id(&mut self, id: u8) -> bool {
         for i in 0..self.objets.len() {
             if self.objets[i].objet_id == id {
@@ -211,6 +251,7 @@ impl Inventaire {
         false
     }
 
+    /// Trie les objets dans l'inventaire par quantité décroissante.
     pub fn trier_quantite(&mut self){
         self.objets.sort_by_key(|obj| Reverse(obj.nombre));
     }

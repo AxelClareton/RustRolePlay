@@ -11,65 +11,98 @@ use zone::Zone;
 use zone::Connexion;
 use inventaire::{Inventaire};
 use crate::objet::{ajouter_objet, TypeObjet, OBJETS_DISPONIBLES};
-// Structures pour lire le JSON
 
+/// Structure temporaire représentant une zone chargée depuis un JSON.
+///
+/// Les champs sont sérialisés/désérialisés avec des noms spécifiques via `serde`.
 #[derive(Debug, Deserialize)]
 struct ZoneTemporaire {
+    /// Identifiant de la zone (texte).
     #[serde(rename = "id")]
     id_texte: String,
+    /// Nom de la zone.
     #[serde(rename = "nom")]
     nom: String,
+    /// Description de la zone.
     #[serde(rename = "desc")]
     description: String,
+    /// Prix associé à la zone (texte).
     #[serde(rename = "prix")]
     prix: String,
     #[serde(rename = "ouvert")]
+    /// Indicateur si la zone est ouverte (texte "true" ou "false").
     ouvert: String,
+    /// Liste des connexions vers d'autres zones.
     connection: Vec<Connexion>,
+    /// Inventaire d'objets présents dans la zone.
     #[serde(rename = "objet_zone")]
     _objet_zone: Inventaire,
+    /// Indique si des mobs sont présents dans la zone.
     #[serde(default)]
     mob_present: bool,
 }
 
-
+/// Structure temporaire représentant un objet dans un inventaire chargé depuis JSON.
 #[derive(Debug, Deserialize)]
 struct ObjetInventaireTemporaire {
+    /// Quantité de l'objet.
     _nombre : u8,
+    /// Identifiant de l'objet.
     _objet_id: u8,
 }
 
-// #[derive(Debug, Deserialize)]
-// struct ObjetTemporaire {
-//     #[serde(rename = "id")]
-//     id_texte : String,
-//     #[serde(rename = "nom")]
-//     nom: String,
-// }
+/// Structure temporaire représentant un inventaire dans le JSON.
 #[derive(Debug, Deserialize)]
 struct InventaireTemporaire {
+    /// Taille de l'inventaire (texte).
     _taille_texte: String,
+    /// Liste des objets présents dans l'inventaire.
     _objets: Vec<ObjetInventaireTemporaire>,
 }
 
+/// Structure temporaire représentant un coffre chargé depuis JSON.
 #[derive(Debug, Deserialize)]
 struct CoffreTemporaire {
+    /// Identifiant du coffre (texte).
     #[serde(rename = "id")]
     id_texte: String,
+    /// Identifiant de la zone contenant ce coffre (texte).
     #[serde(rename = "id_zone")]
     id_zone_texte: String,
     #[serde(rename = "desc")]
+    /// Description du coffre.
     description: String,
+    /// Indique si le coffre est ouvert (texte "true" ou "false").
     _ouvert: String,
+    /// Indique si le coffre est visible (texte "true" ou "false").
     _visible: String,
+    /// Inventaire du coffre (liste d'inventaires, JSON utilise un tableau).
     _inventaire: Vec<InventaireTemporaire>, // Le JSON utilise un tableau
 }
+
+
+/// Charge le contenu d'un fichier JSON en une chaîne de caractères.
+///
+/// # Arguments
+///
+/// * `chemin` - Chemin vers le fichier JSON.
+///
+/// # Erreurs
+///
+/// Retourne une erreur si le fichier ne peut pas être lu.
 pub fn charger_json(chemin: &str)->Result<String, Box<dyn Error>>{
     let contenu = fs::read_to_string(chemin)?;
     Ok(contenu)
 }
 
-// Fonction pour charger les zones
+
+/// Charge et retourne la liste des zones du jeu à partir du fichier JSON.
+///
+/// Cette fonction charge également les coffres associés à chaque zone.
+///
+/// # Erreurs
+///
+/// Retourne une erreur si le chargement ou la conversion échoue.
 pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
     let coffres_totaux: HashMap<u8, Vec<Coffre>> = charger_coffres().expect("⚠️ Impossible de charger les coffres !");
     let contenu = charger_json("src/json/zone.json")?;
@@ -115,6 +148,12 @@ pub fn charger_zones() -> Result<Vec<Zone>, Box<dyn Error>> {
     Ok(zones_finales)
 }
 
+
+/// Charge et retourne un dictionnaire des coffres par zone.
+///
+/// # Erreurs
+///
+/// Retourne une erreur si le chargement ou la conversion échoue.
 pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
     let contenu = charger_json("src/json/coffre.json")?;
     let coffres_temp: Vec<CoffreTemporaire> = serde_json::from_str(&contenu)?;
@@ -166,6 +205,15 @@ pub fn charger_coffres() -> Result<HashMap<u8, Vec<Coffre>>, Box<dyn Error>> {
     Ok(coffre_finales)
 }
 
+
+/// Remplit aléatoirement les coffres avec des objets disponibles.
+///
+/// Chaque coffre reçoit un nombre aléatoire d'objets (entre 1 et 5),
+/// avec au maximum 2 exemplaires de chaque objet.
+///
+/// # Arguments
+///
+/// * `coffres` - Slice mutable des coffres à remplir.
 pub fn remplir_coffres(coffres: &mut [Coffre]){
     let objets_disponibles = OBJETS_DISPONIBLES.read().unwrap();
     let mut rng = rand::rng();
@@ -192,6 +240,11 @@ pub fn remplir_coffres(coffres: &mut [Coffre]){
 
 }
 
+/// Charge les objets depuis le fichier JSON et les ajoute à la collection globale.
+///
+/// # Erreurs
+///
+/// Retourne une erreur si le chargement ou la conversion échoue.
 pub fn charger_objets() -> Result<(), Box<dyn Error>> {
     let contenu = charger_json("src/json/objet.json")?;
     let objets_temp: Vec<serde_json::Value> = serde_json::from_str(&contenu)?;
