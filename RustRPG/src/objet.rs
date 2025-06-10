@@ -4,7 +4,8 @@ use once_cell::sync::Lazy;
 use std::sync::RwLock;
 use std::str::FromStr;
 
-/// Représente un objet dans le jeu avec ses caractéristiques générales.#[derive(Debug, Clone)]
+/// Représente un objet dans le jeu avec ses caractéristiques générales.
+#[derive(Debug, Clone)]
 pub struct Objet {
     pub id: u8,
     pub nom: String,
