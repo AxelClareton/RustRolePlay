@@ -3,12 +3,30 @@ use crate::personnage::Personnage;
 use crate::objet::{OBJETS_DISPONIBLES, TypeObjet};
 use crate::affichage;
 
+/// Résultat d'un combat entre deux personnages.
 pub struct CombatResultat {
+    /// Nom du vainqueur du combat (ou `None` en cas d'égalité).
     pub _vainqueur: Option<String>,
+    /// État final du joueur après le combat.
     pub etat_final_joueur: Personnage,
+    /// État final du monstre/ennemi après le combat.
     pub _etat_final_mob: Personnage,
 }
 
+/// Simule un combat entre deux personnages (joueur et mob).
+///
+/// Le combat se déroule en tours jusqu'à ce qu'un des personnages ne puisse plus se battre.
+/// À chaque tour, un attaquant est choisi aléatoirement, qui utilise une arme (ou ses mains) pour attaquer une partie du corps de l'adversaire.
+/// Les protections de l'adversaire réduisent les dégâts.
+///
+/// # Arguments
+/// * `p1` - Le personnage joueur.
+/// * `p2` - Le personnage ennemi ou mob.
+/// * `zone` - La zone dans laquelle le combat a lieu.
+/// * `tous_les_pnjs` - Liste des PNJs pour mise à jour de l'affichage après le combat.
+///
+/// # Retour
+/// Retourne un `CombatResultat` contenant le vainqueur (s'il y en a un) et l'état final des deux personnages.
 pub fn combattre(mut p1: Personnage, mut p2: Personnage, zone: &crate::zone::Zone, tous_les_pnjs: &[crate::personnage::PNJ]) -> CombatResultat {
     let mut rng = rand::rng();
     let mut attaquant = if rng.random_bool(0.5) { 0 } else { 1 };

@@ -25,7 +25,25 @@ use crate::inventaire::ObjetInventaire;
 use crate::objet::{Emplacement, OBJETS_DISPONIBLES};
 use chrono::Utc;
 
-
+/// Gère le déplacement du joueur d'une zone à une autre.
+///
+/// Cette fonction vérifie la direction souhaitée, les conditions d'accès à la nouvelle zone
+/// (présence d'un ennemi, ouverture de la zone, prix à payer), puis met à jour la position
+/// du joueur si le déplacement est possible.
+///
+/// # Arguments
+///
+/// * `zones` - Liste mutable de toutes les zones du jeu.
+/// * `current_zone_index` - Index actuel de la zone du joueur (modifiable).
+/// * `direction` - Direction de déplacement souhaitée ("nord", "sud", etc.).
+/// * `perso_joueur` - Le personnage du joueur (modifiable).
+/// * `pnjs` - Liste de tous les PNJs présents dans la zone pour l'affichage.
+///
+/// # Comportement
+///
+/// - Si la zone cible contient un ennemi (`mob_present`), le joueur doit confirmer s’il souhaite y entrer.
+/// - Si la zone n’est pas ouverte, le joueur peut l’acheter s’il a assez d’argent.
+/// - Si toutes les conditions sont remplies, le joueur est déplacé et une animation (temporisation) est affichée.
 fn se_deplacer(zones: &mut Vec<Zone>, current_zone_index: &mut usize, direction: &str, perso_joueur: &mut Personnage, pnjs: &Vec<PNJ>) {
     let current_zone = &zones[*current_zone_index];
 
